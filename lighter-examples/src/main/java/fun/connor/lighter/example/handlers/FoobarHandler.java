@@ -18,7 +18,7 @@ public class FoobarHandler {
     }
 
 
-    @Get("{name:name}?count={count},anotherParam={anotherParam}")
+    @Get("{name:name}?count={count},another_param={anotherParam}")
     public Response<Foobar> getFoobarByName(String name, int count, ResponseBuilder<Foobar> resp) {
 
         Foobar foobar = repository.getByName(name);
