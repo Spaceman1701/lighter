@@ -1,0 +1,18 @@
+group 'org.connor.fun'
+version '0.1-SNAPSHOT'
+
+apply plugin: 'java'
+apply plugin: 'application'
+
+mainClassName = 'fun.connor.lighter.example.Main'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    compile project(':lighter-core')
+}
