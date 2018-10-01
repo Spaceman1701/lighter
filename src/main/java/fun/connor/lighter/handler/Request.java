@@ -1,4 +1,9 @@
 package fun.connor.lighter.handler;
 
-public class Request {
+import java.util.Map;
+
+public class Request<T> {
+    private Map<String, String> headers;
+    private Map<String, String> cookies;
+    private T body;
 }
