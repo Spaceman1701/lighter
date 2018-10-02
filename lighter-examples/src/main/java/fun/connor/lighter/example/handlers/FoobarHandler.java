@@ -4,6 +4,7 @@ import fun.connor.lighter.declarative.*;
 import fun.connor.lighter.example.domain.Foobar;
 import fun.connor.lighter.example.persistance.FoobarRepository;
 import fun.connor.lighter.handler.Request;
+import fun.connor.lighter.handler.RequestContext;
 import fun.connor.lighter.handler.Response;
 import fun.connor.lighter.handler.ResponseBuilder;
 
@@ -18,11 +19,12 @@ public class FoobarHandler {
     }
 
 
-    @Get("{name:name}?count={count},another_param={anotherParam}")
-    public Response<Foobar> getFoobarByName(String name, int count, ResponseBuilder<Foobar> resp) {
+    @Get("/{name:name}?count={count}")
+    public Response<Foobar> getFoobarByName(String name, int count, RequestContext<Void, Foobar> context) {
 
         Foobar foobar = repository.getByName(name);
 
+        ResponseBuilder<Foobar> resp = context.getResponseBuilder();
         resp.status(200);
         resp.content(foobar);
         resp.putHeader("This-Is-A-HTTP-Header", "wwwwoooww");

@@ -6,4 +6,8 @@ public class Request<T> {
     private Map<String, String> headers;
     private Map<String, String> cookies;
     private T body;
+
+    public T getBody() {
+        return body;
+    }
 }
