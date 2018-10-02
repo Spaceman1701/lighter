@@ -19,7 +19,7 @@ public class FoobarHandler {
 
 
     @Get("/{name:name}?count={count}")
-    public Response<Foobar> getFoobarByName(String name, int count, RequestContext<Void, Foobar> context) {
+    public Response<Foobar> getFoobarByName(String name, int count, RequestContext<Foobar> context) {
 
         Foobar foobar = repository.getByName(name);
 

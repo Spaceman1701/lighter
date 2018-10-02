@@ -30,6 +30,8 @@ public class UndertowHttpHandler implements HttpHandler{
             queryParams.put(entry.getKey(), entry.getValue().getFirst());
         }
 
-        resolver.resolve(exchange, pathParams, queryParams);
+        UndertowRequest request = new UndertowRequest(exchange);
+
+        resolver.resolve(pathParams, queryParams, request);
     }
 }

@@ -4,7 +4,7 @@ public class RequestContext<T> {
     private final ResponseBuilder<T> responseBuilder;
     private final Request request;
 
-    public RequestContext(Request<T> request) {
+    public RequestContext(Request request) {
         this.request = request;
         responseBuilder = new ResponseBuilder<>();
     }
