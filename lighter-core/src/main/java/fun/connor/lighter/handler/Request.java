@@ -1,13 +1,12 @@
 package fun.connor.lighter.handler;
 
-import java.util.Map;
+import java.util.List;
 
-public class Request<T> {
-    private Map<String, String> headers;
-    private Map<String, String> cookies;
-    private T body;
+public interface Request {
 
-    public T getBody() {
-        return body;
-    }
+    String getHeaderValue(String header);
+    List<String> getHeaderValues(String header);
+    String getRequestPath();
+    String getMethod();
+    String getBody();
 }

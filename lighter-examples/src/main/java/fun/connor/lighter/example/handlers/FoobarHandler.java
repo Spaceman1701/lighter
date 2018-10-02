@@ -3,7 +3,6 @@ package fun.connor.lighter.example.handlers;
 import fun.connor.lighter.declarative.*;
 import fun.connor.lighter.example.domain.Foobar;
 import fun.connor.lighter.example.persistance.FoobarRepository;
-import fun.connor.lighter.handler.Request;
 import fun.connor.lighter.handler.RequestContext;
 import fun.connor.lighter.handler.Response;
 import fun.connor.lighter.handler.ResponseBuilder;

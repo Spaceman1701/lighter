@@ -1,28 +1,22 @@
 package fun.connor.lighter.route;
 
 import fun.connor.lighter.undertow.LighterRequestResolver;
-import org.bigtesting.routd.Route;
-import org.bigtesting.routd.Router;
-
-import java.util.Map;
+import fun.connor.lighter.undertow.UndertowHttpHandler;
+import io.undertow.Handlers;
+import io.undertow.server.HttpHandler;
+import io.undertow.server.HttpServerExchange;
+import io.undertow.server.RoutingHandler;
 
 public class LighterRouter {
 
-    private Router router;
-    private Map<Route, LighterRequestResolver> resolvers;
+    private RoutingHandler handler;
 
-    public LighterRouter(Router router) {
-        this.router = router;
+    public LighterRouter(RoutingHandler handler) {
+        this.handler = handler;
     }
 
-    public void addRoute(String routeStr, LighterRequestResolver resolver) {
-        Route route = new Route(routeStr);
+    public void addRoute(String method, String template, LighterRequestResolver resolver) {
 
-        router.add(route);
-        resolvers.put(route, resolver);
-    }
-
-    public LighterRequestResolver getResolver(String path) {
-        return resolvers.get(router.route(path));
+        handler.add(method, template, new UndertowHttpHandler(resolver));
     }
 }

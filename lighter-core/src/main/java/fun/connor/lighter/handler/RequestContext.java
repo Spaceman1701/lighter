@@ -1,23 +1,19 @@
 package fun.connor.lighter.handler;
 
-public class RequestContext<T, K> {
-    private final ResponseBuilder<K> responseBuilder;
-    private final Request<T> request;
+public class RequestContext<T> {
+    private final ResponseBuilder<T> responseBuilder;
+    private final Request request;
 
     public RequestContext(Request<T> request) {
         this.request = request;
         responseBuilder = new ResponseBuilder<>();
     }
 
-    public ResponseBuilder<K> getResponseBuilder() {
+    public ResponseBuilder<T> getResponseBuilder() {
         return responseBuilder;
     }
 
-    public Request<T> getRequest() {
+    public Request getRequest() {
         return request;
-    }
-
-    public T getRequestBody() {
-        return request.getBody();
     }
 }
