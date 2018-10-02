@@ -18,7 +18,7 @@ public class FoobarHandler {
     }
 
 
-    @Get("/{name:name}?count={count}")
+    @Get("/{name:name}") @QueryString({"count:count", "another_param:anotherParam"})
     public Response<Foobar> getFoobarByName(String name, int count, RequestContext<Foobar> context) {
 
         Foobar foobar = repository.getByName(name);
