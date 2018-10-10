@@ -1,6 +1,7 @@
 package fun.connor.lighter.route;
 
-import fun.connor.lighter.undertow.LighterRequestResolver;
+
+import fun.connor.lighter.handler.LighterRequestResolver;
 
 public class Route {
     private final String method;
