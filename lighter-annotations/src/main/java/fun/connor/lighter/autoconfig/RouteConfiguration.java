@@ -1,4 +1,4 @@
-package fun.connor.lighter.route;
+package fun.connor.lighter.autoconfig;
 
 public interface RouteConfiguration {
     LighterRouter getRouter();

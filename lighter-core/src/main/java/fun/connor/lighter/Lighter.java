@@ -1,7 +1,7 @@
 package fun.connor.lighter;
 
 import fun.connor.lighter.injection.InjectionObjectFactory;
-import fun.connor.lighter.route.RouteConfiguration;
+import fun.connor.lighter.autoconfig.RouteConfiguration;
 
 public class Lighter {
 
