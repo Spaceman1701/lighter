@@ -1,6 +1,7 @@
 package fun.connor.lighter.autoconfig;
 
-import fun.connor.lighter.undertow.LighterRequestResolver;
+
+import fun.connor.lighter.handler.LighterRequestResolver;
 
 import java.util.ArrayList;
 import java.util.List;
