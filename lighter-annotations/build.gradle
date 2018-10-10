@@ -12,6 +12,4 @@ repositories {
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
     compile 'com.google.guava:guava:26.0-jre'
-    compile group: 'io.undertow', name: 'undertow-core', version: '2.0.1.Final'
-    compile project(':lighter-annotations')
 }

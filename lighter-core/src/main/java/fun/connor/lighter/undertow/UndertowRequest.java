@@ -1,14 +1,11 @@
 package fun.connor.lighter.undertow;
 
-import com.sun.org.apache.regexp.internal.RE;
 import fun.connor.lighter.handler.Request;
 import io.undertow.server.HttpServerExchange;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.nio.CharBuffer;
 import java.util.List;
 import java.util.stream.Collectors;
 

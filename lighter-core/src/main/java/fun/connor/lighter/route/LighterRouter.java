@@ -1,22 +1,23 @@
 package fun.connor.lighter.route;
 
 import fun.connor.lighter.undertow.LighterRequestResolver;
-import fun.connor.lighter.undertow.UndertowHttpHandler;
-import io.undertow.Handlers;
-import io.undertow.server.HttpHandler;
-import io.undertow.server.HttpServerExchange;
-import io.undertow.server.RoutingHandler;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class LighterRouter {
 
-    private RoutingHandler handler;
+    private List<Route> routes;
 
-    public LighterRouter(RoutingHandler handler) {
-        this.handler = handler;
+    public LighterRouter() {
+        routes = new ArrayList<>();
     }
 
     public void addRoute(String method, String template, LighterRequestResolver resolver) {
+        routes.add(new Route(method, template, resolver));
+    }
 
-        handler.add(method, template, new UndertowHttpHandler(resolver));
+    public List<Route> getRoutes() {
+        return routes;
     }
 }

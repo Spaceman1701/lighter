@@ -5,7 +5,6 @@ import fun.connor.lighter.example.handlers.FoobarHandler;
 import fun.connor.lighter.handler.Request;
 import fun.connor.lighter.handler.RequestContext;
 import fun.connor.lighter.undertow.LighterRequestResolver;
-import io.undertow.server.HttpServerExchange;
 
 import java.util.Map;
 

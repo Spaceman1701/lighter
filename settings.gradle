@@ -1,4 +1,5 @@
 rootProject.name = 'lighter'
 include 'lighter-core'
 include 'lighter-examples'
+include 'lighter-annotations'
 
