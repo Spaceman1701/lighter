@@ -1,4 +1,4 @@
-package fun.connor.lighter.undertow;
+package fun.connor.lighter.handler;
 
 import fun.connor.lighter.handler.Request;
 
