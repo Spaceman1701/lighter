@@ -4,6 +4,10 @@
 /build/
 /out/
 
+# fix this to be multiple project level git ignores
+*/build/
+*.class
+
 # Ignore Gradle GUI config
 gradle-app.setting
 
