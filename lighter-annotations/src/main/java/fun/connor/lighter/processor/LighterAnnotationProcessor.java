@@ -2,8 +2,8 @@ package fun.connor.lighter.processor;
 
 import com.google.auto.service.AutoService;
 import fun.connor.lighter.declarative.*;
-import fun.connor.lighter.processor.validators.AnnotationValidatorDatabase;
-import fun.connor.lighter.processor.validators.ResourceControllerValidator;
+import fun.connor.lighter.processor.validators.*;
+import javafx.geometry.Pos;
 
 import javax.annotation.processing.*;
 import javax.lang.model.SourceVersion;
@@ -28,6 +28,13 @@ public class LighterAnnotationProcessor extends AbstractProcessor {
         super.init(env);
         annotationValidators = new AnnotationValidatorDatabase();
         annotationValidators.registerValidator(ResourceController.class, new ResourceControllerValidator());
+        annotationValidators.registerValidator(QueryParams.class, new QueryParamsValidator());
+        annotationValidators.registerValidator(Body.class, new BodyValidator());
+
+        annotationValidators.registerValidator(Get.class, new EndpointAnnotationValidator());
+        annotationValidators.registerValidator(Delete.class, new EndpointAnnotationValidator());
+        annotationValidators.registerValidator(Post.class, new EndpointAnnotationValidator());
+        annotationValidators.registerValidator(Put.class, new EndpointAnnotationValidator());
     }
 
     @Override
