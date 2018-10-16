@@ -1,18 +1,19 @@
 package fun.connor.lighter.processor.validators;
 
+import java.lang.annotation.Annotation;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AnnotationValidatorFactory {
+public class AnnotationValidatorDatabase {
 
     private Map<String, AnnotationValidator> validatorMap;
 
-    public AnnotationValidatorFactory() {
+    public AnnotationValidatorDatabase() {
         validatorMap = new HashMap<>();
     }
 
-    public void registerValidator(String name, AnnotationValidator validator) {
-        validatorMap.put(name, validator);
+    public void registerValidator(Class<? extends Annotation> target, AnnotationValidator validator) {
+        validatorMap.put(target.getCanonicalName(), validator);
     }
 
     public AnnotationValidator getInstance(String annotationName) {
