@@ -2,6 +2,7 @@ package fun.connor.lighter.processor;
 
 import com.google.auto.service.AutoService;
 import fun.connor.lighter.declarative.*;
+import fun.connor.lighter.processor.error.CompilerError;
 import fun.connor.lighter.processor.validators.*;
 
 import javax.annotation.processing.*;
@@ -10,10 +11,7 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 
 @AutoService(Processor.class)
@@ -27,13 +25,13 @@ public class LighterAnnotationProcessor extends AbstractProcessor {
         super.init(env);
         annotationValidators = new AnnotationValidatorDatabase();
         annotationValidators.registerValidator(ResourceController.class, new ResourceControllerValidator());
-        annotationValidators.registerValidator(QueryParams.class, new QueryParamsValidator());
+        annotationValidators.registerValidator(QueryParams.class, new QueryParamsValidator(env));
         annotationValidators.registerValidator(Body.class, new BodyValidator());
 
-        annotationValidators.registerValidator(Get.class, new EndpointAnnotationValidator());
-        annotationValidators.registerValidator(Delete.class, new EndpointAnnotationValidator());
-        annotationValidators.registerValidator(Post.class, new EndpointAnnotationValidator());
-        annotationValidators.registerValidator(Put.class, new EndpointAnnotationValidator());
+        annotationValidators.registerValidator(Get.class, new EndpointAnnotationValidator(env));
+        annotationValidators.registerValidator(Delete.class, new EndpointAnnotationValidator(env));
+        annotationValidators.registerValidator(Post.class, new EndpointAnnotationValidator(env));
+        annotationValidators.registerValidator(Put.class, new EndpointAnnotationValidator(env));
     }
 
     @Override
@@ -47,7 +45,11 @@ public class LighterAnnotationProcessor extends AbstractProcessor {
         }
 
 
-        if (!validateAnnotationSet(elementsByAnnotation, processingEnv.getMessager())) {
+        Set<CompilerError> validationErrors = validateAnnotationSet(elementsByAnnotation);
+        if (!validationErrors.isEmpty()) {
+            for (CompilerError error : validationErrors) {
+                processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, error.toString());
+            }
             return true;
         }
 
@@ -56,52 +58,19 @@ public class LighterAnnotationProcessor extends AbstractProcessor {
         return false;
     }
 
-    private boolean validateAnnotationSet(Map<String, Set<? extends Element>> elementsByAnnotation, Messager messager) {
-        boolean hadErrors = false;
+    private Set<CompilerError> validateAnnotationSet
+            (Map<String, Set<? extends Element>> elementsByAnnotation) {
+        Set<CompilerError> errors  = new HashSet<>();
         for (Map.Entry<String, Set<? extends Element>> entry : elementsByAnnotation.entrySet()) {
             for (Element element : entry.getValue()) {
                 try {
                     annotationValidators.getInstance(entry.getKey()).validate(element);
-                } catch (IllegalArgumentException e) {
-                    hadErrors = true;
-                    handleValidationError(entry.getKey(), element, e, messager);
                 } catch (Exception e) { //some other, unhandled error occurred. Print what we can and die
-                    hadErrors = true;
-                    handleUnknownValidationError(entry.getKey(), element, e, messager);
+                    errors.add(new CompilerError(element, e.getMessage(), entry.getKey()));
                 }
             }
         }
-
-        return hadErrors;
-    }
-
-    private void handleUnknownValidationError
-            (String annotationName, Element element, Exception e, Messager messager) {
-
-        String elementStr = elementKindToErrorString(element.getKind());
-        String message = "unknown error processing annotated " + elementStr + " " + element.getSimpleName()
-                + " (annotation: " + annotationName + "): " + e.getMessage();
-
-
-        messager.printMessage(Diagnostic.Kind.ERROR, message);
-    }
-
-    private void handleValidationError
-            (String annotationName, Element element, IllegalArgumentException e, Messager messager) {
-        String elementStr = elementKindToErrorString(element.getKind());
-        String message = "error processing annotated " + elementStr + " " + element.getSimpleName()
-                + " (annotation: " + annotationName + "): " + e.getMessage();
-
-        messager.printMessage(Diagnostic.Kind.ERROR, message);
-    }
-
-    private String elementKindToErrorString(ElementKind kind) {
-        switch (kind) {
-            case CLASS: return "class";
-            case METHOD: return "method";
-            case PARAMETER: return "parameter";
-            default: return "element";
-        }
+        return errors;
     }
 
     @Override

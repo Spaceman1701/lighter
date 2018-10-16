@@ -18,7 +18,8 @@ public class FoobarHandler {
     }
 
 
-    @Get("/{name:name}") @QueryParams({"count:count", "another_param:anotherParam"})
+    @Get("/{name:name}")
+    @QueryParams({"count:count", "another_param:anotherParam"})
     public Response<Foobar> getFoobarByName(String name, int count, RequestContext<Foobar> context) {
 
         Foobar foobar = repository.getByName(name);
@@ -32,10 +33,8 @@ public class FoobarHandler {
     }
 
     @Get @Post
-    public Response<Void> createFoobar(@Body Foobar foobar) {
+    public Response<Foobar> createFoobar(@Body Foobar foobar) {
 
-        repository.create(foobar);
-
-        return new Response<>(201);
+        return null;
     }
 }
