@@ -3,6 +3,9 @@ package fun.connor.lighter.processor;
 import com.google.auto.service.AutoService;
 import fun.connor.lighter.declarative.*;
 import fun.connor.lighter.processor.error.CompilerError;
+import fun.connor.lighter.processor.processors.Controller;
+import fun.connor.lighter.processor.step.CompilerStep;
+import fun.connor.lighter.processor.step.ValidationStep;
 import fun.connor.lighter.processor.validators.*;
 
 import javax.annotation.processing.*;
@@ -10,6 +13,7 @@ import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.TypeMirror;
 import javax.tools.Diagnostic;
 import java.util.*;
 
@@ -19,6 +23,8 @@ public class LighterAnnotationProcessor extends AbstractProcessor {
 
 
     private AnnotationValidatorDatabase annotationValidators;
+
+    private List<CompilerStep> steps;
 
     @Override
     public void init(ProcessingEnvironment env) {
@@ -32,30 +38,65 @@ public class LighterAnnotationProcessor extends AbstractProcessor {
         annotationValidators.registerValidator(Delete.class, new EndpointAnnotationValidator(env));
         annotationValidators.registerValidator(Post.class, new EndpointAnnotationValidator(env));
         annotationValidators.registerValidator(Put.class, new EndpointAnnotationValidator(env));
+
+        steps = new ArrayList<>();
+
+        steps.add(new ValidationStep(env));
     }
 
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-        Map<String, Set<? extends Element>> elementsByAnnotation = new HashMap<>();
+        Map<String, Object> stepEnv = new HashMap<>();
+//        Map<String, Set<? extends Element>> elementsByAnnotation = new HashMap<>();
+//
+//        for (TypeElement annotation : annotations) {
+//            String annotationName = annotation.getQualifiedName().toString();
+//            Set<? extends Element> elements = roundEnv.getElementsAnnotatedWith(annotation);
+//            elementsByAnnotation.put(annotationName, elements);
+//        }
 
-        for (TypeElement annotation : annotations) {
-            String annotationName = annotation.getQualifiedName().toString();
-            Set<? extends Element> elements = roundEnv.getElementsAnnotatedWith(annotation);
-            elementsByAnnotation.put(annotationName, elements);
-        }
+        stepEnv.put("annotations", annotations);
 
-
-        Set<CompilerError> validationErrors = validateAnnotationSet(elementsByAnnotation);
-        if (!validationErrors.isEmpty()) {
-            for (CompilerError error : validationErrors) {
-                processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, error.toString());
+        for (CompilerStep step : steps) {
+            step.validateEnv(stepEnv);
+            Set<CompilerError> stepErrors = step.process(roundEnv);
+            if (!stepErrors.isEmpty()) {
+                for (CompilerError error : stepErrors) {
+                    processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, error.toString());
+                }
+                return true;
             }
-            return true;
         }
+
+
+//        Set<CompilerError> validationErrors = validateAnnotationSet(elementsByAnnotation);
+//        if (!validationErrors.isEmpty()) {
+//            for (CompilerError error : validationErrors) {
+//                processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, error.toString());
+//            }
+//            return true;
+//        }
 
 
 
         return false;
+    }
+
+    private Set<CompilerError> parseAnnotations(RoundEnvironment roundEnv) {
+        TypeElement responseType =
+                processingEnv.getElementUtils().getTypeElement(ResourceController.class.getCanonicalName());
+
+        Set<? extends Element> controllerElements = roundEnv.getElementsAnnotatedWith(responseType);
+
+        Set<Controller> controllers = new HashSet<>();
+
+        for (Element e : controllerElements) {
+            TypeElement type = (TypeElement) controllerElements;
+            Controller controller = new Controller(processingEnv, roundEnv, type);
+            controllers.add(controller);
+        }
+
+        return null;
     }
 
     private Set<CompilerError> validateAnnotationSet
