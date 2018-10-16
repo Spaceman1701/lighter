@@ -4,7 +4,6 @@ import fun.connor.lighter.declarative.ResourceController;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
-import java.lang.annotation.Annotation;
 
 public class ResourceControllerValidator implements AnnotationValidator {
 

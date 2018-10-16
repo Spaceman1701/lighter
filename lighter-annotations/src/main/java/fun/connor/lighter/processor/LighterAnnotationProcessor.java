@@ -3,7 +3,6 @@ package fun.connor.lighter.processor;
 import com.google.auto.service.AutoService;
 import fun.connor.lighter.declarative.*;
 import fun.connor.lighter.processor.validators.*;
-import javafx.geometry.Pos;
 
 import javax.annotation.processing.*;
 import javax.lang.model.SourceVersion;
