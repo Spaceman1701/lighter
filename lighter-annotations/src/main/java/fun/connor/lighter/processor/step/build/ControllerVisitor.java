@@ -1,15 +1,12 @@
 package fun.connor.lighter.processor.step.build;
 
 import fun.connor.lighter.declarative.ResourceController;
-import fun.connor.lighter.processor.processors.Controller;
-import fun.connor.lighter.processor.processors.Endpoint;
-import fun.connor.lighter.processor.processors.Route;
+import fun.connor.lighter.processor.model.Controller;
+import fun.connor.lighter.processor.model.Endpoint;
+import fun.connor.lighter.processor.model.Route;
 
 import javax.lang.model.element.*;
-import javax.lang.model.type.*;
 import javax.lang.model.util.AbstractElementVisitor8;
-import javax.lang.model.util.AbstractTypeVisitor8;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;

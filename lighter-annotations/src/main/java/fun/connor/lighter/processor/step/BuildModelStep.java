@@ -1,18 +1,14 @@
 package fun.connor.lighter.processor.step;
 
 import fun.connor.lighter.declarative.ResourceController;
-import fun.connor.lighter.processor.error.CompilerError;
-import fun.connor.lighter.processor.processors.Controller;
-import fun.connor.lighter.processor.processors.Endpoint;
-import fun.connor.lighter.processor.processors.Model;
+import fun.connor.lighter.processor.model.Controller;
+import fun.connor.lighter.processor.model.Model;
 import fun.connor.lighter.processor.step.build.ControllerVisitor;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
-import javax.lang.model.type.DeclaredType;
-import javax.lang.model.type.TypeMirror;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;

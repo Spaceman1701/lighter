@@ -1,4 +1,4 @@
-package fun.connor.lighter.processor.processors;
+package fun.connor.lighter.processor.model;
 
 public class RoutePart {
 

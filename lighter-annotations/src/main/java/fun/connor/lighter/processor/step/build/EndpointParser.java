@@ -4,11 +4,10 @@ import fun.connor.lighter.declarative.Get;
 import fun.connor.lighter.declarative.Post;
 import fun.connor.lighter.declarative.Put;
 import fun.connor.lighter.declarative.QueryParams;
-import fun.connor.lighter.processor.processors.Endpoint;
-import fun.connor.lighter.processor.processors.QueryParamsProcessor;
-import fun.connor.lighter.processor.processors.Route;
+import fun.connor.lighter.processor.model.Endpoint;
+import fun.connor.lighter.processor.model.QueryParamsProcessor;
+import fun.connor.lighter.processor.model.Route;
 
-import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.ExecutableElement;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;

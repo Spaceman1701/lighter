@@ -1,9 +1,6 @@
-package fun.connor.lighter.processor.processors;
+package fun.connor.lighter.processor.model;
 
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.element.TypeElement;
-import java.util.ArrayList;
 import java.util.List;
 
 public class Controller {

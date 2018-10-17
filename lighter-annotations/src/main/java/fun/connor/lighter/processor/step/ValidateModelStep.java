@@ -2,8 +2,8 @@ package fun.connor.lighter.processor.step;
 
 import fun.connor.lighter.declarative.ResourceController;
 import fun.connor.lighter.processor.error.CompilerError;
-import fun.connor.lighter.processor.processors.Controller;
-import fun.connor.lighter.processor.processors.Model;
+import fun.connor.lighter.processor.model.Controller;
+import fun.connor.lighter.processor.model.Model;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.RoundEnvironment;
