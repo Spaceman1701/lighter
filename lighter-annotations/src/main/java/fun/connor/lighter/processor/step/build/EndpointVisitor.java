@@ -43,6 +43,7 @@ public class EndpointVisitor extends AbstractElementVisitor8<List<Endpoint>, Voi
         return null;
     }
 
+    @SuppressWarnings("unchecked") //unchecked cannot cause bug here + ENDPOINT_ANNOTATIONS guaranteed to be correct
     private Set<Class<? extends Annotation>> getEndpointAnnotationSet(ExecutableElement element) {
         Set<Class<? extends Annotation>> annotations = new HashSet<>();
         for (Class c : ENDPOINT_ANNOTATIONS) {

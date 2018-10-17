@@ -32,11 +32,10 @@ public class ValidationStep extends CompilerStep {
         annotationValidators.registerValidator(Put.class, new EndpointAnnotationValidator(env));
     }
 
-    @Override
+    @Override @SuppressWarnings("unchecked") //TODO: resolve generic type issues
     public Set<EnvironmentRequirement> getRequiredEnv() {
         EnvironmentRequirement annotationsReq =
-                new EnvironmentRequirement<>("annotations", Set.class,
-                                (Set a) -> setAnnotations(a));
+                new EnvironmentRequirement<>("annotations", Set.class, this::setAnnotations);
         Set<EnvironmentRequirement> requirements = new HashSet<>();
         requirements.add(annotationsReq);
         return requirements;

@@ -12,6 +12,7 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -35,7 +36,7 @@ public class BuildModelStep extends CompilerStep {
 
         Set<? extends Element> controllerElements = roundEnv.getElementsAnnotatedWith(responseType);
 
-        Set<Controller> controllers = new HashSet<>();
+        List<Controller> controllers = new ArrayList<>();
 
         for (Element e : controllerElements) {
             TypeElement type = (TypeElement) e;
@@ -43,7 +44,7 @@ public class BuildModelStep extends CompilerStep {
         }
 
 
-        return new StepResult(new HashSet<>());
+        return new StepResult(new HashSet<>(), "model", controllers);
     }
 
 }

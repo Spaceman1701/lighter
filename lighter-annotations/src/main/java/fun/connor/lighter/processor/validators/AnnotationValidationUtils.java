@@ -15,6 +15,7 @@ public class AnnotationValidationUtils {
 
     private AnnotationValidationUtils() {}
 
+    @SuppressWarnings("unchecked") //TODO: see other ENDPOINT_ANNOTATIONS notes
     static boolean hasEndpointAnnotation(Element element) {
         for (Class a : ENDPOINT_ANNOTATIONS) {
             Class<? extends Annotation> annotationClazz = a; //to make unchecked cast more obvious

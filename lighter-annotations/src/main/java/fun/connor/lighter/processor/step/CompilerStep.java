@@ -30,6 +30,7 @@ public abstract class CompilerStep {
         this.env = env;
     }
 
+    @SuppressWarnings("unchecked") //handler.accept - this method manually does type checking
     public void validateEnv(Map<String, Object> stepEnv) {
         Set<EnvironmentRequirement> requirements = getRequiredEnv();
 

@@ -21,13 +21,10 @@ public class EndpointParser {
     private ExecutableElement element;
     private Set<Class<? extends Annotation>> endpointAnnotations;
 
-    private List<? extends AnnotationMirror> annotationMirrors;
 
     public EndpointParser(ExecutableElement element, Set<Class<? extends Annotation>> endpointAnnotations) {
         this.element = element;
         this.endpointAnnotations = endpointAnnotations;
-
-        annotationMirrors = element.getAnnotationMirrors();
     }
 
     public List<Endpoint> parse() {
