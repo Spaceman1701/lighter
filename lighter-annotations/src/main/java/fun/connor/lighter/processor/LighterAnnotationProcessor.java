@@ -4,10 +4,7 @@ import com.google.auto.service.AutoService;
 import fun.connor.lighter.declarative.*;
 import fun.connor.lighter.processor.error.CompilerError;
 import fun.connor.lighter.processor.processors.Controller;
-import fun.connor.lighter.processor.step.BuildModelStep;
-import fun.connor.lighter.processor.step.CompilerStep;
-import fun.connor.lighter.processor.step.StepResult;
-import fun.connor.lighter.processor.step.ValidationStep;
+import fun.connor.lighter.processor.step.*;
 import fun.connor.lighter.processor.validators.*;
 
 import javax.annotation.processing.*;
@@ -34,6 +31,7 @@ public class LighterAnnotationProcessor extends AbstractProcessor {
 
         steps.add(new ValidationStep(env));
         steps.add(new BuildModelStep(env));
+        steps.add(new ValidateModelStep(env));
     }
 
     @Override

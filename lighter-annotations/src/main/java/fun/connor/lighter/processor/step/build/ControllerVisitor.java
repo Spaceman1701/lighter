@@ -25,15 +25,15 @@ public class ControllerVisitor extends AbstractElementVisitor8<Controller, Void>
     @Override
     public Controller visitType(TypeElement typeElement, Void o) {
 
-        Route controllerRouteFragement = createControllerRoute(typeElement);
+        Route routeFragment = createControllerRoute(typeElement);
 
         List<Endpoint> endpoints = typeElement.getEnclosedElements().stream()
-                .map((Element e) -> e.accept(new EndpointVisitor(), controllerRouteFragement))
+                .map((Element e) -> e.accept(new EndpointVisitor(), routeFragment))
                 .filter(Objects::nonNull)
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());
 
-        return new Controller(typeElement, endpoints);
+        return new Controller(typeElement, endpoints, routeFragment);
     }
 
     private Route createControllerRoute(TypeElement controllerElement) {

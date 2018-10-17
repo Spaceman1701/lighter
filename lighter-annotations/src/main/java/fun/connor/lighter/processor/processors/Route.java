@@ -1,6 +1,7 @@
 package fun.connor.lighter.processor.processors;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -12,11 +13,15 @@ public class Route {
 
 
     public Route(String templateStr) {
-
+        this.templateStr = templateStr;
+        this.params = new HashMap<>();
+        this.parts  = new ArrayList<>();
     }
 
     private Route(List<RoutePart> parts) {
-        //reconstruct template string
+        this.templateStr = "";
+        this.params = new HashMap<>();
+        this.parts = parts;
     }
 
 
@@ -24,5 +29,15 @@ public class Route {
         List<RoutePart> newParts = new ArrayList<>(this.parts);
         newParts.addAll(other.parts);
         return new Route(newParts);
+    }
+
+    /**
+     * Check if this route captures all cases of another
+     * route at an equal level of specificity
+     * @param other the other route
+     * @return true iff no precedence can be resolved between the two routes
+     */
+    public boolean captures(Route other) {
+        return false;
     }
 }

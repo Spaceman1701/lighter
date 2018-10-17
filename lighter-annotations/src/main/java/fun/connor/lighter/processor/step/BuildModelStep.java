@@ -4,6 +4,7 @@ import fun.connor.lighter.declarative.ResourceController;
 import fun.connor.lighter.processor.error.CompilerError;
 import fun.connor.lighter.processor.processors.Controller;
 import fun.connor.lighter.processor.processors.Endpoint;
+import fun.connor.lighter.processor.processors.Model;
 import fun.connor.lighter.processor.step.build.ControllerVisitor;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -44,7 +45,7 @@ public class BuildModelStep extends CompilerStep {
         }
 
 
-        return new StepResult(new HashSet<>(), "model", controllers);
+        return new StepResult(new HashSet<>(), "model", new Model(controllers));
     }
 
 }

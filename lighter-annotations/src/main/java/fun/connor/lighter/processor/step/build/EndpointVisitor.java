@@ -24,7 +24,7 @@ public class EndpointVisitor extends AbstractElementVisitor8<List<Endpoint>, Rou
     public List<Endpoint> visitExecutable(ExecutableElement executableElement, Route route) {
         Set<Class<? extends Annotation>> endpointAnnotations = getEndpointAnnotationSet(executableElement);
         if (!endpointAnnotations.isEmpty()) {
-            EndpointParser parser = new EndpointParser(executableElement, endpointAnnotations);
+            EndpointParser parser = new EndpointParser(executableElement, endpointAnnotations, route);
             return parser.parse();
         }
         return null;
