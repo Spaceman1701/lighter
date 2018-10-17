@@ -20,11 +20,14 @@ public class EndpointParser {
 
     private ExecutableElement element;
     private Set<Class<? extends Annotation>> endpointAnnotations;
+    private Route controllerRoute;
 
 
-    public EndpointParser(ExecutableElement element, Set<Class<? extends Annotation>> endpointAnnotations) {
+    public EndpointParser
+            (ExecutableElement element, Set<Class<? extends Annotation>> endpointAnnotations, Route controllerRoute) {
         this.element = element;
         this.endpointAnnotations = endpointAnnotations;
+        this.controllerRoute = controllerRoute;
     }
 
     public List<Endpoint> parse() {
@@ -37,7 +40,7 @@ public class EndpointParser {
         return endpoints;
     }
 
-    private Endpoint parseOne(Class<? extends Annotation> annotationClazz) { //TODO: make full route accessible from here
+    private Endpoint parseOne(Class<? extends Annotation> annotationClazz) {
         Annotation annotation = element.getAnnotation(annotationClazz);
 
         String pathFragment = getEndpointAnnotationValue(annotation);
@@ -51,7 +54,7 @@ public class EndpointParser {
             processor = new QueryParamsProcessor(queryParamsAnnotation.value());
         }
 
-        return new Endpoint(method, routeFragment, processor, element);
+        return new Endpoint(method, controllerRoute.append(routeFragment), processor, element);
     }
 
     private Endpoint.Method getMethodFromAnnotation(Class<? extends Annotation> annotationClazz) {

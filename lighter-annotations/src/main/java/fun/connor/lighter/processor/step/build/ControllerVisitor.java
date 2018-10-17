@@ -1,7 +1,9 @@
 package fun.connor.lighter.processor.step.build;
 
+import fun.connor.lighter.declarative.ResourceController;
 import fun.connor.lighter.processor.processors.Controller;
 import fun.connor.lighter.processor.processors.Endpoint;
+import fun.connor.lighter.processor.processors.Route;
 
 import javax.lang.model.element.*;
 import javax.lang.model.type.*;
@@ -23,13 +25,20 @@ public class ControllerVisitor extends AbstractElementVisitor8<Controller, Void>
     @Override
     public Controller visitType(TypeElement typeElement, Void o) {
 
+        Route controllerRouteFragement = createControllerRoute(typeElement);
+
         List<Endpoint> endpoints = typeElement.getEnclosedElements().stream()
-                .map((Element e) -> e.accept(new EndpointVisitor(), null))
+                .map((Element e) -> e.accept(new EndpointVisitor(), controllerRouteFragement))
                 .filter(Objects::nonNull)
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());
 
         return new Controller(typeElement, endpoints);
+    }
+
+    private Route createControllerRoute(TypeElement controllerElement) {
+        ResourceController controller = controllerElement.getAnnotation(ResourceController.class);
+        return new Route(controller.value());
     }
 
     @Override
