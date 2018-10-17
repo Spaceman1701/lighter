@@ -5,15 +5,18 @@ import fun.connor.lighter.handler.LighterRequestResolver;
 import fun.connor.lighter.handler.Request;
 import fun.connor.lighter.handler.TypeMarshalException;
 import fun.connor.lighter.handler.TypeMarshaller;
+import fun.connor.lighter.processor.generator.endpoint.ParamBlockGenerator;
+import fun.connor.lighter.processor.generator.endpoint.RequiredParamBlockGenerator;
 import fun.connor.lighter.processor.model.Controller;
 import fun.connor.lighter.processor.model.Endpoint;
 
 import javax.annotation.processing.Filer;
 import javax.lang.model.element.Modifier;
+import javax.lang.model.type.TypeMirror;
 import java.io.IOException;
 import java.lang.reflect.Type;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
+import java.util.function.Function;
 
 public class EndpointRequestResolverGenerator extends AbstractGenerator {
 
@@ -82,8 +85,7 @@ public class EndpointRequestResolverGenerator extends AbstractGenerator {
                 .addParameter(mapStrStr, "pathParams")
                 .addParameter(mapStrStr, "queryParams")
                 .addParameter(Request.class, "request")
-                .addCode(generateRequiredParamBlock("foo",
-                        "pathParams", TypeName.get(Integer.class), "foo"))
+                .addCode(generateParameterMarshalling())
                 .build();
     }
 
@@ -91,21 +93,30 @@ public class EndpointRequestResolverGenerator extends AbstractGenerator {
         return null;
     }
 
-    private CodeBlock generateRequiredParamBlock
-            (String parameterMapName, String parameterMap, TypeName expectedType, String parameterName) {
+    private CodeBlock generateParameterMarshalling() {
+        List<ParamBlockGenerator> paramMarshalBlocks = new ArrayList<>();
 
+        for (Endpoint.EndpointParam reqParam : endpoint.getRequiredParams()) {
+            paramMarshalBlocks.add( new RequiredParamBlockGenerator
+                    (reqParam.getNameInMap(), "pathParams", TypeName.get(reqParam.getType()),
+                            reqParam.getNameOnMethod()));
+        }
 
+        for (Endpoint.EndpointParam optParams : endpoint.getOptionalParams()) {
 
-        String parameterStrName = parameterName + "Str";
-        return CodeBlock.builder()
-                .addStatement("String $L = $L.get($S)", parameterStrName, parameterMap, parameterMapName)
-                .beginControlFlow("if ($L == null)", parameterStrName)
-                    .addStatement("throw new $T($S, $S, $T.class)", TypeMarshalException.class, "bad", "bad", Void.class)
-                .endControlFlow()
-                .addStatement("$L $L = typeMarshaller.marshal($L, $T.class)", expectedType,
-                        parameterName, parameterStrName, expectedType)
-                .build();
+            TypeMirror type = optParams.getType();
+
+            paramMarshalBlocks.add( new RequiredParamBlockGenerator
+                    (optParams.getNameInMap(), "pathParams", TypeName.get(type),
+                            optParams.getNameOnMethod()));
+        }
+
+        return paramMarshalBlocks.stream()
+                .map(ParamBlockGenerator::build)
+                .reduce(CodeBlock.builder().build(), (a, b) -> a.toBuilder().add(b).build());
     }
+
+
 
     private MethodSpec generateConstructor() {
         return MethodSpec.constructorBuilder()

@@ -45,4 +45,8 @@ public class Route {
     public String getTemplateStr() {
         return templateStr;
     }
+
+    public Map<String, String> getParams() {
+        return params;
+    }
 }
