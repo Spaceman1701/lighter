@@ -2,7 +2,9 @@ package fun.connor.lighter.processor.step;
 
 import fun.connor.lighter.processor.error.CompilerError;
 import fun.connor.lighter.processor.generator.ControllerDataContainerGenerator;
+import fun.connor.lighter.processor.generator.EndpointRequestResolverGenerator;
 import fun.connor.lighter.processor.model.Controller;
+import fun.connor.lighter.processor.model.Endpoint;
 import fun.connor.lighter.processor.model.Model;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -40,9 +42,20 @@ public class CodeGenerationStep extends CompilerStep {
                     new ControllerDataContainerGenerator(env.getFiler(), c);
 
             try {
-                containerGenerator.generateCode();
+                containerGenerator.generateCodeFile();
             } catch (IOException e) {
                 errors.add(new CompilerError(null, e.getMessage(), null));
+            }
+
+            for (Endpoint e : c.getEndpoints()) {
+                EndpointRequestResolverGenerator generator =
+                        new EndpointRequestResolverGenerator(c, e, env.getFiler());
+
+                try {
+                    generator.generateCodeFile();
+                } catch (IOException e1) {
+                    errors.add(new CompilerError(null, e1.getMessage(), null));
+                }
             }
         }
 

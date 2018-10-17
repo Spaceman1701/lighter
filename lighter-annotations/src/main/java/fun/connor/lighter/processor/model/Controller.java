@@ -1,6 +1,11 @@
 package fun.connor.lighter.processor.model;
 
+import jdk.internal.dynalink.support.TypeUtilities;
+
+import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.util.Types;
+import java.lang.reflect.Type;
 import java.util.List;
 
 public class Controller {
@@ -35,5 +40,9 @@ public class Controller {
 
     public String getSimpleName() {
         return element.getSimpleName().toString();
+    }
+
+    public TypeElement getElement() {
+        return element;
     }
 }

@@ -18,6 +18,7 @@ public abstract class AbstractGenerator {
 
     protected void writeFile(String packageName, TypeSpec type) throws IOException {
         JavaFile file = JavaFile.builder(packageName, type)
+                .indent("    ")
                 .build();
         file.writeTo(filer);
     }

@@ -48,4 +48,16 @@ public class Endpoint {
             endpointParamTypes.put(name, type);
         }
     }
+
+    public String getMethodName() {
+        return methodElement.getSimpleName().toString();
+    }
+
+    public String pathTemplate() {
+        return fullRoute.getTemplateStr();
+    }
+
+    public Method getHttpMethod() {
+        return httpMethod;
+    }
 }

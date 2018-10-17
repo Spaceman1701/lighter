@@ -41,4 +41,8 @@ public class Route {
     public boolean captures(Route other) {
         return false;
     }
+
+    public String getTemplateStr() {
+        return templateStr;
+    }
 }
