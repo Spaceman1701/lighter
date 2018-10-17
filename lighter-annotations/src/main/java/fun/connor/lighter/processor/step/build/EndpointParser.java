@@ -3,9 +3,8 @@ package fun.connor.lighter.processor.step.build;
 import fun.connor.lighter.declarative.Get;
 import fun.connor.lighter.declarative.Post;
 import fun.connor.lighter.declarative.Put;
-import fun.connor.lighter.declarative.QueryParams;
 import fun.connor.lighter.processor.model.Endpoint;
-import fun.connor.lighter.processor.model.QueryParamsProcessor;
+import fun.connor.lighter.processor.model.QueryParams;
 import fun.connor.lighter.processor.model.Route;
 
 import javax.lang.model.element.ExecutableElement;
@@ -47,10 +46,10 @@ public class EndpointParser {
         Endpoint.Method method = getMethodFromAnnotation(annotationClazz);
 
 
-        QueryParams queryParamsAnnotation = element.getAnnotation(QueryParams.class);
-        QueryParamsProcessor processor = null;
+        fun.connor.lighter.declarative.QueryParams queryParamsAnnotation = element.getAnnotation(fun.connor.lighter.declarative.QueryParams.class);
+        QueryParams processor = null;
         if (queryParamsAnnotation != null) {
-            processor = new QueryParamsProcessor(queryParamsAnnotation.value());
+            processor = new QueryParams(queryParamsAnnotation.value());
         }
 
         return new Endpoint(method, controllerRoute.append(routeFragment), processor, element);

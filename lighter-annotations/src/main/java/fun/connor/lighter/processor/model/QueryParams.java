@@ -3,11 +3,11 @@ package fun.connor.lighter.processor.model;
 import java.util.HashMap;
 import java.util.Map;
 
-public class QueryParamsProcessor {
+public class QueryParams {
 
     private Map<String, String> nameMappings;
 
-    public QueryParamsProcessor(String[] params) {
+    public QueryParams(String[] params) {
         nameMappings = new HashMap<>();
         parseParams(params);
     }

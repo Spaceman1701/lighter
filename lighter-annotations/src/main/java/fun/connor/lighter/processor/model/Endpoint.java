@@ -43,7 +43,7 @@ public class Endpoint {
     private Method httpMethod;
     private Route fullRoute;
 
-    private QueryParamsProcessor queryParams;
+    private QueryParams queryParams;
 
     private ExecutableElement methodElement;
     private TypeMirror returnType;
@@ -51,7 +51,7 @@ public class Endpoint {
 
     public Endpoint
             (Method httpMethod, Route fullRoute,
-             QueryParamsProcessor queryParams, ExecutableElement methodElement) {
+             QueryParams queryParams, ExecutableElement methodElement) {
         this.httpMethod = httpMethod;
         this.fullRoute = fullRoute;
         this.queryParams = queryParams;
