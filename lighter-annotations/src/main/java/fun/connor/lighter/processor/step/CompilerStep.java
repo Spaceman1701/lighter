@@ -1,14 +1,10 @@
 package fun.connor.lighter.processor.step;
 
-import fun.connor.lighter.processor.error.CompilerError;
-
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.RoundEnvironment;
-import javax.lang.model.element.TypeElement;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 public abstract class CompilerStep {
 

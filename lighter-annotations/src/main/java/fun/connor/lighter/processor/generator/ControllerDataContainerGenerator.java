@@ -6,12 +6,8 @@ import fun.connor.lighter.handler.ResourceControllerMetaData;
 import fun.connor.lighter.processor.model.Controller;
 
 import javax.annotation.processing.Filer;
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.Modifier;
-import javax.tools.JavaFileObject;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.Writer;
 
 public class ControllerDataContainerGenerator extends AbstractGenerator {
 
@@ -30,9 +26,7 @@ public class ControllerDataContainerGenerator extends AbstractGenerator {
                 .build();
 
         String packageName = "fun.connor.lighter.generated." + controller.getContainingName();
-        JavaFile file = JavaFile.builder(packageName, type)
-                .build();
 
-        writeFile(file);
+        writeFile(packageName, type);
     }
 }

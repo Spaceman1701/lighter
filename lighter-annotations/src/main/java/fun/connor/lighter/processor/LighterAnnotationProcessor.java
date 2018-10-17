@@ -5,7 +5,10 @@ import fun.connor.lighter.declarative.*;
 import fun.connor.lighter.processor.error.CompilerError;
 import fun.connor.lighter.processor.step.*;
 
-import javax.annotation.processing.*;
+import javax.annotation.processing.AbstractProcessor;
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.annotation.processing.Processor;
+import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic;
