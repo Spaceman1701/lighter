@@ -1,14 +1,9 @@
 package fun.connor.lighter.processor.processors;
 
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.element.Name;
-import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.ExecutableType;
 import javax.lang.model.type.TypeMirror;
-import javax.tools.Diagnostic;
 import java.util.*;
 
 public class Endpoint {
@@ -20,7 +15,7 @@ public class Endpoint {
     private Method httpMethod;
     private Route fullRoute;
 
-    private QueryParams queryParams;
+    private QueryParamsProcessor queryParams;
 
     private ExecutableElement methodElement;
     private TypeMirror returnType;
@@ -28,7 +23,7 @@ public class Endpoint {
 
     public Endpoint
             (Method httpMethod, Route fullRoute,
-             QueryParams queryParams, ExecutableElement methodElement) {
+             QueryParamsProcessor queryParams, ExecutableElement methodElement) {
         this.httpMethod = httpMethod;
         this.fullRoute = fullRoute;
         this.queryParams = queryParams;
