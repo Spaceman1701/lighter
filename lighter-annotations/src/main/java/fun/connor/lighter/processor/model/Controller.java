@@ -26,4 +26,14 @@ public class Controller {
     public String getFullName() {
         return element.getQualifiedName().toString();
     }
+
+    public String getContainingName() {
+        String fullName = getFullName();
+        int finalDotIndex = fullName.lastIndexOf('.');
+        return fullName.substring(0, finalDotIndex);
+    }
+
+    public String getSimpleName() {
+        return element.getSimpleName().toString();
+    }
 }

@@ -27,6 +27,7 @@ public class LighterAnnotationProcessor extends AbstractProcessor {
         steps.add(new ValidationStep(env));
         steps.add(new BuildModelStep(env));
         steps.add(new ValidateModelStep(env));
+        steps.add(new CodeGenerationStep(env));
     }
 
     @Override
