@@ -17,9 +17,6 @@ public class Endpoint {
         GET, POST, PUT, DELETE
     }
 
-    private ProcessingEnvironment env;
-    private RoundEnvironment roundEnv;
-
     private Method httpMethod;
     private Route fullRoute;
 
@@ -31,14 +28,11 @@ public class Endpoint {
 
     public Endpoint
             (Method httpMethod, Route fullRoute,
-             QueryParams queryParams, ExecutableElement methodElement,
-             ProcessingEnvironment env, RoundEnvironment roundEnv) {
+             QueryParams queryParams, ExecutableElement methodElement) {
         this.httpMethod = httpMethod;
         this.fullRoute = fullRoute;
         this.queryParams = queryParams;
         this.methodElement = methodElement;
-        this.env = env;
-        this.roundEnv = roundEnv;
 
         endpointParamTypes = new HashMap<>();
         extractMethodParams();
@@ -55,8 +49,6 @@ public class Endpoint {
             String name = parameterVars.get(i).getSimpleName().toString();
             TypeMirror type = parameterTypes.get(i);
             endpointParamTypes.put(name, type);
-            env.getMessager().printMessage(Diagnostic.Kind.NOTE,
-                    "found method param " + name + ": " + type.toString());
         }
     }
 }

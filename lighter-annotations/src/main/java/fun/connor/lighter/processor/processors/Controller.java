@@ -8,17 +8,12 @@ import java.util.List;
 
 public class Controller {
 
-    private ProcessingEnvironment env;
-    private RoundEnvironment roundEnv;
-
     private TypeElement element;
 
     private List<Endpoint> endpoints;
 
-    public Controller(ProcessingEnvironment env, RoundEnvironment roundEnv, TypeElement element) {
-        this.env = env;
-        this.roundEnv = roundEnv;
+    public Controller(TypeElement element, List<Endpoint> endpoints) {
         this.element = element;
-        endpoints = new ArrayList<>();
+        this.endpoints = endpoints;
     }
 }

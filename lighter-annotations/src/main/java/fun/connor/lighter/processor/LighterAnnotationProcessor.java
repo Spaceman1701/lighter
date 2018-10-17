@@ -4,7 +4,9 @@ import com.google.auto.service.AutoService;
 import fun.connor.lighter.declarative.*;
 import fun.connor.lighter.processor.error.CompilerError;
 import fun.connor.lighter.processor.processors.Controller;
+import fun.connor.lighter.processor.step.BuildModelStep;
 import fun.connor.lighter.processor.step.CompilerStep;
+import fun.connor.lighter.processor.step.StepResult;
 import fun.connor.lighter.processor.step.ValidationStep;
 import fun.connor.lighter.processor.validators.*;
 
@@ -22,96 +24,42 @@ import java.util.*;
 public class LighterAnnotationProcessor extends AbstractProcessor {
 
 
-    private AnnotationValidatorDatabase annotationValidators;
 
     private List<CompilerStep> steps;
 
     @Override
     public void init(ProcessingEnvironment env) {
         super.init(env);
-        annotationValidators = new AnnotationValidatorDatabase();
-        annotationValidators.registerValidator(ResourceController.class, new ResourceControllerValidator());
-        annotationValidators.registerValidator(QueryParams.class, new QueryParamsValidator(env));
-        annotationValidators.registerValidator(Body.class, new BodyValidator());
-
-        annotationValidators.registerValidator(Get.class, new EndpointAnnotationValidator(env));
-        annotationValidators.registerValidator(Delete.class, new EndpointAnnotationValidator(env));
-        annotationValidators.registerValidator(Post.class, new EndpointAnnotationValidator(env));
-        annotationValidators.registerValidator(Put.class, new EndpointAnnotationValidator(env));
-
         steps = new ArrayList<>();
 
         steps.add(new ValidationStep(env));
+        steps.add(new BuildModelStep(env));
     }
 
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
         Map<String, Object> stepEnv = new HashMap<>();
-//        Map<String, Set<? extends Element>> elementsByAnnotation = new HashMap<>();
-//
-//        for (TypeElement annotation : annotations) {
-//            String annotationName = annotation.getQualifiedName().toString();
-//            Set<? extends Element> elements = roundEnv.getElementsAnnotatedWith(annotation);
-//            elementsByAnnotation.put(annotationName, elements);
-//        }
 
         stepEnv.put("annotations", annotations);
 
         for (CompilerStep step : steps) {
             step.validateEnv(stepEnv);
-            Set<CompilerError> stepErrors = step.process(roundEnv);
-            if (!stepErrors.isEmpty()) {
-                for (CompilerError error : stepErrors) {
+            StepResult result = step.process(roundEnv);
+
+            if (!result.getErrors().isEmpty()) {
+                for (CompilerError error : result.getErrors()) {
                     processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, error.toString());
                 }
                 return true;
             }
+
+            if (result.hasResult()) {
+                stepEnv.put(result.getResultName(), result.getResult());
+            }
         }
-
-
-//        Set<CompilerError> validationErrors = validateAnnotationSet(elementsByAnnotation);
-//        if (!validationErrors.isEmpty()) {
-//            for (CompilerError error : validationErrors) {
-//                processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, error.toString());
-//            }
-//            return true;
-//        }
-
 
 
         return false;
-    }
-
-    private Set<CompilerError> parseAnnotations(RoundEnvironment roundEnv) {
-        TypeElement responseType =
-                processingEnv.getElementUtils().getTypeElement(ResourceController.class.getCanonicalName());
-
-        Set<? extends Element> controllerElements = roundEnv.getElementsAnnotatedWith(responseType);
-
-        Set<Controller> controllers = new HashSet<>();
-
-        for (Element e : controllerElements) {
-            TypeElement type = (TypeElement) controllerElements;
-            Controller controller = new Controller(processingEnv, roundEnv, type);
-            controllers.add(controller);
-        }
-
-        return null;
-    }
-
-    private Set<CompilerError> validateAnnotationSet
-            (Map<String, Set<? extends Element>> elementsByAnnotation) {
-        Set<CompilerError> errors  = new HashSet<>();
-        for (Map.Entry<String, Set<? extends Element>> entry : elementsByAnnotation.entrySet()) {
-            for (Element element : entry.getValue()) {
-                try {
-                    annotationValidators.getInstance(entry.getKey()).validate(element);
-                } catch (Exception e) { //some other, unhandled error occurred. Print what we can and die
-                    errors.add(new CompilerError(element, e.getMessage(), entry.getKey()));
-                }
-            }
-        }
-        return errors;
     }
 
     @Override

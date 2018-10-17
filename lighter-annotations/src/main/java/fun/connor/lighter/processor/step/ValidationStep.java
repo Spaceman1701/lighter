@@ -47,7 +47,7 @@ public class ValidationStep extends CompilerStep {
     }
 
     @Override
-    public Set<CompilerError> process(RoundEnvironment roundEnv) {
+    public StepResult process(RoundEnvironment roundEnv) {
 
         Map<String, Set<? extends Element>> elementsByAnnotation = new HashMap<>();
 
@@ -67,6 +67,6 @@ public class ValidationStep extends CompilerStep {
                 }
             }
         }
-        return errors;
+        return new StepResult(errors);
     }
 }

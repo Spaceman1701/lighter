@@ -26,7 +26,7 @@ public abstract class CompilerStep {
         }
     }
 
-    public CompilerStep(ProcessingEnvironment env) {
+    protected CompilerStep(ProcessingEnvironment env) {
         this.env = env;
     }
 
@@ -48,5 +48,5 @@ public abstract class CompilerStep {
 
     public abstract Set<EnvironmentRequirement> getRequiredEnv();
 
-    public abstract Set<CompilerError> process(RoundEnvironment roundEnv);
+    public abstract StepResult process(RoundEnvironment roundEnv);
 }
