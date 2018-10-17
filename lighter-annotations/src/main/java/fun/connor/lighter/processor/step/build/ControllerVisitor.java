@@ -8,6 +8,7 @@ import javax.lang.model.type.*;
 import javax.lang.model.util.AbstractElementVisitor8;
 import javax.lang.model.util.AbstractTypeVisitor8;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -25,6 +26,7 @@ public class ControllerVisitor extends AbstractElementVisitor8<Controller, Void>
         List<Endpoint> endpoints = typeElement.getEnclosedElements().stream()
                 .map((Element e) -> e.accept(new EndpointVisitor(), null))
                 .filter(Objects::nonNull)
+                .flatMap(Collection::stream)
                 .collect(Collectors.toList());
 
         return new Controller(typeElement, endpoints);
