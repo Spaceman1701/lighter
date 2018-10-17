@@ -39,20 +39,11 @@ public class BuildModelStep extends CompilerStep {
 
         for (Element e : controllerElements) {
             TypeElement type = (TypeElement) e;
-            buildEndpoints(type);
-            Controller controller = new Controller(env, roundEnv, type);
-            controllers.add(controller);
+            controllers.add(type.accept(new ControllerVisitor(), null));
         }
 
 
         return new StepResult(new HashSet<>());
     }
 
-    private List<Endpoint> buildEndpoints(TypeElement controllerElement) {
-        List<? extends Element> innerElements = controllerElement.getEnclosedElements();
-
-        controllerElement.accept(new ControllerVisitor(), null);
-
-        return null;
-    }
 }
