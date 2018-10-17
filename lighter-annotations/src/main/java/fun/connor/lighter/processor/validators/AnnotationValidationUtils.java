@@ -13,7 +13,8 @@ public class AnnotationValidationUtils {
     private static final Class[] ENDPOINT_ANNOTATIONS =
             {Get.class, Delete.class, Post.class, Put.class};
 
-    private AnnotationValidationUtils() {}
+    private AnnotationValidationUtils() {
+    }
 
     @SuppressWarnings("unchecked") //TODO: see other ENDPOINT_ANNOTATIONS notes
     static boolean hasEndpointAnnotation(Element element) {

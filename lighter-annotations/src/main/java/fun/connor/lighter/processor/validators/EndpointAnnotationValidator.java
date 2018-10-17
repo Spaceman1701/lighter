@@ -36,7 +36,7 @@ public class EndpointAnnotationValidator implements AnnotationValidator {
         TypeMirror returnTypeMirror = method.getReturnType();
 
         TypeElement responseType = environment.getElementUtils().getTypeElement(Response.class.getCanonicalName());
-        TypeElement returnType = (TypeElement)environment.getTypeUtils().asElement(returnTypeMirror);
+        TypeElement returnType = (TypeElement) environment.getTypeUtils().asElement(returnTypeMirror);
 
         if (responseType.getQualifiedName() != returnType.getQualifiedName()) {
             throw new IllegalArgumentException("return type is " + returnType.getQualifiedName() +

@@ -15,7 +15,7 @@ public class Route {
     public Route(String templateStr) {
         this.templateStr = templateStr;
         this.params = new HashMap<>();
-        this.parts  = new ArrayList<>();
+        this.parts = new ArrayList<>();
     }
 
     private Route(List<RoutePart> parts) {
@@ -34,6 +34,7 @@ public class Route {
     /**
      * Check if this route captures all cases of another
      * route at an equal level of specificity
+     *
      * @param other the other route
      * @return true iff no precedence can be resolved between the two routes
      */

@@ -13,18 +13,17 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;
 
-public class ControllerDataContainerGenerator {
+public class ControllerDataContainerGenerator extends AbstractGenerator {
 
 
     private Controller controller;
-    private Filer filer;
 
     public ControllerDataContainerGenerator(Filer filer, Controller controller) {
+        super(filer);
         this.controller = controller;
-        this.filer = filer;
     }
 
-    public void generateCode() throws IOException {
+    public void generateCodeFile() throws IOException {
         TypeSpec type = TypeSpec.classBuilder(controller.getSimpleName() + "MetaData")
                 .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
                 .addSuperinterface(ResourceControllerMetaData.class)
@@ -34,6 +33,6 @@ public class ControllerDataContainerGenerator {
         JavaFile file = JavaFile.builder(packageName, type)
                 .build();
 
-        file.writeTo(filer);
+        writeFile(file);
     }
 }

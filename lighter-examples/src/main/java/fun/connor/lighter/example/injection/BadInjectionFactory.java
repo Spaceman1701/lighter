@@ -1,4 +1,4 @@
 package fun.connor.lighter.example.injection;
 
-public class BadInjectionFactory  {
+public class BadInjectionFactory {
 }

@@ -16,7 +16,6 @@ import java.util.*;
 public class LighterAnnotationProcessor extends AbstractProcessor {
 
 
-
     private List<CompilerStep> steps;
 
     @Override

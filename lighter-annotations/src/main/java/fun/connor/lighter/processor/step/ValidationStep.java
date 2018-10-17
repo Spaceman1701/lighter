@@ -32,7 +32,8 @@ public class ValidationStep extends CompilerStep {
         annotationValidators.registerValidator(Put.class, new EndpointAnnotationValidator(env));
     }
 
-    @Override @SuppressWarnings("unchecked") //TODO: resolve generic type issues
+    @Override
+    @SuppressWarnings("unchecked") //TODO: resolve generic type issues
     public Set<EnvironmentRequirement> getRequiredEnv() {
         EnvironmentRequirement annotationsReq =
                 new EnvironmentRequirement<>("annotations", Set.class, this::setAnnotations);
@@ -56,7 +57,7 @@ public class ValidationStep extends CompilerStep {
             elementsByAnnotation.put(annotationName, elements);
         }
 
-        Set<CompilerError> errors  = new HashSet<>();
+        Set<CompilerError> errors = new HashSet<>();
         for (Map.Entry<String, Set<? extends Element>> entry : elementsByAnnotation.entrySet()) {
             for (Element element : entry.getValue()) {
                 try {

@@ -8,7 +8,7 @@ import java.util.Deque;
 import java.util.HashMap;
 import java.util.Map;
 
-public class UndertowHttpHandler implements HttpHandler{
+public class UndertowHttpHandler implements HttpHandler {
 
     private LighterRequestResolver resolver;
 

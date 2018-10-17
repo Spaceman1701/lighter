@@ -32,7 +32,8 @@ public class FoobarHandler {
         return resp.build();
     }
 
-    @Get @Post
+    @Get
+    @Post
     public Response<Foobar> createFoobar(@Body Foobar foobar) {
 
         return null;
