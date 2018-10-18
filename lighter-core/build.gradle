@@ -1,4 +1,4 @@
-group 'org.connor.fun'
+group 'connor.fun'
 version '0.1-SNAPSHOT'
 
 apply plugin: 'java'
