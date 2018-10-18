@@ -14,4 +14,8 @@ public class Lighter {
     public void addRouter(RouteConfiguration router) {
 
     }
+
+    public void start() {
+
+    }
 }

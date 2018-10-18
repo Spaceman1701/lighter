@@ -1,12 +1,15 @@
-group 'connor.fun'
+group 'fun.connor'
 version '0.1-SNAPSHOT'
 
 apply plugin: 'java'
+apply plugin: 'maven'
+
 
 sourceCompatibility = 1.8
 
 repositories {
     mavenCentral()
+    mavenLocal()
 }
 
 dependencies {
