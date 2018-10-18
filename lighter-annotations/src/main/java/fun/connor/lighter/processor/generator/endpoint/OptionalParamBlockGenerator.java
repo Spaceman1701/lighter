@@ -2,7 +2,6 @@ package fun.connor.lighter.processor.generator.endpoint;
 
 import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.TypeName;
-import fun.connor.lighter.handler.TypeMarshalException;
 
 public class OptionalParamBlockGenerator extends ParamBlockGenerator {
 

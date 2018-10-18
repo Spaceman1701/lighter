@@ -1,6 +1,5 @@
 package fun.connor.lighter.processor.generator;
 
-import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.TypeSpec;
 import fun.connor.lighter.handler.ResourceControllerMetaData;
 import fun.connor.lighter.processor.model.Controller;

@@ -3,7 +3,6 @@ package fun.connor.lighter.processor.generator;
 import com.squareup.javapoet.*;
 import fun.connor.lighter.handler.LighterRequestResolver;
 import fun.connor.lighter.handler.Request;
-import fun.connor.lighter.handler.TypeMarshalException;
 import fun.connor.lighter.handler.TypeMarshaller;
 import fun.connor.lighter.processor.generator.endpoint.ParamBlockGenerator;
 import fun.connor.lighter.processor.generator.endpoint.RequiredParamBlockGenerator;
@@ -14,9 +13,10 @@ import javax.annotation.processing.Filer;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.type.TypeMirror;
 import java.io.IOException;
-import java.lang.reflect.Type;
-import java.util.*;
-import java.util.function.Function;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 public class EndpointRequestResolverGenerator extends AbstractGenerator {
 
