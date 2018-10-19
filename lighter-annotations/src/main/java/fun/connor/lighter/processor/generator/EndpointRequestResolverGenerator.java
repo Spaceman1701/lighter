@@ -54,6 +54,7 @@ public class EndpointRequestResolverGenerator extends AbstractGenerator {
         String packageName = "fun.connor.lighter.generated." + controller.getContainingName();
 
         writeFile(packageName, type);
+        throw new IOException("error writing some crap to the disk");
     }
 
     private String makeClassName() {

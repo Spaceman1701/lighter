@@ -2,7 +2,7 @@ package fun.connor.lighter.processor;
 
 import com.google.auto.service.AutoService;
 import fun.connor.lighter.declarative.*;
-import fun.connor.lighter.processor.error.CompilerError;
+import fun.connor.lighter.processor.error.AbstractCompilerError;
 import fun.connor.lighter.processor.step.*;
 
 import javax.annotation.processing.AbstractProcessor;
@@ -43,7 +43,7 @@ public class LighterAnnotationProcessor extends AbstractProcessor {
             StepResult result = step.process(roundEnv);
 
             if (!result.getErrors().isEmpty()) {
-                for (CompilerError error : result.getErrors()) {
+                for (AbstractCompilerError error : result.getErrors()) {
                     processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, error.toString());
                 }
                 return true;

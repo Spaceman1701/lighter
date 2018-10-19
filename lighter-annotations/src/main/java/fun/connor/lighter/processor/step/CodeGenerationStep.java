@@ -1,6 +1,8 @@
 package fun.connor.lighter.processor.step;
 
-import fun.connor.lighter.processor.error.CompilerError;
+import fun.connor.lighter.processor.error.AbstractCompilerError;
+import fun.connor.lighter.processor.error.AnnotationValidationError;
+import fun.connor.lighter.processor.error.CodeGenerationError;
 import fun.connor.lighter.processor.generator.ControllerDataContainerGenerator;
 import fun.connor.lighter.processor.generator.EndpointRequestResolverGenerator;
 import fun.connor.lighter.processor.model.Controller;
@@ -36,7 +38,7 @@ public class CodeGenerationStep extends CompilerStep {
 
     @Override
     public StepResult process(RoundEnvironment roundEnv) {
-        Set<CompilerError> errors = new HashSet<>();
+        Set<AbstractCompilerError> errors = new HashSet<>();
         for (Controller c : model.getControllers()) {
             ControllerDataContainerGenerator containerGenerator =
                     new ControllerDataContainerGenerator(env.getFiler(), c);
@@ -44,7 +46,7 @@ public class CodeGenerationStep extends CompilerStep {
             try {
                 containerGenerator.generateCodeFile();
             } catch (IOException e) {
-                errors.add(new CompilerError(null, e.getMessage(), null));
+                errors.add(new CodeGenerationError(c.getElement(), e.getMessage()));
             }
 
             for (Endpoint e : c.getEndpoints()) {
@@ -54,7 +56,7 @@ public class CodeGenerationStep extends CompilerStep {
                 try {
                     generator.generateCodeFile();
                 } catch (IOException e1) {
-                    errors.add(new CompilerError(null, e1.getMessage(), null));
+                    errors.add(new CodeGenerationError(e.getMethodElement(), e1.getMessage()));
                 }
             }
         }

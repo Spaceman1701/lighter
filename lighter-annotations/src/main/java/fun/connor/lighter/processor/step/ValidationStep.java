@@ -1,7 +1,8 @@
 package fun.connor.lighter.processor.step;
 
 import fun.connor.lighter.declarative.*;
-import fun.connor.lighter.processor.error.CompilerError;
+import fun.connor.lighter.processor.error.AbstractCompilerError;
+import fun.connor.lighter.processor.error.AnnotationValidationError;
 import fun.connor.lighter.processor.validators.*;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -57,13 +58,13 @@ public class ValidationStep extends CompilerStep {
             elementsByAnnotation.put(annotationName, elements);
         }
 
-        Set<CompilerError> errors = new HashSet<>();
+        Set<AbstractCompilerError> errors = new HashSet<>();
         for (Map.Entry<String, Set<? extends Element>> entry : elementsByAnnotation.entrySet()) {
             for (Element element : entry.getValue()) {
                 try {
                     annotationValidators.getInstance(entry.getKey()).validate(element);
                 } catch (Exception e) { //some other, unhandled error occurred. Print what we can and die
-                    errors.add(new CompilerError(element, e.getMessage(), entry.getKey()));
+                    errors.add(new AnnotationValidationError(element, e.getMessage(), entry.getKey()));
                 }
             }
         }

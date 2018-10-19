@@ -1,25 +1,25 @@
 package fun.connor.lighter.processor.step;
 
-import fun.connor.lighter.processor.error.CompilerError;
+import fun.connor.lighter.processor.error.AbstractCompilerError;
 
 import java.util.Set;
 
 public class StepResult {
-    private final Set<CompilerError> errors;
+    private final Set<AbstractCompilerError> errors;
     private final String resultName;
     private final Object result;
 
-    StepResult(Set<CompilerError> errors, String resultName, Object result) {
+    StepResult(Set<AbstractCompilerError> errors, String resultName, Object result) {
         this.errors = errors;
         this.resultName = resultName;
         this.result = result;
     }
 
-    StepResult(Set<CompilerError> errors) {
+    StepResult(Set<AbstractCompilerError> errors) {
         this(errors, null, null);
     }
 
-    public Set<CompilerError> getErrors() {
+    public Set<AbstractCompilerError> getErrors() {
         return errors;
     }
 

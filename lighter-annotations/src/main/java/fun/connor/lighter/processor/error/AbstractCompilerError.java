@@ -3,23 +3,10 @@ package fun.connor.lighter.processor.error;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 
-public class CompilerError {
+public abstract class AbstractCompilerError {
 
-    private String detail;
-    private Element target;
-    private String annotationName;
-
-    public CompilerError(Element target, String detail, String annotationName) {
-        this.detail = detail;
-        if (detail == null) {
-            this.detail = "unknown error";
-        }
-        this.target = target;
-        this.annotationName = annotationName;
-    }
-
-    private String getDetailedElementName(Element e) {
-        switch (target.getKind()) {
+    protected String getDetailedElementName(Element e) {
+        switch (e.getKind()) {
             case CLASS:
                 return makeClassName(e);
             case METHOD:
@@ -32,8 +19,9 @@ public class CompilerError {
     }
 
     public String getDetailedTargetName() {
-        return getDetailedElementName(target);
+        return getDetailedElementName(getTarget());
     }
+
 
     private String makeOtherName(Element e) {
         return e.getSimpleName().toString(); //TODO: improve this
@@ -57,23 +45,24 @@ public class CompilerError {
     }
 
     @Override
+    public abstract String toString(); //force subclasses to implement
+
+    public abstract Element getTarget();
+
+    public abstract String getDetail();
+
+    @Override
     public boolean equals(Object other) {
         if (other != null && other.getClass() == this.getClass()) {
-            CompilerError otherError = (CompilerError) other;
+            AnnotationValidationError otherError = (AnnotationValidationError) other;
             return otherError.getDetailedTargetName().equals(getDetailedTargetName())
-                    && otherError.detail.equals(detail);
+                    && otherError.getDetail().equals(getDetail());
         }
         return false;
     }
 
     @Override
     public int hashCode() {
-        return getDetailedTargetName().hashCode() + detail.hashCode();
-    }
-
-    @Override
-    public String toString() {
-        return "At " + getDetailedTargetName() +
-                " (annotated with" + annotationName + "): " + detail;
+        return getDetailedTargetName().hashCode() + getDetail().hashCode();
     }
 }
