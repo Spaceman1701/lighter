@@ -4,6 +4,7 @@ import com.squareup.javapoet.*;
 import fun.connor.lighter.handler.LighterRequestResolver;
 import fun.connor.lighter.handler.Request;
 import fun.connor.lighter.handler.TypeMarshaller;
+import fun.connor.lighter.processor.generator.endpoint.OptionalParamBlockGenerator;
 import fun.connor.lighter.processor.generator.endpoint.ParamBlockGenerator;
 import fun.connor.lighter.processor.generator.endpoint.RequiredParamBlockGenerator;
 import fun.connor.lighter.processor.model.Controller;
@@ -106,7 +107,7 @@ public class EndpointRequestResolverGenerator extends AbstractGenerator {
 
             TypeMirror type = optParams.getType();
 
-            paramMarshalBlocks.add( new RequiredParamBlockGenerator
+            paramMarshalBlocks.add( new OptionalParamBlockGenerator
                     (optParams.getNameInMap(), "pathParams", TypeName.get(type),
                             optParams.getNameOnMethod()));
         }

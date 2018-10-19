@@ -17,10 +17,10 @@ public class OptionalParamBlockGenerator extends ParamBlockGenerator {
                 .addStatement("String $L = $L.get($S)", parameterStrName, parameterMapName, parameterNameInMap)
                 .addStatement("$T $L", expectedType, parameterName)
                 .beginControlFlow("if ($L == null)", parameterStrName)
-                    .addStatement("$L = null")
+                    .addStatement("$L = null", parameterName)
                 .endControlFlow()
                 .beginControlFlow("else")
-                    .addStatement("$L = typeMarshaller.marshal($L, $T.class)", expectedType,
+                    .addStatement("$L = typeMarshaller.marshal($L, $T.class)",
                             parameterName, parameterStrName, expectedType)
                 .endControlFlow()
                 .build();
