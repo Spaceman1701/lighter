@@ -8,6 +8,8 @@ import java.io.IOException;
 
 public abstract class AbstractGenerator {
 
+    public static final String GENERATED_PACKAGE_NAME = "fun.connor.lighter.generated";
+
     private Filer filer;
 
     protected AbstractGenerator(Filer filer) {

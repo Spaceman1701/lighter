@@ -1,6 +1,7 @@
 package fun.connor.lighter.processor.model;
 
 import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.Name;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.ExecutableType;
 import javax.lang.model.type.TypeMirror;
@@ -8,6 +9,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class Endpoint {
 
@@ -114,5 +117,16 @@ public class Endpoint {
 
     public ExecutableElement getMethodElement() {
         return methodElement;
+    }
+
+    public TypeMirror getReturnType() {
+        return returnType;
+    }
+
+    public List<String> getMethodArgs() {
+        return methodElement.getParameters().stream()
+                .map(VariableElement::getSimpleName)
+                .map(Name::toString)
+                .collect(Collectors.toList());
     }
 }

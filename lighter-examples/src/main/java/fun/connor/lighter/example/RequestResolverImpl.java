@@ -5,6 +5,7 @@ import fun.connor.lighter.example.handlers.FoobarHandler;
 import fun.connor.lighter.handler.LighterRequestResolver;
 import fun.connor.lighter.handler.Request;
 import fun.connor.lighter.handler.RequestContext;
+import fun.connor.lighter.handler.Response;
 
 import java.util.Map;
 
@@ -35,7 +36,8 @@ public class RequestResolverImpl implements LighterRequestResolver {
 
         RequestContext<Foobar> context = new RequestContext<>(request);
 
-        handler.getFoobarByName(name, count, context);
+        Response<Foobar<Integer>> response = handler.getFoobarByName(name, count, null);
+
 
     }
 }

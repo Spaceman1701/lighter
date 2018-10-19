@@ -20,11 +20,11 @@ public class FoobarHandler {
 
     @Get("/{name:name}")
     @QueryParams({"count:count"})
-    public Response<Foobar> getFoobarByName(String name, Integer count, RequestContext<Foobar> context) {
+    public Response<Foobar<Integer>> getFoobarByName(String name, Integer count, RequestContext<Foobar<Integer>> context) {
 
-        Foobar foobar = repository.getByName(name);
+        Foobar<Integer> foobar = repository.getByName(name);
 
-        ResponseBuilder<Foobar> resp = context.getResponseBuilder();
+        ResponseBuilder<Foobar<Integer>> resp = context.getResponseBuilder();
         resp.status(200);
         resp.content(foobar);
         resp.putHeader("This-Is-A-HTTP-Header", "wwwwoooww");
