@@ -1,7 +1,6 @@
 package fun.connor.lighter.processor.step;
 
 import fun.connor.lighter.processor.error.AbstractCompilerError;
-import fun.connor.lighter.processor.error.AnnotationValidationError;
 import fun.connor.lighter.processor.error.CodeGenerationError;
 import fun.connor.lighter.processor.generator.ControllerDataContainerGenerator;
 import fun.connor.lighter.processor.generator.EndpointRequestResolverGenerator;

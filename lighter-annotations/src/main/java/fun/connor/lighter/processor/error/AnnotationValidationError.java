@@ -1,7 +1,6 @@
 package fun.connor.lighter.processor.error;
 
 import javax.lang.model.element.Element;
-import javax.lang.model.element.TypeElement;
 
 public class AnnotationValidationError extends AbstractCompilerError {
 
