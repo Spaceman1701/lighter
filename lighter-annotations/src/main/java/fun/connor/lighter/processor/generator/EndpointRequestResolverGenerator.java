@@ -90,6 +90,7 @@ public class EndpointRequestResolverGenerator extends AbstractGenerator {
         TypeName returnTypeParameter = getMethodTypeParameter();
 
         return MethodSpec.methodBuilder(RESOLVE_METHOD_NAME)
+                .returns(TypeName.get(endpoint.getReturnType()))
                 .addModifiers(Modifier.PUBLIC)
                 .addParameter(mapStrStr, PATH_PARAMS_NAME)
                 .addParameter(mapStrStr, QUERY_PARAMS_NAME)
@@ -113,6 +114,7 @@ public class EndpointRequestResolverGenerator extends AbstractGenerator {
                 .addStatement("$T<$T> context = new $T<>(request)", RequestContext.class, getMethodTypeParameter(), RequestContext.class)
                 .addStatement("$T<$T> response = $L.$L($L)", Response.class,
                         getMethodTypeParameter(), "controller", methodName, String.join(",", parameters))
+                .addStatement("return response")
                 .build();
     }
 

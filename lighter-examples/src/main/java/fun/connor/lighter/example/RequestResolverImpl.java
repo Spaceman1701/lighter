@@ -14,7 +14,7 @@ public class RequestResolverImpl implements LighterRequestResolver {
     private FoobarHandler handler;
 
     @Override
-    public void resolve(Map<String, String> pathParams, Map<String, String> queryParams, Request request) {
+    public Response<?> resolve(Map<String, String> pathParams, Map<String, String> queryParams, Request request) {
 
 
         String name = pathParams.get("name");
@@ -38,6 +38,6 @@ public class RequestResolverImpl implements LighterRequestResolver {
 
         Response<Foobar<Integer>> response = handler.getFoobarByName(name, count, null);
 
-
+        return response;
     }
 }
