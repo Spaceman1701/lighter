@@ -2,6 +2,7 @@ package fun.connor.lighter.processor.generator;
 
 import com.squareup.javapoet.*;
 import fun.connor.lighter.handler.*;
+import fun.connor.lighter.injection.InjectionObjectFactory;
 import fun.connor.lighter.processor.generator.endpoint.OptionalParamBlockGenerator;
 import fun.connor.lighter.processor.generator.endpoint.ParamBlockGenerator;
 import fun.connor.lighter.processor.generator.endpoint.RequiredParamBlockGenerator;
@@ -145,10 +146,10 @@ public class EndpointRequestResolverGenerator extends AbstractGenerator {
 
     private MethodSpec generateConstructor() {
         return MethodSpec.constructorBuilder()
-                .addParameter(controllerTypeName, CONTROLLER_NAME)
+                .addParameter(InjectionObjectFactory.class, "genericFactory")
                 .addParameter(TypeMarshaller.class, TYPE_MARSHALLER_NAME)
-                .addCode("this.$L = $L;", CONTROLLER_NAME, CONTROLLER_NAME)
-                .addCode("this.$L = $L;", TYPE_MARSHALLER_NAME, TYPE_MARSHALLER_NAME)
+                .addStatement("this.$L = genericFactory.newInstance($T.class);", CONTROLLER_NAME, controllerTypeName)
+                .addStatement("this.$L = $L;", TYPE_MARSHALLER_NAME, TYPE_MARSHALLER_NAME)
                 .build();
     }
 

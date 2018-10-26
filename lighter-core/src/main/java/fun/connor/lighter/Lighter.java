@@ -15,6 +15,7 @@ public class Lighter {
 
     }
 
+
     public void start() {
 
     }
