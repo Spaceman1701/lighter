@@ -9,7 +9,7 @@ import fun.connor.lighter.example.modules.ExampleModule;
 public class Main {
 
     public static void main(String[] args) {
-
+        long startTime = System.currentTimeMillis();
         Injector injector = Guice.createInjector(new ExampleModule());
 
         Lighter l = new Lighter(injector::getInstance);

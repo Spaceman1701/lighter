@@ -30,6 +30,9 @@ public class Lighter {
             UndertowHttpHandler undertowHttpHandler = new UndertowHttpHandler(resolver);
             routingHandler.add(route.getMethod(), route.getTemplate(), undertowHttpHandler);
         }
+
+        undertowBuilder.addHttpListener(8080, "0.0.0.0")
+                .setHandler(routingHandler);
     }
 
 
