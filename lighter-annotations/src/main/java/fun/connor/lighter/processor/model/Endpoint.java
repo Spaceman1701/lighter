@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class Endpoint {
@@ -128,5 +127,9 @@ public class Endpoint {
                 .map(VariableElement::getSimpleName)
                 .map(Name::toString)
                 .collect(Collectors.toList());
+    }
+
+    public String getSimplePathTemplate() {
+        return fullRoute.getTemplateWithSimpleNames();
     }
 }

@@ -1,8 +1,6 @@
 package fun.connor.lighter.autoconfig;
 
 
-import fun.connor.lighter.handler.LighterRequestResolver;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +12,7 @@ public class LighterRouter {
         routes = new ArrayList<>();
     }
 
-    public void addRoute(String method, String template, LighterRequestResolver resolver) {
+    public void addRoute(String method, String template, ResolverFactory resolver) {
         routes.add(new Route(method, template, resolver));
     }
 

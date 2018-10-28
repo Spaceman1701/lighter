@@ -6,7 +6,6 @@ import fun.connor.lighter.processor.model.Controller;
 
 import javax.annotation.processing.Filer;
 import javax.lang.model.element.Modifier;
-import java.io.IOException;
 
 public class ControllerDataContainerGenerator extends AbstractGenerator {
 
@@ -18,14 +17,16 @@ public class ControllerDataContainerGenerator extends AbstractGenerator {
         this.controller = controller;
     }
 
-    public void generateCodeFile() throws IOException {
-        TypeSpec type = TypeSpec.classBuilder(controller.getSimpleName() + "MetaData")
+    @Override
+    public TypeSpec generateType() {
+        return TypeSpec.classBuilder(controller.getSimpleName() + "MetaData")
                 .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
                 .addSuperinterface(ResourceControllerMetaData.class)
                 .build();
+    }
 
-        String packageName = "fun.connor.lighter.generated." + controller.getContainingName();
-
-        writeFile(packageName, type);
+    @Override
+    protected String getGeneratedPackageName() {
+        return "fun.connor.lighter.generated." + controller.getContainingName();
     }
 }

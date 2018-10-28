@@ -16,12 +16,20 @@ public abstract class AbstractGenerator {
         this.filer = filer;
     }
 
-    public abstract void generateCodeFile() throws IOException;
+    public GeneratedType generateCodeFile() throws IOException {
+        TypeSpec spec = generateType();
+        String packageName = getGeneratedPackageName();
+        writeFile(packageName, spec);
+        return new GeneratedType(packageName, spec.name);
+    }
 
-    protected void writeFile(String packageName, TypeSpec type) throws IOException {
+    private void writeFile(String packageName, TypeSpec type) throws IOException {
         JavaFile file = JavaFile.builder(packageName, type)
                 .indent("    ")
                 .build();
         file.writeTo(filer);
     }
+
+    protected abstract TypeSpec generateType();
+    protected abstract String getGeneratedPackageName();
 }

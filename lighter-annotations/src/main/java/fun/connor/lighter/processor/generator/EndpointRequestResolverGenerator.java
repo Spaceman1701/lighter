@@ -13,7 +13,6 @@ import javax.annotation.processing.Filer;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -44,13 +43,13 @@ public class EndpointRequestResolverGenerator extends AbstractGenerator {
 
 
     @Override
-    public void generateCodeFile() throws IOException {
+    protected TypeSpec generateType() {
         FieldSpec controllerField = generateControllerField();
         FieldSpec unmarshallerField = generateUnmarshallerField();
         MethodSpec constructor = generateConstructor();
         MethodSpec resolveMethod = generateResolveMethod();
 
-        TypeSpec type = TypeSpec.classBuilder(makeClassName())
+        return TypeSpec.classBuilder(makeClassName())
                 .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
                 .addSuperinterface(LighterRequestResolver.class)
                 .addField(controllerField)
@@ -58,10 +57,11 @@ public class EndpointRequestResolverGenerator extends AbstractGenerator {
                 .addMethod(constructor)
                 .addMethod(resolveMethod)
                 .build();
+    }
 
-        String packageName = GENERATED_PACKAGE_NAME + "." + controller.getContainingName();
-
-        writeFile(packageName, type);
+    @Override
+    protected String getGeneratedPackageName() {
+        return GENERATED_PACKAGE_NAME + "." + controller.getContainingName();
     }
 
     private String makeClassName() {
@@ -146,6 +146,7 @@ public class EndpointRequestResolverGenerator extends AbstractGenerator {
 
     private MethodSpec generateConstructor() {
         return MethodSpec.constructorBuilder()
+                .addModifiers(Modifier.PUBLIC)
                 .addParameter(InjectionObjectFactory.class, "genericFactory")
                 .addParameter(TypeMarshaller.class, TYPE_MARSHALLER_NAME)
                 .addStatement("this.$L = genericFactory.newInstance($T.class);", CONTROLLER_NAME, controllerTypeName)

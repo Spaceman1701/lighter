@@ -1,14 +1,12 @@
 package fun.connor.lighter.autoconfig;
 
 
-import fun.connor.lighter.handler.LighterRequestResolver;
-
 public class Route {
     private final String method;
     private final String template;
-    private final LighterRequestResolver handler;
+    private final ResolverFactory handler;
 
-    Route(final String method, final String template, final LighterRequestResolver handler) {
+    Route(final String method, final String template, final ResolverFactory handler) {
         this.method = method;
         this.template = template;
         this.handler = handler;
@@ -23,7 +21,7 @@ public class Route {
         return template;
     }
 
-    public LighterRequestResolver getHandler() {
+    public ResolverFactory getHandlerFactory() {
         return handler;
     }
 }

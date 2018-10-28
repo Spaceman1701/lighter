@@ -78,6 +78,18 @@ public class Route {
         return new Route(newParts);
     }
 
+    public String getTemplateWithSimpleNames() {
+        String simpleTemplate = templateStr;
+        for (RoutePart part : parts) {
+            if (part.getKind() == RoutePart.Kind.PARAMETER) {
+                ParameterParser parser = new ParameterParser(part.getString());
+                String simpleParamName = "{" + parser.getExposedName() + "}";
+                simpleTemplate = simpleTemplate.replaceAll(part.getString(), simpleParamName);
+            }
+        }
+        return simpleTemplate;
+    }
+
     /**
      * Check if this route covers ALL cases of another
      * route.
