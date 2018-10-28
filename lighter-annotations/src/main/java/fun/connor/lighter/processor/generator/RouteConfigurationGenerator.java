@@ -4,6 +4,7 @@ import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
 import fun.connor.lighter.autoconfig.LighterRouter;
+import fun.connor.lighter.autoconfig.RouteConfiguration;
 
 import javax.annotation.processing.Filer;
 import javax.lang.model.element.Modifier;
@@ -25,6 +26,7 @@ public class RouteConfigurationGenerator extends AbstractGenerator {
 
         return TypeSpec.classBuilder("GeneratedRouteConfiguration")
                 .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
+                .addSuperinterface(RouteConfiguration.class)
                 .addMethod(getRouterMethod)
                 .build();
     }
