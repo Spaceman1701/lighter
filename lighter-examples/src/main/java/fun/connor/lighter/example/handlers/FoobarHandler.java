@@ -7,12 +7,15 @@ import fun.connor.lighter.handler.RequestContext;
 import fun.connor.lighter.handler.Response;
 import fun.connor.lighter.handler.ResponseBuilder;
 
+import javax.inject.Inject;
+
 
 @ResourceController("/foobar")
 public class FoobarHandler {
 
     private final FoobarRepository repository;
 
+    @Inject
     public FoobarHandler(final FoobarRepository repository) {
         this.repository = repository;
     }
