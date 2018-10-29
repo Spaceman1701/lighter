@@ -18,17 +18,18 @@ public class Route {
         this.parts = new ArrayList<>();
 
         parsePartsFromTemplate(templateStr);
-        parseFromRouteParts(parts);
+        parseFromRouteParts(parts, hasTrailingSlash());
 
         System.out.println("built route: " + templateStr);
     }
 
-    private Route(List<RoutePart> parts) {
+    private Route(List<RoutePart> parts, boolean trailingSlash) {
         this.templateStr = "";
         this.params = new HashMap<>();
         this.parts = parts;
 
-        parseFromRouteParts(parts);
+        parseFromRouteParts(parts, trailingSlash);
+
 
         System.out.println("built route (from parts): " + templateStr);
     }
@@ -57,7 +58,7 @@ public class Route {
         return templatePart.startsWith("{") && templatePart.endsWith("}");
     }
 
-    private void parseFromRouteParts(List<RoutePart> parts) {
+    private void parseFromRouteParts(List<RoutePart> parts, boolean trailingSlash) {
         StringBuilder templateBuilder = new StringBuilder();
 
         for (RoutePart p : parts) {
@@ -68,14 +69,16 @@ public class Route {
                 params.put(parser.getExposedName(), parser.getNameOnMethod());
             }
         }
-
         templateStr = templateBuilder.toString();
+        if (!trailingSlash) {
+            templateStr = templateStr.substring(0, templateStr.length() - 1);
+        }
     }
 
     public Route append(Route other) {
         List<RoutePart> newParts = new ArrayList<>(this.parts);
         newParts.addAll(other.parts);
-        return new Route(newParts);
+        return new Route(newParts, other.hasTrailingSlash());
     }
 
     public String getTemplateWithSimpleNames() {
@@ -137,5 +140,9 @@ public class Route {
             return captures(other) && getSpecificity() == other.getSpecificity();
         }
         return false;
+    }
+
+    public boolean hasTrailingSlash() {
+        return templateStr.charAt(templateStr.length() - 1) == '/';
     }
 }
