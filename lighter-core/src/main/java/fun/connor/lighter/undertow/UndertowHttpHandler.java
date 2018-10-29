@@ -5,6 +5,7 @@ import fun.connor.lighter.handler.LighterRequestResolver;
 import fun.connor.lighter.handler.Response;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
+import io.undertow.util.Headers;
 import io.undertow.util.HttpString;
 import io.undertow.util.PathTemplateMatch;
 
@@ -47,6 +48,7 @@ public class UndertowHttpHandler implements HttpHandler {
             exchange.getResponseHeaders().put(HttpString.tryFromString(header.getKey()), header.getValue());
         }
         Gson gson = new Gson();
+        exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "application/json");
         exchange.getResponseSender().send(gson.toJson(r.getContent()));
     }
 }

@@ -8,6 +8,7 @@ import fun.connor.lighter.example.modules.ExampleComponent;
 import fun.connor.lighter.example.modules.ExampleDaggerInjector;
 import fun.connor.lighter.example.modules.ExampleDaggerModule;
 import fun.connor.lighter.example.modules.ExampleModule;
+import fun.connor.lighter.undertow.LighterUndertow;
 
 public class Main {
 
@@ -15,9 +16,13 @@ public class Main {
         long startTime = System.currentTimeMillis();
         Injector injector = Guice.createInjector(new ExampleModule());
 
-        Lighter l = new Lighter(injector::getInstance);
-
-        l.addRouter(AutomaticRouteConfigurationLoader.loadAutomaticConfiguration());
+        Lighter l = LighterUndertow.builder()
+                .adapterFactory(null)
+                .injectionFactory(injector::getInstance)
+                .addRouter(AutomaticRouteConfigurationLoader.loadAutomaticConfiguration())
+                .hostHame("0.0.0.0")
+                .port(8000)
+                .build();
 
         System.out.println("just testing the build");
 
