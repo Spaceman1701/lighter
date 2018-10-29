@@ -11,6 +11,7 @@ import fun.connor.lighter.processor.model.Endpoint;
 
 import javax.annotation.processing.Filer;
 import javax.lang.model.element.Modifier;
+import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
 import java.util.ArrayList;
@@ -124,7 +125,7 @@ public class EndpointRequestResolverGenerator extends AbstractGenerator {
 
         for (Endpoint.EndpointParam reqParam : endpoint.getRequiredParams()) {
             paramMarshalBlocks.add( new RequiredParamBlockGenerator
-                    (reqParam.getNameInMap(), PATH_PARAMS_NAME, TypeName.get(reqParam.getType()),
+                    (reqParam.getNameInMap(), PATH_PARAMS_NAME, reqParam.getType(),
                             reqParam.getNameOnMethod()));
         }
 
@@ -133,7 +134,7 @@ public class EndpointRequestResolverGenerator extends AbstractGenerator {
             TypeMirror type = optParams.getType();
 
             paramMarshalBlocks.add( new OptionalParamBlockGenerator
-                    (optParams.getNameInMap(), PATH_PARAMS_NAME, TypeName.get(type),
+                    (optParams.getNameInMap(), PATH_PARAMS_NAME, type,
                             optParams.getNameOnMethod()));
         }
 

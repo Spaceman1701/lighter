@@ -8,6 +8,7 @@ import fun.connor.lighter.handler.Response;
 import fun.connor.lighter.handler.ResponseBuilder;
 
 import javax.inject.Inject;
+import java.util.Optional;
 
 
 @ResourceController("/foobar")
@@ -23,7 +24,7 @@ public class FoobarHandler {
 
     @Get("/{name:name}")
     @QueryParams({"count:count"})
-    public Response<Foobar<Integer>> getFoobarByName(String name, Integer count, RequestContext<Foobar<Integer>> context) {
+    public Response<Foobar<Integer>> getFoobarByName(String name, Optional<Integer> count, RequestContext<Foobar<Integer>> context) {
 
         Foobar<Integer> foobar = repository.getByName(name);
 

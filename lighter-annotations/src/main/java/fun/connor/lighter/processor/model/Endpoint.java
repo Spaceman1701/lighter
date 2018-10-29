@@ -2,13 +2,13 @@ package fun.connor.lighter.processor.model;
 
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Name;
+import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
+import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.ExecutableType;
+import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Endpoint {
@@ -18,14 +18,19 @@ public class Endpoint {
     }
 
     public static class EndpointParam {
+        public enum Location {
+            PATH, QUERY
+        }
         private String nameInMap;
         private TypeMirror type;
         private String nameOnMethod;
+        private Location location;
 
-        private EndpointParam(String nameInMap, String nameOnMethod, TypeMirror type) {
+        private EndpointParam(String nameInMap, String nameOnMethod, TypeMirror type, Location location) {
             this.nameInMap = nameInMap;
             this.nameOnMethod = nameOnMethod;
             this.type = type;
+            this.location = location;
         }
 
         public String getNameInMap() {
@@ -40,6 +45,9 @@ public class Endpoint {
             return type;
         }
 
+        public Location getLocation() {
+            return location;
+        }
     }
 
     private Method httpMethod;
@@ -90,25 +98,46 @@ public class Endpoint {
     }
 
     public List<EndpointParam> getRequiredParams() {
-        return getParamFromMapping(fullRoute.getParams());
+        List<EndpointParam> path = getParamFromMapping(fullRoute.getParams(), EndpointParam.Location.PATH);
+
+        if (queryParams != null) {
+            List<EndpointParam> query = getParamFromMapping(queryParams.getNameMappings(), EndpointParam.Location.QUERY)
+                    .stream()
+                    .filter(p -> !isTypeOptional(p.type))
+                    .collect(Collectors.toList());
+
+            path.addAll(query);
+        }
+
+        return path;
     }
 
     public List<EndpointParam> getOptionalParams() {
         if (queryParams == null) {
             return new ArrayList<>();
         }
-        return getParamFromMapping(queryParams.getNameMappings());
+        return getParamFromMapping(queryParams.getNameMappings(), EndpointParam.Location.QUERY).stream()
+                .filter(p -> isTypeOptional(p.type))
+                .collect(Collectors.toList());
     }
 
+    private boolean isTypeOptional(TypeMirror type) {
+        if (type.getKind() == TypeKind.DECLARED) {
+            DeclaredType declaredType = (DeclaredType) type;
+            TypeElement element = (TypeElement) declaredType.asElement();
+            return (element.getQualifiedName().toString().equals(Optional.class.getCanonicalName()));
+        }
+        return false;
+    }
 
-    private List<EndpointParam> getParamFromMapping(Map<String, String> mapping) {
+    private List<EndpointParam> getParamFromMapping(Map<String, String> mapping, EndpointParam.Location location) {
         List<EndpointParam> requiredParams = new ArrayList<>();
 
         for (Map.Entry<String, String> entry : mapping.entrySet()) {
             String nameInMap = entry.getKey();
             String nameOnMethod = entry.getValue();
             TypeMirror type = endpointParamTypes.get(nameOnMethod);
-            requiredParams.add(new EndpointParam(nameInMap, nameOnMethod, type));
+            requiredParams.add(new EndpointParam(nameInMap, nameOnMethod, type, location));
         }
 
         return requiredParams;
