@@ -4,6 +4,9 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import fun.connor.lighter.Lighter;
 import fun.connor.lighter.autoconfig.AutomaticRouteConfigurationLoader;
+import fun.connor.lighter.example.modules.ExampleComponent;
+import fun.connor.lighter.example.modules.ExampleDaggerInjector;
+import fun.connor.lighter.example.modules.ExampleDaggerModule;
 import fun.connor.lighter.example.modules.ExampleModule;
 
 public class Main {
@@ -18,6 +21,8 @@ public class Main {
 
         System.out.println("just testing the build");
 
+        long finishTime = System.currentTimeMillis();
         l.start();
+        System.out.println("total start->stop time was: " + (finishTime - startTime));
     }
 }

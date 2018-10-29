@@ -38,6 +38,7 @@ public class Lighter {
 
     public void start() {
         Undertow undertow = undertowBuilder.build();
-        undertow.start();
+        new Thread(undertow::start).start();
+//        undertow.stop();
     }
 }
