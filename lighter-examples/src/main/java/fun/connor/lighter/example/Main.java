@@ -17,8 +17,8 @@ public class Main {
         Injector injector = Guice.createInjector(new ExampleModule());
 
         DelegatingAdaptorFactory adaptorFactory = DelegatingAdaptorFactory.builder()
-                .addDelagateFactory(StringTypeAdapterFactory.applies(), new StringTypeAdapterFactory())
-                .addDelagateFactory(GsonTypeAdapterFactory.applies(), GsonTypeAdapterFactory.create())
+                .addDelegateFactory(StringTypeAdapterFactory.applies(), new StringTypeAdapterFactory())
+                .addDelegateFactory(GsonTypeAdapterFactory.applies(), GsonTypeAdapterFactory.create())
                 .build();
 
         Lighter l = LighterUndertow.builder()

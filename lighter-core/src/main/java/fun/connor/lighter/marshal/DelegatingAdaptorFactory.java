@@ -39,7 +39,7 @@ public class DelegatingAdaptorFactory implements TypeAdapterFactory {
             delegateFactories = new ArrayList<>();
         }
 
-        public Builder addDelagateFactory(Predicate<Class<?>> condition, TypeAdapterFactory factory) {
+        public Builder addDelegateFactory(Predicate<Class<?>> condition, TypeAdapterFactory factory) {
             delegateFactories.add(new DelegateFactory(condition, factory));
             return this;
         }
