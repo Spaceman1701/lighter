@@ -5,6 +5,9 @@ import com.google.inject.Injector;
 import fun.connor.lighter.Lighter;
 import fun.connor.lighter.autoconfig.AutomaticRouteConfigurationLoader;
 import fun.connor.lighter.example.modules.ExampleModule;
+import fun.connor.lighter.marshal.DelegatingAdaptorFactory;
+import fun.connor.lighter.marshal.gson.GsonTypeAdapterFactory;
+import fun.connor.lighter.marshal.string.StringTypeAdapterFactory;
 import fun.connor.lighter.undertow.LighterUndertow;
 
 public class Main {
@@ -13,8 +16,13 @@ public class Main {
         long startTime = System.currentTimeMillis();
         Injector injector = Guice.createInjector(new ExampleModule());
 
+        DelegatingAdaptorFactory adaptorFactory = DelegatingAdaptorFactory.builder()
+                .addDelagateFactory(StringTypeAdapterFactory.applies(), new StringTypeAdapterFactory())
+                .addDelagateFactory(GsonTypeAdapterFactory.applies(), GsonTypeAdapterFactory.create())
+                .build();
+
         Lighter l = LighterUndertow.builder()
-                .adapterFactory(null)
+                .adapterFactory(adaptorFactory)
                 .injectionFactory(injector::getInstance)
                 .addRouter(AutomaticRouteConfigurationLoader.loadAutomaticConfiguration())
                 .hostHame("0.0.0.0")

@@ -1,6 +1,8 @@
 package fun.connor.lighter.processor.generator;
 
 import com.squareup.javapoet.*;
+import fun.connor.lighter.adapter.TypeAdapter;
+import fun.connor.lighter.adapter.TypeAdapterFactory;
 import fun.connor.lighter.handler.*;
 import fun.connor.lighter.injection.InjectionObjectFactory;
 import fun.connor.lighter.processor.generator.endpoint.OptionalParamBlockGenerator;
@@ -79,7 +81,8 @@ public class EndpointRequestResolverGenerator extends AbstractGenerator {
     }
 
     private FieldSpec generateUnmarshallerField() {
-        return FieldSpec.builder(TypeMarshaller.class, TYPE_MARSHALLER_NAME, Modifier.PRIVATE)
+        //TODO: for best performance, add fields for the exact type adapters needed
+        return FieldSpec.builder(TypeAdapterFactory.class, TYPE_MARSHALLER_NAME, Modifier.PRIVATE)
                 .build();
     }
 
@@ -148,7 +151,7 @@ public class EndpointRequestResolverGenerator extends AbstractGenerator {
         return MethodSpec.constructorBuilder()
                 .addModifiers(Modifier.PUBLIC)
                 .addParameter(InjectionObjectFactory.class, "genericFactory")
-                .addParameter(TypeMarshaller.class, TYPE_MARSHALLER_NAME)
+                .addParameter(TypeAdapterFactory.class, TYPE_MARSHALLER_NAME)
                 .addStatement("this.$L = genericFactory.newInstance($T.class);", CONTROLLER_NAME, controllerTypeName)
                 .addStatement("this.$L = $L;", TYPE_MARSHALLER_NAME, TYPE_MARSHALLER_NAME)
                 .build();

@@ -31,8 +31,8 @@ public class OptionalParamBlockGenerator extends ParamBlockGenerator {
                     .addStatement("$L = null", paramOptionName)
                 .endControlFlow()
                 .beginControlFlow("else")
-                    .addStatement("$L = typeMarshaller.marshal($L, $T.class)",
-                            paramOptionName, parameterStrName, optionalGenericType)
+                    .addStatement("$L = typeMarshaller.getAdapter($T.class).deserialize($L)",
+                            paramOptionName, optionalGenericType, parameterStrName)
                 .endControlFlow()
                 .addStatement("$T<$T> $L = $T.ofNullable($L)", Optional.class, optionalGenericType, parameterName,
                         Optional.class, paramOptionName)

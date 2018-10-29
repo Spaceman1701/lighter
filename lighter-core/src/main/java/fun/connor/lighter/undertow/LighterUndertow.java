@@ -39,12 +39,11 @@ public class LighterUndertow implements Lighter {
     private void configureRouting(Undertow.Builder undertowBuilder, List<LighterRouter> routers) {
         RoutingHandler routingHandler = Handlers.routing(false);
 
-        SimpleGsonMarshaller marshaller = new SimpleGsonMarshaller();
 
         routers.stream()
             .flatMap(router -> router.getRoutes().stream())
             .forEach(route -> {
-                LighterRequestResolver resolver = route.getHandlerFactory().newInstance(objectFactory, marshaller);
+                LighterRequestResolver resolver = route.getHandlerFactory().newInstance(objectFactory, adapterFactory);
                 UndertowHttpHandler undertowHttpHandler = new UndertowHttpHandler(resolver);
                 System.out.println("adding route: " + route);
                 routingHandler.add(route.getMethod(), route.getTemplate(), undertowHttpHandler);

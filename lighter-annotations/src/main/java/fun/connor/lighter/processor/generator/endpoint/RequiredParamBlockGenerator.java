@@ -20,8 +20,8 @@ public class RequiredParamBlockGenerator extends ParamBlockGenerator {
                 .beginControlFlow("if ($L == null)", parameterStrName)
                     .addStatement("throw new $T($S, $S, $T.class)", TypeMarshalException.class, "bad", "bad", expectedType)
                 .endControlFlow()
-                .addStatement("$T $L = typeMarshaller.marshal($L, $T.class)", expectedType,
-                        parameterName, parameterStrName, expectedType)
+                .addStatement("$T $L = typeMarshaller.getAdapter($T.class).deserialize($L)", expectedType,
+                        parameterName, expectedType, parameterStrName)
                 .build();
     }
 }
