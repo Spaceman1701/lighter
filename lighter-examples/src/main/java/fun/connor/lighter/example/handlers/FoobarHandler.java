@@ -31,7 +31,6 @@ public class FoobarHandler {
         ResponseBuilder<Foobar<Integer>> resp = context.getResponseBuilder();
         resp.status(200);
         resp.content(foobar);
-        resp.putHeader("This-Is-A-HTTP-Header", "wwwwoooww");
 
         return resp.build();
     }

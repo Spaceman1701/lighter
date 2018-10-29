@@ -24,4 +24,9 @@ public class Route {
     public ResolverFactory getHandlerFactory() {
         return handler;
     }
+
+    @Override
+    public String toString() {
+        return method + ": " + template;
+    }
 }

@@ -10,7 +10,9 @@ public class FoobarRepoImpl implements FoobarRepository {
 
     @Override
     public Foobar getByName(String name) {
-        return null;
+        Foobar bar = new Foobar();
+        bar.aField = "foo";
+        return bar;
     }
 
     @Override
