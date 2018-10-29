@@ -1,6 +1,8 @@
 package fun.connor.lighter.example.handlers;
 
-import fun.connor.lighter.declarative.*;
+import fun.connor.lighter.declarative.Get;
+import fun.connor.lighter.declarative.QueryParams;
+import fun.connor.lighter.declarative.ResourceController;
 import fun.connor.lighter.example.domain.Foobar;
 import fun.connor.lighter.example.persistance.FoobarRepository;
 import fun.connor.lighter.handler.RequestContext;

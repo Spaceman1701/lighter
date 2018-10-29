@@ -1,9 +1,7 @@
 package fun.connor.lighter.processor.generator.endpoint;
 
 import com.squareup.javapoet.CodeBlock;
-import com.squareup.javapoet.TypeName;
 
-import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeMirror;
 
 public abstract class ParamBlockGenerator {

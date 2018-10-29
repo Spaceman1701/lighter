@@ -1,12 +1,10 @@
 package fun.connor.lighter.example.modules;
 
 import fun.connor.lighter.injection.InjectionObjectFactory;
-import fun.connor.lighter.processor.model.Endpoint;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class ExampleDaggerInjector implements InjectionObjectFactory {

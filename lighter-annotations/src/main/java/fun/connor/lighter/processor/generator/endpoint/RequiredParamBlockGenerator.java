@@ -1,10 +1,8 @@
 package fun.connor.lighter.processor.generator.endpoint;
 
 import com.squareup.javapoet.CodeBlock;
-import com.squareup.javapoet.TypeName;
 import fun.connor.lighter.handler.TypeMarshalException;
 
-import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeMirror;
 
 public class RequiredParamBlockGenerator extends ParamBlockGenerator {

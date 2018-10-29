@@ -1,10 +1,8 @@
 package fun.connor.lighter.undertow;
 
-import com.google.gson.Gson;
 import fun.connor.lighter.Lighter;
 import fun.connor.lighter.adapter.TypeAdapterFactory;
 import fun.connor.lighter.autoconfig.LighterRouter;
-import fun.connor.lighter.autoconfig.Route;
 import fun.connor.lighter.autoconfig.RouteConfiguration;
 import fun.connor.lighter.handler.LighterRequestResolver;
 import fun.connor.lighter.injection.InjectionObjectFactory;

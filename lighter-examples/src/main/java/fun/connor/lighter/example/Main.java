@@ -4,9 +4,6 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import fun.connor.lighter.Lighter;
 import fun.connor.lighter.autoconfig.AutomaticRouteConfigurationLoader;
-import fun.connor.lighter.example.modules.ExampleComponent;
-import fun.connor.lighter.example.modules.ExampleDaggerInjector;
-import fun.connor.lighter.example.modules.ExampleDaggerModule;
 import fun.connor.lighter.example.modules.ExampleModule;
 import fun.connor.lighter.undertow.LighterUndertow;
 
