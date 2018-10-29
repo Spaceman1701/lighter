@@ -6,7 +6,6 @@ import fun.connor.lighter.autoconfig.LighterRouter;
 import fun.connor.lighter.autoconfig.RouteConfiguration;
 import fun.connor.lighter.handler.LighterRequestResolver;
 import fun.connor.lighter.injection.InjectionObjectFactory;
-import fun.connor.lighter.marshal.SimpleGsonMarshaller;
 import io.undertow.Handlers;
 import io.undertow.Undertow;
 import io.undertow.server.RoutingHandler;
