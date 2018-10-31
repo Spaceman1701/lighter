@@ -22,6 +22,20 @@ public class Person {
         }
     }
 
+    @Override
+    public boolean equals(Object other) {
+        if (other != null && other.getClass().isAssignableFrom(Person.class)) {
+            Person otherPerson = (Person) other;
+            return otherPerson.getName().equals(name) && otherPerson.prefersFullName == prefersFullName;
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return name.hashCode() + (prefersFullName ? 0 : 7);
+    }
+
     public boolean prefersFullName() {
         return prefersFullName;
     }
