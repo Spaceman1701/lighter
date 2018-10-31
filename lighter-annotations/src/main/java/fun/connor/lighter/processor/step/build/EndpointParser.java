@@ -1,5 +1,6 @@
 package fun.connor.lighter.processor.step.build;
 
+import fun.connor.lighter.declarative.Body;
 import fun.connor.lighter.declarative.Get;
 import fun.connor.lighter.declarative.Post;
 import fun.connor.lighter.declarative.Put;
@@ -8,6 +9,7 @@ import fun.connor.lighter.processor.model.QueryParams;
 import fun.connor.lighter.processor.model.Route;
 
 import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.VariableElement;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -52,7 +54,14 @@ public class EndpointParser {
             processor = new QueryParams(queryParamsAnnotation.value());
         }
 
-        return new Endpoint(method, controllerRoute.append(routeFragment), processor, element);
+        String bodyParamName = null;
+        for (VariableElement variableElement : element.getParameters()) {
+            if (variableElement.getAnnotation(Body.class) != null) {
+                bodyParamName = variableElement.getSimpleName().toString();
+            }
+        }
+
+        return new Endpoint(method, controllerRoute.append(routeFragment), processor, bodyParamName, element);
     }
 
     private Endpoint.Method getMethodFromAnnotation(Class<? extends Annotation> annotationClazz) {

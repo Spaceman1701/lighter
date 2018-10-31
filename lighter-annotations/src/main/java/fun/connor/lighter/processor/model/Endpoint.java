@@ -1,5 +1,7 @@
 package fun.connor.lighter.processor.model;
 
+import fun.connor.lighter.processor.model.endpoint.MethodParameter;
+
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Name;
 import javax.lang.model.element.TypeElement;
@@ -59,9 +61,11 @@ public class Endpoint {
     private TypeMirror returnType;
     private Map<String, TypeMirror> endpointParamTypes;
 
+    private MethodParameter bodyParameter;
+
     public Endpoint
             (Method httpMethod, Route fullRoute,
-             QueryParams queryParams, ExecutableElement methodElement) {
+             QueryParams queryParams, String bodyParamName, ExecutableElement methodElement) {
         this.httpMethod = httpMethod;
         this.fullRoute = fullRoute;
         this.queryParams = queryParams;
@@ -69,6 +73,16 @@ public class Endpoint {
 
         endpointParamTypes = new HashMap<>();
         extractMethodParams();
+
+        this.bodyParameter = makeBodyParam(bodyParamName);
+    }
+
+    private MethodParameter makeBodyParam(String name) {
+        if (name != null) {
+            int index  = getMethodParamIndexByName(name);
+            return new MethodParameter(index, endpointParamTypes.get(name), name);
+        }
+        return null;
     }
 
     private void extractMethodParams() {
@@ -83,6 +97,17 @@ public class Endpoint {
             TypeMirror type = parameterTypes.get(i);
             endpointParamTypes.put(name, type);
         }
+    }
+
+    private int getMethodParamIndexByName(String name) {
+        int index = 0;
+        for (VariableElement element : methodElement.getParameters()) {
+            if (element.getSimpleName().toString().equals(name)) {
+                return index;
+            }
+            index++;
+        }
+        return -1;
     }
 
     public String getMethodName() {
@@ -148,6 +173,10 @@ public class Endpoint {
         return endpointParamTypes.entrySet().stream()
                 .map(Map.Entry::getValue)
                 .collect(Collectors.toList());
+    }
+
+    public MethodParameter getBodyParameter() {
+        return bodyParameter;
     }
 
     public ExecutableElement getMethodElement() {

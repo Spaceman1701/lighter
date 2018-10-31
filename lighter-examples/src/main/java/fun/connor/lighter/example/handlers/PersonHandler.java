@@ -1,9 +1,6 @@
 package fun.connor.lighter.example.handlers;
 
-import fun.connor.lighter.declarative.Get;
-import fun.connor.lighter.declarative.Post;
-import fun.connor.lighter.declarative.QueryParams;
-import fun.connor.lighter.declarative.ResourceController;
+import fun.connor.lighter.declarative.*;
 import fun.connor.lighter.example.domain.Name;
 import fun.connor.lighter.example.domain.Person;
 import fun.connor.lighter.example.persistance.PersonRepository;

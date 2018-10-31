@@ -8,6 +8,7 @@ import fun.connor.lighter.injection.InjectionObjectFactory;
 import fun.connor.lighter.processor.model.Controller;
 import fun.connor.lighter.processor.model.Endpoint;
 import fun.connor.lighter.processor.model.ModelUtils;
+import fun.connor.lighter.processor.model.endpoint.MethodParameter;
 
 import javax.annotation.processing.Filer;
 import javax.lang.model.element.Modifier;
@@ -195,6 +196,7 @@ public class EndpointRequestResolverGenerator extends AbstractGenerator {
                 .addParameter(mapStrStr, QUERY_PARAMS_NAME)
                 .addParameter(Request.class, REQUEST_PARAM_NAME)
                 .addCode(generateParameterMarshalling())
+                .addCode(generateBodyParamBlock())
                 .addCode(generateResolveMethodCode())
                 .build();
     }
@@ -206,6 +208,19 @@ public class EndpointRequestResolverGenerator extends AbstractGenerator {
     private DeclaredType getMethodTypeParameterType() {
         DeclaredType returnType = (DeclaredType)endpoint.getReturnType();
         return (DeclaredType) returnType.getTypeArguments().get(0);
+    }
+
+    private CodeBlock generateBodyParamBlock() {
+        MethodParameter parameter = endpoint.getBodyParameter();
+        if (parameter != null) {
+            TypeMirror parameterType = parameter.getType();
+            TypeMirror erasedType = typeUtils.erasure(parameterType);
+            return CodeBlock.builder()
+                    .addStatement("$T $L = $L.deserialize(request.getBody())",
+                            parameter.getType(), parameter.getName(), getTypeAdapterName(TypeName.get(erasedType)))
+                    .build();
+        }
+        return CodeBlock.builder().build();
     }
 
     private CodeBlock generateResolveMethodCode() {
