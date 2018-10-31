@@ -19,7 +19,7 @@ public class QueryParams {
             if (s.contains(":")) {
                 String[] parts = s.split(":");
                 if (parts.length != 2) {
-                    throw new IllegalArgumentException("query string had illegal mapping: " + s);
+                    throw new IllegalArgumentException("query java had illegal mapping: " + s);
                 }
                 fromName = parts[0];
                 toName = parts[1];

@@ -135,6 +135,7 @@ public class Endpoint {
 
         for (Map.Entry<String, String> entry : mapping.entrySet()) {
             String nameInMap = entry.getKey();
+            System.out.println(nameInMap);
             String nameOnMethod = entry.getValue();
             TypeMirror type = endpointParamTypes.get(nameOnMethod);
             requiredParams.add(new EndpointParam(nameInMap, nameOnMethod, type, location));

@@ -1,14 +1,15 @@
-package fun.connor.lighter.marshal.string;
+package fun.connor.lighter.marshal.java;
 
+import fun.connor.lighter.adapter.FilteringTypeAdaptorFactory;
 import fun.connor.lighter.adapter.TypeAdapter;
 import fun.connor.lighter.adapter.TypeAdapterFactory;
 import fun.connor.lighter.handler.TypeMarshalException;
 
 import java.util.function.Predicate;
 
-public class StringTypeAdapterFactory implements TypeAdapterFactory {
+public class StringTypeAdapterFactory implements FilteringTypeAdaptorFactory {
 
-    public static Predicate<Class<?>> applies() {
+    public Predicate<Class<?>> applies() {
         return clazz -> clazz.isAssignableFrom(String.class);
     }
 

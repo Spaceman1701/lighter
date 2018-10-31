@@ -219,20 +219,32 @@ public class EndpointRequestResolverGenerator extends AbstractGenerator {
                 .build();
     }
 
+    private String getParamMapNameFromLocation(Endpoint.EndpointParam.Location location) {
+        switch (location) {
+            case PATH:
+                return PATH_PARAMS_NAME;
+            case QUERY:
+                return QUERY_PARAMS_NAME;
+        }
+        return null;
+    }
+
     private CodeBlock generateParameterMarshalling() {
         List<CodeBlock> paramMarshalBlocks = new ArrayList<>();
 
         for (Endpoint.EndpointParam reqParam : endpoint.getRequiredParams()) {
+            String requestMap = getParamMapNameFromLocation(reqParam.getLocation());
+
             paramMarshalBlocks.add(generateRequiredParamBlock
-                    (reqParam.getNameInMap(), PATH_PARAMS_NAME, reqParam.getType(), reqParam.getNameOnMethod()));
+                    (reqParam.getNameInMap(), requestMap, reqParam.getType(), reqParam.getNameOnMethod()));
         }
 
         for (Endpoint.EndpointParam optParams : endpoint.getOptionalParams()) {
-
             TypeMirror type = optParams.getType();
+            String requestMap = getParamMapNameFromLocation(optParams.getLocation());
 
             paramMarshalBlocks.add(generatedOptionalParamBlock
-                            (optParams.getNameInMap(), PATH_PARAMS_NAME, type, optParams.getNameOnMethod()));
+                            (optParams.getNameInMap(), requestMap, type, optParams.getNameOnMethod()));
         }
 
         return paramMarshalBlocks.stream()

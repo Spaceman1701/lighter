@@ -7,7 +7,9 @@ import fun.connor.lighter.autoconfig.AutomaticRouteConfigurationLoader;
 import fun.connor.lighter.example.modules.ExampleModule;
 import fun.connor.lighter.marshal.DelegatingAdaptorFactory;
 import fun.connor.lighter.marshal.gson.GsonTypeAdapterFactory;
-import fun.connor.lighter.marshal.string.StringTypeAdapterFactory;
+import fun.connor.lighter.marshal.java.BooleanTypeAdapterFactory;
+import fun.connor.lighter.marshal.java.JavaTypesAdaptorFactory;
+import fun.connor.lighter.marshal.java.StringTypeAdapterFactory;
 import fun.connor.lighter.undertow.LighterUndertow;
 
 public class Main {
@@ -17,8 +19,8 @@ public class Main {
         Injector injector = Guice.createInjector(new ExampleModule());
 
         DelegatingAdaptorFactory adaptorFactory = DelegatingAdaptorFactory.builder()
-                .addDelegateFactory(StringTypeAdapterFactory.applies(), new StringTypeAdapterFactory())
-                .addDelegateFactory(GsonTypeAdapterFactory.applies(), GsonTypeAdapterFactory.create())
+                .addDelegateFactory(new JavaTypesAdaptorFactory())
+                .addDelegateFactory(GsonTypeAdapterFactory.create())
                 .build();
 
         Lighter l = LighterUndertow.builder()

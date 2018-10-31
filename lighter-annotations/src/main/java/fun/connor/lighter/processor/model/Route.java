@@ -70,7 +70,7 @@ public class Route {
             }
         }
         templateStr = templateBuilder.toString();
-        if (!trailingSlash) {
+        if (!trailingSlash && !templateStr.isEmpty()) {
             templateStr = templateStr.substring(0, templateStr.length() - 1);
         }
     }
@@ -143,6 +143,9 @@ public class Route {
     }
 
     public boolean hasTrailingSlash() {
+        if (templateStr.isEmpty()) {
+            return false;
+        }
         return templateStr.charAt(templateStr.length() - 1) == '/';
     }
 }
