@@ -143,6 +143,12 @@ public class Endpoint {
         return requiredParams;
     }
 
+    public List<TypeMirror> getMethodArgumentTypes() {
+        return endpointParamTypes.entrySet().stream()
+                .map(Map.Entry::getValue)
+                .collect(Collectors.toList());
+    }
+
     public ExecutableElement getMethodElement() {
         return methodElement;
     }

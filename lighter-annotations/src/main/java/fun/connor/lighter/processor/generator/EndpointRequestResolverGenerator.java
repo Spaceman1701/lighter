@@ -10,15 +10,14 @@ import fun.connor.lighter.processor.generator.endpoint.ParamBlockGenerator;
 import fun.connor.lighter.processor.generator.endpoint.RequiredParamBlockGenerator;
 import fun.connor.lighter.processor.model.Controller;
 import fun.connor.lighter.processor.model.Endpoint;
+import fun.connor.lighter.processor.model.ModelUtils;
 
 import javax.annotation.processing.Filer;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import javax.lang.model.util.Types;
+import java.util.*;
 
 public class EndpointRequestResolverGenerator extends AbstractGenerator {
 
@@ -35,19 +34,23 @@ public class EndpointRequestResolverGenerator extends AbstractGenerator {
 
     private TypeName controllerTypeName;
 
-    public EndpointRequestResolverGenerator(Controller controller, Endpoint endpoint, Filer filer) {
+    private Types typeUtils;
+
+    public EndpointRequestResolverGenerator(Controller controller, Endpoint endpoint, Types typeUtils, Filer filer) {
         super(filer);
         this.controller = controller;
         this.endpoint = endpoint;
 
         controllerTypeName = TypeName.get(controller.getElement().asType());
+
+        this.typeUtils = typeUtils;
     }
 
 
     @Override
     protected TypeSpec generateType() {
         FieldSpec controllerField = generateControllerField();
-        FieldSpec unmarshallerField = generateUnmarshallerField();
+        List<FieldSpec> adapterFields = generateAdapterFields();
         MethodSpec constructor = generateConstructor();
         MethodSpec resolveMethod = generateResolveMethod();
 
@@ -55,7 +58,7 @@ public class EndpointRequestResolverGenerator extends AbstractGenerator {
                 .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
                 .addSuperinterface(LighterRequestResolver.class)
                 .addField(controllerField)
-                .addField(unmarshallerField)
+                .addFields(adapterFields)
                 .addMethod(constructor)
                 .addMethod(resolveMethod)
                 .build();
@@ -80,9 +83,106 @@ public class EndpointRequestResolverGenerator extends AbstractGenerator {
                 .build();
     }
 
-    private FieldSpec generateUnmarshallerField() {
-        //TODO: for best performance, add fields for the exact type adapters needed
-        return FieldSpec.builder(TypeAdapterFactory.class, TYPE_MARSHALLER_NAME, Modifier.PRIVATE)
+    private List<FieldSpec> generateAdapterFields() {
+        List<FieldSpec> fieldSpecs = new ArrayList<>();
+        Set<TypeName> requiredAdapters = getAllAdaptableTypes();
+
+        for (TypeName type : requiredAdapters) {
+            TypeName adapterType = ParameterizedTypeName.get(ClassName.get(TypeAdapter.class), type);
+            String fieldName = getTypeAdapterName(type);
+            FieldSpec spec = FieldSpec.builder(adapterType, fieldName, Modifier.PRIVATE).build();
+            fieldSpecs.add(spec);
+        }
+
+        return fieldSpecs;
+    }
+
+    private CodeBlock makeTypeAdaptersAndSetFields(String factoryName)  {
+        CodeBlock.Builder block = CodeBlock.builder();
+        Set<TypeName> requiredAdapters = getAllAdaptableTypes();
+
+        for (TypeName type : requiredAdapters) {
+            String adapterName = getTypeAdapterName(type);
+            block.addStatement("$L = $L.getAdapter($T.class)", adapterName, factoryName, type);
+        }
+
+        return block.build();
+    }
+
+    private String getTypeAdapterName(TypeName type) {
+        return type.toString().replace('.', '_') + "Adapter";
+    }
+
+    private Set<TypeName> getAllAdaptableTypes() {
+        Set<TypeName> types = new HashSet<>();
+
+        List<TypeMirror> argumentTypes = endpoint.getMethodArgumentTypes();
+        for (TypeMirror type : argumentTypes) {
+            TypeMirror typeToAdd = type;
+            if (ModelUtils.typeMirrorEqualsType(type, RequestContext.class)) { //TODO: change to Request when I make that change
+                continue;
+            }
+            if (ModelUtils.typeMirrorEqualsType(type, Optional.class)) {
+                DeclaredType declaredType = (DeclaredType) type;
+                if (!declaredType.getTypeArguments().isEmpty()) {
+                    typeToAdd = declaredType.getTypeArguments().get(0);
+                }
+            }
+
+            TypeMirror erasedType = typeUtils.erasure(typeToAdd);
+            types.add(TypeName.get(erasedType));
+        }
+
+        types.add(TypeName.get(typeUtils.erasure(getMethodTypeParameterType())));
+        return types;
+    }
+
+    private CodeBlock adapteTypeToString(String strVarName, String typedVarName, TypeMirror type) {
+        TypeMirror erasedType = typeUtils.erasure(type);
+        String typeAdapter = getTypeAdapterName(TypeName.get(erasedType));
+        return CodeBlock.builder()
+                .addStatement("$L = $L.serialize($L)", strVarName, typeAdapter, typedVarName)
+                .build();
+    }
+
+    private CodeBlock adapteStringToType(String typedVarName, String strVarName, TypeMirror type) {
+        TypeMirror erasedType = typeUtils.erasure(type);
+        String typeAdapter = getTypeAdapterName(TypeName.get(erasedType));
+        return CodeBlock.builder()
+                .addStatement("$L = $L.deserialize($L)", typedVarName, typeAdapter, strVarName)
+                .build();
+    }
+
+    private CodeBlock generateRequiredParamBlock
+            (String parameterNameInMap, String parameterMapName, TypeMirror expectedType, String parameterName) {
+        String parameterStrName = parameterName + "_Str";
+        return CodeBlock.builder()
+                .addStatement("String $L = $L.get($S)", parameterStrName, parameterMapName, parameterNameInMap)
+                .beginControlFlow("if ($L == null)", parameterStrName)
+                    .addStatement("throw new $T($S, $S, $T.class)", TypeMarshalException.class, "bad", "bad", expectedType)
+                .endControlFlow()
+                .addStatement("$T $L;", expectedType, parameterName)
+                .add(adapteStringToType(parameterName, parameterStrName, expectedType))
+                .build();
+    }
+
+    private CodeBlock generatedOptionalParamBlock
+            (String parameterNameInMap, String parameterMapName, TypeMirror expectedType, String parameterName) {
+        String parameterStrName = parameterName + "_Str";
+        String paramOptionName = parameterName + "_Optional";
+        TypeMirror optionalType = ModelUtils.extractOptionalType((DeclaredType)expectedType);
+        TypeName optionalTypeName = TypeName.get(optionalType);
+        return CodeBlock.builder()
+                .addStatement("String $L = $L.get($S)", parameterStrName, parameterMapName, parameterNameInMap)
+                .addStatement("$T $L", optionalTypeName, paramOptionName)
+                .beginControlFlow("if ($L == null)", parameterStrName)
+                    .addStatement("$L = null", paramOptionName)
+                .endControlFlow()
+                .beginControlFlow("else")
+                    .add(adapteStringToType(paramOptionName, parameterStrName, optionalType))
+                .endControlFlow()
+                .addStatement("$T<$T> $L = $T.ofNullable($L)", Optional.class, optionalTypeName, parameterName,
+                        Optional.class, paramOptionName)
                 .build();
     }
 
@@ -90,8 +190,6 @@ public class EndpointRequestResolverGenerator extends AbstractGenerator {
 
         ParameterizedTypeName mapStrStr = ParameterizedTypeName
                 .get(Map.class, String.class, String.class);
-
-        TypeName returnTypeParameter = getMethodTypeParameter();
 
         return MethodSpec.methodBuilder(RESOLVE_METHOD_NAME)
                 .returns(TypeName.get(endpoint.getReturnType()))
@@ -105,10 +203,12 @@ public class EndpointRequestResolverGenerator extends AbstractGenerator {
     }
 
     private TypeName getMethodTypeParameter() {
-        DeclaredType returnType = (DeclaredType)endpoint.getReturnType();
-        DeclaredType typeParameter = (DeclaredType) returnType.getTypeArguments().get(0); //will always be length 1
+        return TypeName.get(getMethodTypeParameterType());
+    }
 
-        return TypeName.get(typeParameter);
+    private DeclaredType getMethodTypeParameterType() {
+        DeclaredType returnType = (DeclaredType)endpoint.getReturnType();
+        return (DeclaredType) returnType.getTypeArguments().get(0);
     }
 
     private CodeBlock generateResolveMethodCode() {
@@ -123,25 +223,22 @@ public class EndpointRequestResolverGenerator extends AbstractGenerator {
     }
 
     private CodeBlock generateParameterMarshalling() {
-        List<ParamBlockGenerator> paramMarshalBlocks = new ArrayList<>();
+        List<CodeBlock> paramMarshalBlocks = new ArrayList<>();
 
         for (Endpoint.EndpointParam reqParam : endpoint.getRequiredParams()) {
-            paramMarshalBlocks.add( new RequiredParamBlockGenerator
-                    (reqParam.getNameInMap(), PATH_PARAMS_NAME, reqParam.getType(),
-                            reqParam.getNameOnMethod()));
+            paramMarshalBlocks.add(generateRequiredParamBlock
+                    (reqParam.getNameInMap(), PATH_PARAMS_NAME, reqParam.getType(), reqParam.getNameOnMethod()));
         }
 
         for (Endpoint.EndpointParam optParams : endpoint.getOptionalParams()) {
 
             TypeMirror type = optParams.getType();
 
-            paramMarshalBlocks.add( new OptionalParamBlockGenerator
-                    (optParams.getNameInMap(), PATH_PARAMS_NAME, type,
-                            optParams.getNameOnMethod()));
+            paramMarshalBlocks.add(generatedOptionalParamBlock
+                            (optParams.getNameInMap(), PATH_PARAMS_NAME, type, optParams.getNameOnMethod()));
         }
 
         return paramMarshalBlocks.stream()
-                .map(ParamBlockGenerator::build)
                 .reduce(CodeBlock.builder().build(), (a, b) -> a.toBuilder().add(b).build());
     }
 
@@ -153,7 +250,7 @@ public class EndpointRequestResolverGenerator extends AbstractGenerator {
                 .addParameter(InjectionObjectFactory.class, "genericFactory")
                 .addParameter(TypeAdapterFactory.class, TYPE_MARSHALLER_NAME)
                 .addStatement("this.$L = genericFactory.newInstance($T.class);", CONTROLLER_NAME, controllerTypeName)
-                .addStatement("this.$L = $L;", TYPE_MARSHALLER_NAME, TYPE_MARSHALLER_NAME)
+                .addCode(makeTypeAdaptersAndSetFields(TYPE_MARSHALLER_NAME))
                 .build();
     }
 
