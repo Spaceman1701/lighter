@@ -1,6 +1,5 @@
 package fun.connor.lighter.marshal.gson;
 
-import com.google.gson.Gson;
 import fun.connor.lighter.adapter.TypeAdapter;
 import fun.connor.lighter.handler.TypeMarshalException;
 

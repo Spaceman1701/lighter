@@ -7,9 +7,7 @@ import fun.connor.lighter.autoconfig.AutomaticRouteConfigurationLoader;
 import fun.connor.lighter.example.modules.ExampleModule;
 import fun.connor.lighter.marshal.DelegatingAdaptorFactory;
 import fun.connor.lighter.marshal.gson.GsonTypeAdapterFactory;
-import fun.connor.lighter.marshal.java.BooleanTypeAdapterFactory;
 import fun.connor.lighter.marshal.java.JavaTypesAdaptorFactory;
-import fun.connor.lighter.marshal.java.StringTypeAdapterFactory;
 import fun.connor.lighter.undertow.LighterUndertow;
 
 public class Main {
