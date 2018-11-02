@@ -118,6 +118,20 @@ public class LighterTypes implements Types {
         return elements.getTypeElement(clazz.getCanonicalName()).asType();
     }
 
+    public DeclaredType mirrorOfParameterizedClass(Class clazz, DeclaredType... typeArgs) {
+        DeclaredType clazzDeclared = (DeclaredType) mirrorOfClass(clazz);
+        TypeElement clazzElement = (TypeElement) clazzDeclared.asElement();
+
+        return getDeclaredType(clazzElement, typeArgs);
+    }
+
+    public DeclaredType mirrorOfParamterizedClass(Class clazz, Class... typeArgs) {
+        DeclaredType[] declaredTypeArgs = Arrays.stream(typeArgs)
+                .map(c -> (DeclaredType)mirrorOfClass(clazz))
+                .toArray(DeclaredType[]::new);
+
+        return mirrorOfParameterizedClass(clazz, declaredTypeArgs);
+    }
 
     public TypeMirror extractOptionalType(DeclaredType optional) {
         if (isTypeMirrorOfClass(optional, Optional.class)) {

@@ -1,31 +1,25 @@
 package fun.connor.lighter.processor.generator.codegen;
 
 import com.squareup.javapoet.CodeBlock;
+import com.squareup.javapoet.ParameterSpec;
+import com.squareup.javapoet.TypeName;
 
+import javax.lang.model.element.Modifier;
 import javax.lang.model.type.TypeMirror;
 
-public class LocalVariable implements Assignable, Expression {
+public class MethodParameterGenerator implements Expression {
+
     private TypeMirror type;
     private String name;
 
-    public LocalVariable(TypeMirror type, String name) {
+    public MethodParameterGenerator(TypeMirror type, String name) {
         this.type = type;
         this.name = name;
     }
 
-    public CodeBlock makeDeclaration() {
-        return CodeBlock.builder()
-                .addStatement("$T $L", type, name)
+    public ParameterSpec getParameterSpec() {
+        return ParameterSpec.builder(TypeName.get(type), name, Modifier.FINAL)
                 .build();
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    @Override
-    public CodeBlock makeAssignmentStub() {
-        return CodeBlock.of("$L", name);
     }
 
     @Override

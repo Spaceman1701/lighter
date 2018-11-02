@@ -4,18 +4,17 @@ import com.squareup.javapoet.CodeBlock;
 import fun.connor.lighter.processor.LighterTypes;
 
 import javax.lang.model.type.TypeMirror;
-import javax.lang.model.util.Types;
 import java.util.Optional;
 import java.util.OptionalDouble;
 import java.util.OptionalInt;
 import java.util.OptionalLong;
 
-public class OptionalGenerator implements Readable{
+public class OptionalGenerator implements Expression {
 
-    private Readable source;
+    private Expression source;
     private LighterTypes types;
 
-    public OptionalGenerator(Readable source, LighterTypes types) {
+    public OptionalGenerator(Expression source, LighterTypes types) {
         this.types = types;
         this.source = source;
     }

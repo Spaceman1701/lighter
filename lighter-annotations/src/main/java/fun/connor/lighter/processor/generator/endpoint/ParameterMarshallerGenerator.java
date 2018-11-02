@@ -1,27 +1,24 @@
 package fun.connor.lighter.processor.generator.endpoint;
 
 import com.squareup.javapoet.CodeBlock;
-import com.sun.tools.javac.jvm.Code;
 import fun.connor.lighter.handler.TypeMarshalException;
 import fun.connor.lighter.processor.LighterTypes;
 import fun.connor.lighter.processor.generator.codegen.Assignable;
-import fun.connor.lighter.processor.generator.codegen.Readable;
+import fun.connor.lighter.processor.generator.codegen.Expression;
 import fun.connor.lighter.processor.generator.codegen.Statement;
 import fun.connor.lighter.processor.generator.codegen.TypeAdaptorGenerator;
-
-import javax.lang.model.type.TypeMirror;
 
 public class ParameterMarshallerGenerator implements Statement {
 
     private Assignable output;
-    private Readable inputStr;
+    private Expression inputStr;
     private TypeAdaptorGenerator adaptor;
     private LighterTypes types;
 
     private boolean exceptionOnNull;
 
     private ParameterMarshallerGenerator
-            (Assignable resultVariable, Readable stringParam,
+            (Assignable resultVariable, Expression stringParam,
              TypeAdaptorGenerator adaptor, LighterTypes types, boolean exceptionOnNull) {
         this.output = resultVariable;
         this.inputStr = stringParam;
@@ -68,7 +65,7 @@ public class ParameterMarshallerGenerator implements Statement {
 
     public static class Builder {
         private Assignable output;
-        private Readable inputStr;
+        private Expression inputStr;
         private TypeAdaptorGenerator adaptor;
         private LighterTypes types;
 
@@ -79,7 +76,7 @@ public class ParameterMarshallerGenerator implements Statement {
             this.types = types;
         }
 
-        public Builder input(Readable inputStr) {
+        public Builder input(Expression inputStr) {
             this.inputStr = inputStr;
             return this;
         }

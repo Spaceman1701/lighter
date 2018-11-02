@@ -114,6 +114,10 @@ public class Endpoint {
         return -1;
     }
 
+    public Map<String, MethodParameter> getMethodParameters() {
+        return methodParameters;
+    }
+
     public String getMethodName() {
         return methodElement.getSimpleName().toString();
     }

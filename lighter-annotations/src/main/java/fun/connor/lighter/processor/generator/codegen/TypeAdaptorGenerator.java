@@ -49,7 +49,7 @@ public class TypeAdaptorGenerator {
         return new Assignable() {
             @Override
             public CodeBlock makeAssignmentStub() {
-                return CodeBlock.of("$N = ", field);
+                return CodeBlock.of("$N", field);
             }
 
             @Override
@@ -59,10 +59,10 @@ public class TypeAdaptorGenerator {
         };
     }
 
-    public Readable makeDeserialize(Readable readFrom) {
+    public Expression makeDeserialize(Expression readFrom) {
         CodeBlock fromStub = readFrom.makeReadStub();
 
-        return new Readable() {
+        return new Expression() {
             @Override
             public CodeBlock makeReadStub() {
                 return CodeBlock.builder()
@@ -77,10 +77,10 @@ public class TypeAdaptorGenerator {
         };
     }
 
-    public Readable makeSerialize(Readable readFrom) {
+    public Expression makeSerialize(Expression readFrom) {
         CodeBlock readStub = readFrom.makeReadStub();
 
-        return new Readable() {
+        return new Expression() {
             @Override
             public CodeBlock makeReadStub() {
                 return CodeBlock.builder()

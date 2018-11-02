@@ -43,6 +43,8 @@ public class EndpointResolverGenerator extends AbstractGenerator {
         return null;
     }
 
+
+
     private List<TypeMirror> getAllRequiredTypes() {
         List<TypeMirror> requiredTypes = new ArrayList<>();
 

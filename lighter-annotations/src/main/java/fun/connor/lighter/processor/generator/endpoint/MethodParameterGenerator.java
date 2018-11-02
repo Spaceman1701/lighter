@@ -2,28 +2,26 @@ package fun.connor.lighter.processor.generator.endpoint;
 
 import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.TypeName;
-import com.sun.tools.javac.jvm.Code;
 import fun.connor.lighter.processor.LighterTypes;
 import fun.connor.lighter.processor.MoreTypes;
 import fun.connor.lighter.processor.generator.codegen.*;
-import fun.connor.lighter.processor.generator.codegen.Readable;
+import fun.connor.lighter.processor.generator.codegen.Expression;
 
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
-import javax.lang.model.util.Types;
 import java.util.Map;
 
 public class MethodParameterGenerator implements Statement {
 
     private LocalVariable destination;
-    private Readable source;
+    private Expression source;
     private LighterTypes types;
     private Map<TypeName, TypeAdaptorGenerator> generatorMap;
 
     private boolean isOptional;
 
     public MethodParameterGenerator
-            (LocalVariable destination, Readable source, Map<TypeName, TypeAdaptorGenerator> generatorMap,
+            (LocalVariable destination, Expression source, Map<TypeName, TypeAdaptorGenerator> generatorMap,
              LighterTypes types) {
         this.destination = destination;
         this.source = source;
@@ -73,7 +71,7 @@ public class MethodParameterGenerator implements Statement {
                 .build();
     }
 
-    private CodeBlock buildMarshalBlock(Assignable destination, Readable input, boolean throwOnNull) {
+    private CodeBlock buildMarshalBlock(Assignable destination, Expression input, boolean throwOnNull) {
         return ParameterMarshallerGenerator.builder(destination, types)
                 .shouldThrowOnNull(throwOnNull)
                 .typeAdaptorGenerator(getTypeAdaptor(destination.getType()))
