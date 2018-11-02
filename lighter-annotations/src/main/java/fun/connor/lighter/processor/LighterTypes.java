@@ -125,9 +125,9 @@ public class LighterTypes implements Types {
         return getDeclaredType(clazzElement, typeArgs);
     }
 
-    public DeclaredType mirrorOfParamterizedClass(Class clazz, Class... typeArgs) {
+    public DeclaredType mirrorOfParameterizedClass(Class clazz, Class... typeArgs) {
         DeclaredType[] declaredTypeArgs = Arrays.stream(typeArgs)
-                .map(c -> (DeclaredType)mirrorOfClass(clazz))
+                .map(c -> (DeclaredType)mirrorOfClass(c))
                 .toArray(DeclaredType[]::new);
 
         return mirrorOfParameterizedClass(clazz, declaredTypeArgs);

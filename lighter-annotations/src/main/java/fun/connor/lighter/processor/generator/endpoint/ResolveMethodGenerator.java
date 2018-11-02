@@ -5,10 +5,7 @@ import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeName;
 import fun.connor.lighter.handler.Request;
 import fun.connor.lighter.processor.LighterTypes;
-import fun.connor.lighter.processor.generator.codegen.Expression;
-import fun.connor.lighter.processor.generator.codegen.LocalVariable;
-import fun.connor.lighter.processor.generator.codegen.MethodParameterGenerator;
-import fun.connor.lighter.processor.generator.codegen.TypeAdaptorGenerator;
+import fun.connor.lighter.processor.generator.codegen.*;
 import fun.connor.lighter.processor.model.Endpoint;
 import fun.connor.lighter.processor.model.endpoint.MethodParameter;
 
@@ -67,12 +64,26 @@ public class ResolveMethodGenerator {
                 .map(MethodParameterGenerator::getParameterSpec)
                 .collect(Collectors.toList()));
 
-
-        for (Map.Entry<String, MethodParameter> param : controllerParams.entrySet()) {
-            builder.addCode(makeVariableMarshaling(param.getValue(), controllerParamVariables.get(param.getKey())));
+        for (LocalVariable variable : controllerParamVariables.values()) {
+            builder.addCode(variable.makeDeclaration());
         }
 
+        builder.addCode(makeParameterAssignments());
 
+        return builder.build();
+    }
+
+    private CodeBlock makeParameterAssignments() {
+        CodeBlock.Builder builder = CodeBlock.builder();
+        for (Map.Entry<String, MethodParameter> param : controllerParams.entrySet()) {
+            if (param.getValue().getSource() == MethodParameter.Source.CONTEXT) {
+                Assignable assignable = controllerParamVariables.get(param.getKey());
+                Expression contextCreateExpr = makeContextFromRequest();
+                builder.addStatement(Assignment.of(assignable, contextCreateExpr).make());
+            } else {
+                builder.add(makeVariableMarshaling(param.getValue(), controllerParamVariables.get(param.getKey())));
+            }
+        }
         return builder.build();
     }
 
@@ -87,13 +98,13 @@ public class ResolveMethodGenerator {
             case BODY:
                 return requestMaker.makeGetBody();
             case CONTEXT:
-                return makeContextFromRequest();
+                throw new IllegalArgumentException("context param doesn't require marshalling");
         }
         throw new IllegalArgumentException("unexpected parameter source type");
     }
 
     private Expression makeContextFromRequest() {
-        return null;
+        return requestMaker;
     }
 
     private CodeBlock makeVariableMarshaling(MethodParameter param, LocalVariable output) {
@@ -115,7 +126,7 @@ public class ResolveMethodGenerator {
     private List<MethodParameterGenerator> makeMethodParameters() {
         List<MethodParameterGenerator> parameters = new ArrayList<>();
 
-        TypeMirror mapStrStrType = types.mirrorOfParamterizedClass(Map.class, String.class, String.class);
+        TypeMirror mapStrStrType = types.mirrorOfParameterizedClass(Map.class, String.class, String.class);
         TypeMirror requestType = types.mirrorOfClass(Request.class);
 
         parameters.add(new MethodParameterGenerator(mapStrStrType, "paramMap_str"));

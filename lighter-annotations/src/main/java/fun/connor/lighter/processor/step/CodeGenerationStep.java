@@ -72,11 +72,14 @@ public class CodeGenerationStep extends CompilerStep {
     private List<GeneratedEndpoint> generateEndpoints(Controller c, Set<AbstractCompilerError> errors) {
         List<GeneratedEndpoint> generatedTypes = new ArrayList<>();
         for (Endpoint e : c.getEndpoints()) {
-            EndpointRequestResolverGenerator generator =
-                    new EndpointRequestResolverGenerator(c, e, typeUtils, env.getFiler());
+//            EndpointRequestResolverGenerator generator =
+//                    new EndpointRequestResolverGenerator(c, e, typeUtils, env.getFiler());
+            EndpointResolverGenerator generator2 =
+                    new EndpointResolverGenerator(c, e, typeUtils, env.getFiler());
 
             try {
-                GeneratedType type = generator.generateCodeFile();
+//                GeneratedType type = generator.generateCodeFile();
+                GeneratedType type = generator2.generateCodeFile();
                 generatedTypes.add(new GeneratedEndpoint(e, type));
             } catch (IOException e1) {
                 errors.add(new CodeGenerationError(e.getMethodElement(), e1.getMessage()));

@@ -3,11 +3,15 @@ package fun.connor.lighter.processor.generator;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 import fun.connor.lighter.processor.LighterTypes;
+import fun.connor.lighter.processor.MoreTypes;
 import fun.connor.lighter.processor.generator.codegen.TypeAdaptorGenerator;
+import fun.connor.lighter.processor.generator.endpoint.ResolveMethodGenerator;
 import fun.connor.lighter.processor.model.Controller;
 import fun.connor.lighter.processor.model.Endpoint;
 
 import javax.annotation.processing.Filer;
+import javax.lang.model.element.Modifier;
+import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
 import java.util.*;
 import java.util.function.Function;
@@ -32,13 +36,16 @@ public class EndpointResolverGenerator extends AbstractGenerator {
                 .map(t -> new TypeAdaptorGenerator(t, types))
                 .collect(Collectors.toMap(a -> TypeName.get(a.getAdaptingType()), Function.identity()));
 
-        TypeSpec.Builder builder = TypeSpec.classBuilder(makeClassName());
+        TypeSpec.Builder builder = TypeSpec.classBuilder(makeClassName())
+                .addModifiers(Modifier.PUBLIC, Modifier.FINAL);
 
         typeAdaptorGenerators.values().stream()
                 .map(TypeAdaptorGenerator::getField)
                 .forEach(builder::addField);
 
-        return null;
+        builder.addMethod(new ResolveMethodGenerator(typeAdaptorGenerators, types, null, endpoint).make());
+
+        return builder.build();
     }
 
 
@@ -51,6 +58,9 @@ public class EndpointResolverGenerator extends AbstractGenerator {
 
         requiredTypes.add(returnType);
         for (TypeMirror mirror : methodArguments) {
+            if (MoreTypes.isTypeOptional(mirror)) {
+                mirror = types.extractOptionalType((DeclaredType) mirror);
+            }
             TypeMirror erased = types.erasure(mirror);
             if (!types.collectionContains(requiredTypes, erased)) {
                 requiredTypes.add(erased);
@@ -60,7 +70,7 @@ public class EndpointResolverGenerator extends AbstractGenerator {
     }
 
     private String makeClassName() {
-        String methodName = endpoint.getMethodName();
+        String methodName = endpoint.getMethodName() + "_TEST_";
 
         String randomStr = UUID.nameUUIDFromBytes((endpoint.getHttpMethod().toString() + endpoint.pathTemplate())
                 .getBytes()).toString().replace("-", "");

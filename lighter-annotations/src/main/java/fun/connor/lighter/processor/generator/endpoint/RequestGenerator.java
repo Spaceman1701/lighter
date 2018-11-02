@@ -1,12 +1,13 @@
 package fun.connor.lighter.processor.generator.endpoint;
 
 import com.squareup.javapoet.CodeBlock;
+import fun.connor.lighter.handler.Request;
 import fun.connor.lighter.processor.LighterTypes;
 import fun.connor.lighter.processor.generator.codegen.Expression;
 
 import javax.lang.model.type.TypeMirror;
 
-public class RequestGenerator {
+public class RequestGenerator implements Expression {
 
     private Expression source;
     private LighterTypes types;
@@ -29,6 +30,16 @@ public class RequestGenerator {
                 return CodeBlock.of("$L.getBody()", source.makeReadStub());
             }
         };
+    }
+
+    @Override
+    public CodeBlock makeReadStub() {
+        return source.makeReadStub();
+    }
+
+    @Override
+    public TypeMirror getType() {
+        return types.mirrorOfClass(Request.class);
     }
 }
 

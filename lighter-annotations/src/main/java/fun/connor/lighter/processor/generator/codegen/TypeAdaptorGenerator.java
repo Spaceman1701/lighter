@@ -27,12 +27,12 @@ public class TypeAdaptorGenerator {
 
         DeclaredType typeAdaptorMirror = (DeclaredType) types.mirrorOfClass(TypeAdapter.class);
 
-        this.fieldType = types.getDeclaredType((TypeElement)typeAdaptorMirror.asElement(), adaptingType);
+        this.fieldType = types.getDeclaredType((TypeElement)typeAdaptorMirror.asElement(), this.adaptingType);
 
         TypeName typeName =
                 ParameterizedTypeName.get(fieldType);
 
-        String fieldName = typeName.toString().replace('.', '_') + "Adapter";
+        String fieldName = TypeName.get(this.adaptingType).toString().replace('.', '_') + "Adapter";
 
         field = FieldSpec.builder(typeName, fieldName, Modifier.PRIVATE, Modifier.FINAL).build();
     }

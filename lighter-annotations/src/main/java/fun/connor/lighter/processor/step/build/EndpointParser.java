@@ -4,6 +4,8 @@ import fun.connor.lighter.declarative.Body;
 import fun.connor.lighter.declarative.Get;
 import fun.connor.lighter.declarative.Post;
 import fun.connor.lighter.declarative.Put;
+import fun.connor.lighter.handler.Request;
+import fun.connor.lighter.processor.MoreTypes;
 import fun.connor.lighter.processor.model.Endpoint;
 import fun.connor.lighter.processor.model.QueryParams;
 import fun.connor.lighter.processor.model.Route;
@@ -55,13 +57,18 @@ public class EndpointParser {
         }
 
         String bodyParamName = null;
+        String contextParamName = null;
         for (VariableElement variableElement : element.getParameters()) {
             if (variableElement.getAnnotation(Body.class) != null) {
                 bodyParamName = variableElement.getSimpleName().toString();
             }
+            if (MoreTypes.isTypeMirrorOfClass(variableElement.asType(), Request.class)) {
+                contextParamName = variableElement.getSimpleName().toString();
+            }
         }
 
-        return new Endpoint(method, controllerRoute.append(routeFragment), processor, bodyParamName, element);
+        return new Endpoint(method, controllerRoute.append(routeFragment),
+                processor, bodyParamName, contextParamName, element);
     }
 
     private Endpoint.Method getMethodFromAnnotation(Class<? extends Annotation> annotationClazz) {

@@ -3,10 +3,9 @@ package fun.connor.lighter.processor.generator.endpoint;
 import com.squareup.javapoet.CodeBlock;
 import fun.connor.lighter.handler.TypeMarshalException;
 import fun.connor.lighter.processor.LighterTypes;
-import fun.connor.lighter.processor.generator.codegen.Assignable;
-import fun.connor.lighter.processor.generator.codegen.Expression;
-import fun.connor.lighter.processor.generator.codegen.Statement;
-import fun.connor.lighter.processor.generator.codegen.TypeAdaptorGenerator;
+import fun.connor.lighter.processor.generator.codegen.*;
+
+import static java.util.Objects.requireNonNull;
 
 public class ParameterMarshallerGenerator implements Statement {
 
@@ -20,10 +19,10 @@ public class ParameterMarshallerGenerator implements Statement {
     private ParameterMarshallerGenerator
             (Assignable resultVariable, Expression stringParam,
              TypeAdaptorGenerator adaptor, LighterTypes types, boolean exceptionOnNull) {
-        this.output = resultVariable;
-        this.inputStr = stringParam;
-        this.adaptor = adaptor;
-        this.types = types;
+        this.output = requireNonNull(resultVariable);
+        this.inputStr = requireNonNull(stringParam);
+        this.adaptor = requireNonNull(adaptor, "type adaptor was null");
+        this.types = requireNonNull(types);
         this.exceptionOnNull = exceptionOnNull;
     }
 
@@ -35,8 +34,8 @@ public class ParameterMarshallerGenerator implements Statement {
     public CodeBlock make() {
 
         return CodeBlock.builder()
-                .beginControlFlow("if ($L != null)")
-                    .addStatement("$L $L", output.makeAssignmentStub(), adaptor.makeDeserialize(inputStr))
+                .beginControlFlow("if ($L != null)", inputStr.makeReadStub())
+                    .addStatement(Assignment.of(output, adaptor.makeDeserialize(inputStr)).make())
                 .endControlFlow()
                 .beginControlFlow("else")
                     .add(makeNullCaseHandler())

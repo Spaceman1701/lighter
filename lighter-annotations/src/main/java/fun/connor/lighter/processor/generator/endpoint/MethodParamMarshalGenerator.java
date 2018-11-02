@@ -41,7 +41,7 @@ public class MethodParamMarshalGenerator implements Statement {
         CodeBlock.Builder builder = CodeBlock.builder();
 
         builder.add(tempStr.makeDeclaration());
-        builder.add(Assignment.of(tempStr, source).make());
+        builder.addStatement(Assignment.of(tempStr, source).make());
 
         if (isOptional) {
             builder.add(buildOptionalBlock(tempStr));
@@ -54,6 +54,10 @@ public class MethodParamMarshalGenerator implements Statement {
 
     private TypeAdaptorGenerator getTypeAdaptor(TypeMirror type) {
         TypeMirror erasedType = types.erasure(type);
+        for (TypeName typeName : generatorMap.keySet()) {
+            System.out.println(typeName + " is in map");
+        }
+        System.out.println(TypeName.get(erasedType) + " is required");
         return generatorMap.get(TypeName.get(erasedType));
     }
 

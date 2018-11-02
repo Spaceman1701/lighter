@@ -67,7 +67,8 @@ public class Endpoint {
 
     public Endpoint
             (Method httpMethod, Route fullRoute,
-             QueryParams queryParams, String bodyParamName, ExecutableElement methodElement) {
+             QueryParams queryParams, String bodyParamName,
+             String contextParamName, ExecutableElement methodElement) {
         this.httpMethod = httpMethod;
         this.fullRoute = fullRoute;
         this.queryParams = queryParams;
@@ -75,7 +76,7 @@ public class Endpoint {
 
         endpointParamTypes = new HashMap<>();
         methodParameters = new HashMap<>();
-        extractMethodParams(bodyParamName);
+        extractMethodParams(bodyParamName, contextParamName);
 
         this.bodyParameter = makeBodyParam(bodyParamName);
     }
@@ -88,7 +89,7 @@ public class Endpoint {
         return null;
     }
 
-    private void extractMethodParams(String bodyParamName) {
+    private void extractMethodParams(String bodyParamName, String contextParamName) {
         returnType = methodElement.getReturnType();
         ExecutableType methodType = (ExecutableType) methodElement.asType();
 
@@ -99,17 +100,18 @@ public class Endpoint {
             String name = parameterVars.get(i).getSimpleName().toString();
             TypeMirror type = parameterTypes.get(i);
             endpointParamTypes.put(name, type);
-            methodParameters.put(name, makeMethodParam(i, type, name, bodyParamName));
+            methodParameters.put(name, makeMethodParam(i, type, name, bodyParamName, contextParamName));
         }
     }
 
-    private MethodParameter makeMethodParam(int index, TypeMirror type, String name, String bodyParamName) {
+    private MethodParameter makeMethodParam
+            (int index, TypeMirror type, String name, String bodyParamName, String contextParamName) {
         MethodParameter.Source source;
-        if (false) { //TODO: find a way to get the Context parameter
+        if (name.equals(contextParamName)) {
             source = MethodParameter.Source.CONTEXT;
-        } else if (name.equals(bodyParameter.getName())) {
+        } else if (name.equals(bodyParamName)) {
             source = MethodParameter.Source.BODY;
-        } else if (queryParams.containsValue(name)) {
+        } else if (queryParams != null && queryParams.containsValue(name)) {
             source = MethodParameter.Source.QUERY;
         } else {
             source = MethodParameter.Source.PATH;
