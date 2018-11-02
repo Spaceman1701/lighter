@@ -19,8 +19,6 @@ public class EndpointResolverGenerator extends AbstractGenerator {
     private Controller controller;
     private LighterTypes types;
 
-    private Map<TypeName, TypeAdaptorGenerator>  typeAdaptorGenerators;
-
     public EndpointResolverGenerator(Controller controller, Endpoint endpoint, LighterTypes types, Filer filer) {
         super(filer);
         this.controller = controller;
@@ -30,7 +28,7 @@ public class EndpointResolverGenerator extends AbstractGenerator {
 
     @Override
     protected TypeSpec generateType() {
-        typeAdaptorGenerators = getAllRequiredTypes().stream()
+        Map<TypeName, TypeAdaptorGenerator> typeAdaptorGenerators = getAllRequiredTypes().stream()
                 .map(t -> new TypeAdaptorGenerator(t, types))
                 .collect(Collectors.toMap(a -> TypeName.get(a.getAdaptingType()), Function.identity()));
 

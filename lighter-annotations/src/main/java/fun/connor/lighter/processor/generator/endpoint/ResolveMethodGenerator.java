@@ -68,7 +68,9 @@ public class ResolveMethodGenerator {
                 .collect(Collectors.toList()));
 
 
-
+        for (Map.Entry<String, MethodParameter> param : controllerParams.entrySet()) {
+            builder.addCode(makeVariableMarshaling(param.getValue(), controllerParamVariables.get(param.getKey())));
+        }
 
 
         return builder.build();
