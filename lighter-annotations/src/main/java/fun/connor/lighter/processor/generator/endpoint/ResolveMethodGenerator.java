@@ -1,9 +1,11 @@
 package fun.connor.lighter.processor.generator.endpoint;
 
+import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeName;
 import fun.connor.lighter.handler.Request;
 import fun.connor.lighter.processor.LighterTypes;
+import fun.connor.lighter.processor.generator.codegen.Expression;
 import fun.connor.lighter.processor.generator.codegen.LocalVariable;
 import fun.connor.lighter.processor.generator.codegen.MethodParameterGenerator;
 import fun.connor.lighter.processor.generator.codegen.TypeAdaptorGenerator;
@@ -25,6 +27,14 @@ public class ResolveMethodGenerator {
     private Endpoint endpoint;
     private ControllerGenerator controller;
 
+    private List<MethodParameterGenerator> parameterGenerators;
+    private MapGenerator paramMapMaker;
+    private MapGenerator queryMapMaker;
+    private RequestGenerator requestMaker;
+
+    private Map<String, MethodParameter> controllerParams;
+    private Map<String, LocalVariable> controllerParamVariables;
+
     public ResolveMethodGenerator
             (Map<TypeName, TypeAdaptorGenerator> adaptorGenerators, LighterTypes types,
              ControllerGenerator controller, Endpoint endpoint) {
@@ -32,6 +42,19 @@ public class ResolveMethodGenerator {
         this.types = types;
         this.endpoint = endpoint;
         this.controller = controller;
+
+        initGenerators();
+    }
+
+    private void initGenerators() {
+        parameterGenerators = makeMethodParameters();
+
+        paramMapMaker = new MapGenerator(String.class, String.class, parameterGenerators.get(0), types);
+        queryMapMaker = new MapGenerator(String.class, String.class, parameterGenerators.get(1), types);
+        requestMaker = new RequestGenerator(parameterGenerators.get(2), types);
+
+        controllerParams = endpoint.getMethodParameters();
+        controllerParamVariables = makeControllerParamVariables(controllerParams);
     }
 
     public MethodSpec make() {
@@ -39,19 +62,43 @@ public class ResolveMethodGenerator {
                 .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
                 .returns(TypeName.get(endpoint.getReturnType()));
 
-        List<MethodParameterGenerator> parameters = makeMethodParameters();
-        builder.addParameters(parameters.stream().map(MethodParameterGenerator::getParameterSpec).collect(Collectors.toList()));
+        builder.addParameters(parameterGenerators
+                .stream()
+                .map(MethodParameterGenerator::getParameterSpec)
+                .collect(Collectors.toList()));
 
-        MethodParameterGenerator paramMapMaker = parameters.get(0);
-        MethodParameterGenerator queryMapMaker = parameters.get(0);
-        RequestGenerator requestMaker = new RequestGenerator(parameters.get(0), types);
 
-        Map<String, MethodParameter> controllerParameters = endpoint.getMethodParameters();
-        Map<String, LocalVariable> controllerParamVariables = makeControllerParamVariables(controllerParameters);
 
 
 
         return builder.build();
+    }
+
+    private Expression getMarshallerSource(MethodParameter param) {
+        switch (param.getSource()) {
+            case QUERY:
+                String nameInQueryMap = endpoint.getQueryParamName(param.getName());
+                return queryMapMaker.makeGet(Expression.literal(String.class, nameInQueryMap, types));
+            case PATH:
+                String nameInParamMap = endpoint.getPathParamName(param.getName());
+                return paramMapMaker.makeGet(Expression.literal(String.class, nameInParamMap, types));
+            case BODY:
+                return requestMaker.makeGetBody();
+            case CONTEXT:
+                return makeContextFromRequest();
+        }
+        throw new IllegalArgumentException("unexpected parameter source type");
+    }
+
+    private Expression makeContextFromRequest() {
+        return null;
+    }
+
+    private CodeBlock makeVariableMarshaling(MethodParameter param, LocalVariable output) {
+        Expression getParam = getMarshallerSource(param);
+        MethodParamMarshalGenerator marshalGenerator =
+                new MethodParamMarshalGenerator(output, getParam, adaptorGenerators, types);
+        return marshalGenerator.make();
     }
 
     private Map<String, LocalVariable> makeControllerParamVariables(Map<String, MethodParameter> parameters) {

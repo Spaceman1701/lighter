@@ -75,7 +75,7 @@ public class Endpoint {
 
         endpointParamTypes = new HashMap<>();
         methodParameters = new HashMap<>();
-        extractMethodParams();
+        extractMethodParams(bodyParamName);
 
         this.bodyParameter = makeBodyParam(bodyParamName);
     }
@@ -83,12 +83,12 @@ public class Endpoint {
     private MethodParameter makeBodyParam(String name) {
         if (name != null) {
             int index  = getMethodParamIndexByName(name);
-            return new MethodParameter(index, endpointParamTypes.get(name), name);
+            return new MethodParameter(index, endpointParamTypes.get(name), name, MethodParameter.Source.BODY);
         }
         return null;
     }
 
-    private void extractMethodParams() {
+    private void extractMethodParams(String bodyParamName) {
         returnType = methodElement.getReturnType();
         ExecutableType methodType = (ExecutableType) methodElement.asType();
 
@@ -99,8 +99,22 @@ public class Endpoint {
             String name = parameterVars.get(i).getSimpleName().toString();
             TypeMirror type = parameterTypes.get(i);
             endpointParamTypes.put(name, type);
-            methodParameters.put(name, new MethodParameter(i, type, name));
+            methodParameters.put(name, makeMethodParam(i, type, name, bodyParamName));
         }
+    }
+
+    private MethodParameter makeMethodParam(int index, TypeMirror type, String name, String bodyParamName) {
+        MethodParameter.Source source;
+        if (false) { //TODO: find a way to get the Context parameter
+            source = MethodParameter.Source.CONTEXT;
+        } else if (name.equals(bodyParameter.getName())) {
+            source = MethodParameter.Source.BODY;
+        } else if (queryParams.containsValue(name)) {
+            source = MethodParameter.Source.QUERY;
+        } else {
+            source = MethodParameter.Source.PATH;
+        }
+        return new MethodParameter(index, type, name, source);
     }
 
     private int getMethodParamIndexByName(String name) {
@@ -112,6 +126,23 @@ public class Endpoint {
             index++;
         }
         return -1;
+    }
+
+    public String getQueryParamName(String methodParamName) {
+        return reverseParameterLookup(methodParamName, queryParams.getNameMappings());
+    }
+
+    public String getPathParamName(String methodParamName) {
+        return reverseParameterLookup(methodParamName, fullRoute.getParams());
+    }
+
+    private String reverseParameterLookup(String methodParamName, Map<String, String> nameMapping) {
+        for (Map.Entry<String, String> entry : nameMapping.entrySet()) {
+            if (entry.getValue().equals(methodParamName)) {
+                return entry.getKey();
+            }
+        }
+        return null;
     }
 
     public Map<String, MethodParameter> getMethodParameters() {

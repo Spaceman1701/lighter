@@ -11,7 +11,7 @@ import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
 import java.util.Map;
 
-public class MethodParameterGenerator implements Statement {
+public class MethodParamMarshalGenerator implements Statement {
 
     private LocalVariable destination;
     private Expression source;
@@ -20,7 +20,7 @@ public class MethodParameterGenerator implements Statement {
 
     private boolean isOptional;
 
-    public MethodParameterGenerator
+    public MethodParamMarshalGenerator
             (LocalVariable destination, Expression source, Map<TypeName, TypeAdaptorGenerator> generatorMap,
              LighterTypes types) {
         this.destination = destination;

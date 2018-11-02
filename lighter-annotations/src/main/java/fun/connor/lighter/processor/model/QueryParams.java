@@ -34,4 +34,12 @@ public class QueryParams {
     public Map<String, String> getNameMappings() {
         return nameMappings;
     }
+
+    boolean containsValue(String nameOnMethod) {
+        return nameMappings.values().contains(nameOnMethod);
+    }
+
+    boolean containsKey(String nameInMap) {
+        return nameMappings.containsKey(nameInMap);
+    }
 }
