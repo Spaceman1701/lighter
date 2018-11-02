@@ -1,5 +1,7 @@
 package fun.connor.lighter.processor.step;
 
+import fun.connor.lighter.processor.LighterTypes;
+
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.RoundEnvironment;
 import java.util.Map;
@@ -9,6 +11,7 @@ import java.util.function.Consumer;
 public abstract class CompilerStep {
 
     protected ProcessingEnvironment env;
+    protected LighterTypes typeUtils;
 
     protected static class EnvironmentRequirement<T> {
         final String name;
@@ -24,6 +27,7 @@ public abstract class CompilerStep {
 
     protected CompilerStep(ProcessingEnvironment env) {
         this.env = env;
+        this.typeUtils = new LighterTypes(env.getTypeUtils(), env.getElementUtils());
     }
 
     @SuppressWarnings("unchecked") //handler.accept - this method manually does type checking

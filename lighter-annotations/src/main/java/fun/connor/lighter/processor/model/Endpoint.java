@@ -1,5 +1,6 @@
 package fun.connor.lighter.processor.model;
 
+import fun.connor.lighter.processor.MoreTypes;
 import fun.connor.lighter.processor.model.endpoint.MethodParameter;
 
 import javax.lang.model.element.ExecutableElement;
@@ -60,6 +61,7 @@ public class Endpoint {
     private ExecutableElement methodElement;
     private TypeMirror returnType;
     private Map<String, TypeMirror> endpointParamTypes;
+    private Map<String, MethodParameter> methodParameters;
 
     private MethodParameter bodyParameter;
 
@@ -72,6 +74,7 @@ public class Endpoint {
         this.methodElement = methodElement;
 
         endpointParamTypes = new HashMap<>();
+        methodParameters = new HashMap<>();
         extractMethodParams();
 
         this.bodyParameter = makeBodyParam(bodyParamName);
@@ -96,6 +99,7 @@ public class Endpoint {
             String name = parameterVars.get(i).getSimpleName().toString();
             TypeMirror type = parameterTypes.get(i);
             endpointParamTypes.put(name, type);
+            methodParameters.put(name, new MethodParameter(i, type, name));
         }
     }
 
@@ -128,7 +132,7 @@ public class Endpoint {
         if (queryParams != null) {
             List<EndpointParam> query = getParamFromMapping(queryParams.getNameMappings(), EndpointParam.Location.QUERY)
                     .stream()
-                    .filter(p -> !isTypeOptional(p.type))
+                    .filter(p -> !MoreTypes.isTypeOptional(p.type))
                     .collect(Collectors.toList());
 
             path.addAll(query);
@@ -142,18 +146,10 @@ public class Endpoint {
             return new ArrayList<>();
         }
         return getParamFromMapping(queryParams.getNameMappings(), EndpointParam.Location.QUERY).stream()
-                .filter(p -> isTypeOptional(p.type))
+                .filter(p -> MoreTypes.isTypeOptional(p.type))
                 .collect(Collectors.toList());
     }
 
-    private boolean isTypeOptional(TypeMirror type) {
-        if (type.getKind() == TypeKind.DECLARED) {
-            DeclaredType declaredType = (DeclaredType) type;
-            TypeElement element = (TypeElement) declaredType.asElement();
-            return (element.getQualifiedName().toString().equals(Optional.class.getCanonicalName()));
-        }
-        return false;
-    }
 
     private List<EndpointParam> getParamFromMapping(Map<String, String> mapping, EndpointParam.Location location) {
         List<EndpointParam> requiredParams = new ArrayList<>();
@@ -185,6 +181,10 @@ public class Endpoint {
 
     public TypeMirror getReturnType() {
         return returnType;
+    }
+
+    public TypeMirror getReturnTypeParameter() {
+        return ((DeclaredType)returnType).getTypeArguments().get(0);
     }
 
     public List<String> getMethodArgs() {

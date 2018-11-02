@@ -15,7 +15,7 @@ public class QueryParamsValidator extends EndpointAnnotationValidator {
         super.validate(annotatedElement);
 
         if (!AnnotationValidationUtils.hasEndpointAnnotation(annotatedElement)) {
-            throw new IllegalArgumentException("no endpoint definition annotation present");
+            throw new IllegalArgumentException("no codegen definition annotation present");
         }
     }
 

@@ -1,0 +1,87 @@
+package fun.connor.lighter.processor.generator.endpoint;
+
+import com.squareup.javapoet.CodeBlock;
+import com.squareup.javapoet.TypeName;
+import com.sun.tools.javac.jvm.Code;
+import fun.connor.lighter.processor.LighterTypes;
+import fun.connor.lighter.processor.MoreTypes;
+import fun.connor.lighter.processor.generator.codegen.*;
+import fun.connor.lighter.processor.generator.codegen.Readable;
+
+import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.TypeMirror;
+import javax.lang.model.util.Types;
+import java.util.Map;
+
+public class MethodParameterGenerator implements Statement {
+
+    private LocalVariable destination;
+    private Readable source;
+    private LighterTypes types;
+    private Map<TypeName, TypeAdaptorGenerator> generatorMap;
+
+    private boolean isOptional;
+
+    public MethodParameterGenerator
+            (LocalVariable destination, Readable source, Map<TypeName, TypeAdaptorGenerator> generatorMap,
+             LighterTypes types) {
+        this.destination = destination;
+        this.source = source;
+        this.types = types;
+        this.generatorMap = generatorMap;
+
+        isOptional = MoreTypes.isTypeOptional(destination.getType());
+    }
+
+
+    @Override
+    public CodeBlock make() {
+
+        LocalVariable tempStr =
+                new LocalVariable(types.mirrorOfClass(String.class), destination.getName() + "_Str");
+
+        CodeBlock.Builder builder = CodeBlock.builder();
+
+        builder.add(tempStr.makeDeclaration());
+        builder.add(Assignment.of(tempStr, source).make());
+
+        if (isOptional) {
+            builder.add(buildOptionalBlock(tempStr));
+        } else {
+            builder.add(buildRequiredBlock(tempStr));
+        }
+
+        return builder.build();
+    }
+
+    private TypeAdaptorGenerator getTypeAdaptor(TypeMirror type) {
+        TypeMirror erasedType = types.erasure(type);
+        return generatorMap.get(TypeName.get(erasedType));
+    }
+
+    private CodeBlock buildOptionalBlock(LocalVariable tempStr) {
+        //TODO: deal with primitives
+        TypeMirror optionType = types.extractOptionalType((DeclaredType) destination.getType());
+        LocalVariable nullableVar = new LocalVariable(optionType, destination.getName() + "_Nullable");
+
+        CodeBlock marshalBlock = ParameterMarshallerGenerator.builder(nullableVar, types)
+                .input(tempStr)
+                .typeAdaptorGenerator(getTypeAdaptor(optionType))
+                .shouldThrowOnNull(false)
+                .build().make();
+
+        OptionalGenerator optionalGenerator = new OptionalGenerator(nullableVar, types);
+
+        return marshalBlock.toBuilder()
+                .addStatement(Assignment.of(destination, optionalGenerator).make())
+                .build();
+    }
+
+    private CodeBlock buildRequiredBlock(LocalVariable tempStr) {
+        return ParameterMarshallerGenerator.builder(destination, types)
+                .shouldThrowOnNull(true)
+                .typeAdaptorGenerator(getTypeAdaptor(destination.getType()))
+                .input(tempStr)
+                .build().make();
+    }
+}

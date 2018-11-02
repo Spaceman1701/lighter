@@ -24,6 +24,7 @@ public class LighterAnnotationProcessor extends AbstractProcessor {
     @Override
     public void init(ProcessingEnvironment env) {
         super.init(env);
+
         steps = new ArrayList<>();
 
         steps.add(new ValidationStep(env));

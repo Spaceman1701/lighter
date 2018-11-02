@@ -5,6 +5,7 @@ import fun.connor.lighter.adapter.TypeAdapter;
 import fun.connor.lighter.adapter.TypeAdapterFactory;
 import fun.connor.lighter.handler.*;
 import fun.connor.lighter.injection.InjectionObjectFactory;
+import fun.connor.lighter.processor.LighterTypes;
 import fun.connor.lighter.processor.model.Controller;
 import fun.connor.lighter.processor.model.Endpoint;
 import fun.connor.lighter.processor.model.ModelUtils;
@@ -14,7 +15,6 @@ import javax.annotation.processing.Filer;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
-import javax.lang.model.util.Types;
 import java.util.*;
 
 public class EndpointRequestResolverGenerator extends AbstractGenerator {
@@ -32,9 +32,10 @@ public class EndpointRequestResolverGenerator extends AbstractGenerator {
 
     private TypeName controllerTypeName;
 
-    private Types typeUtils;
+    private LighterTypes typeUtils;
 
-    public EndpointRequestResolverGenerator(Controller controller, Endpoint endpoint, Types typeUtils, Filer filer) {
+    public EndpointRequestResolverGenerator
+            (Controller controller, Endpoint endpoint, LighterTypes typeUtils, Filer filer) {
         super(filer);
         this.controller = controller;
         this.endpoint = endpoint;
@@ -47,6 +48,7 @@ public class EndpointRequestResolverGenerator extends AbstractGenerator {
 
     @Override
     protected TypeSpec generateType() {
+
         FieldSpec controllerField = generateControllerField();
         List<FieldSpec> adapterFields = generateAdapterFields();
         MethodSpec constructor = generateConstructor();
@@ -143,7 +145,7 @@ public class EndpointRequestResolverGenerator extends AbstractGenerator {
                 .build();
     }
 
-    private CodeBlock adapteStringToType(String typedVarName, String strVarName, TypeMirror type) {
+    private CodeBlock adaptStringToType(String typedVarName, String strVarName, TypeMirror type) {
         TypeMirror erasedType = typeUtils.erasure(type);
         String typeAdapter = getTypeAdapterName(TypeName.get(erasedType));
         return CodeBlock.builder()
@@ -160,7 +162,7 @@ public class EndpointRequestResolverGenerator extends AbstractGenerator {
                     .addStatement("throw new $T($S, $S, $T.class)", TypeMarshalException.class, "bad", "bad", expectedType)
                 .endControlFlow()
                 .addStatement("$T $L;", expectedType, parameterName)
-                .add(adapteStringToType(parameterName, parameterStrName, expectedType))
+                .add(adaptStringToType(parameterName, parameterStrName, expectedType))
                 .build();
     }
 
@@ -177,7 +179,7 @@ public class EndpointRequestResolverGenerator extends AbstractGenerator {
                     .addStatement("$L = null", paramOptionName)
                 .endControlFlow()
                 .beginControlFlow("else")
-                    .add(adapteStringToType(paramOptionName, parameterStrName, optionalType))
+                    .add(adaptStringToType(paramOptionName, parameterStrName, optionalType))
                 .endControlFlow()
                 .addStatement("$T<$T> $L = $T.ofNullable($L)", Optional.class, optionalTypeName, parameterName,
                         Optional.class, paramOptionName)

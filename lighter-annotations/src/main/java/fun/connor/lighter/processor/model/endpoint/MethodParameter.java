@@ -37,4 +37,8 @@ public class MethodParameter {
     public boolean isOptional() {
         return ModelUtils.typeMirrorEqualsType(type, Optional.class);
     }
+
+    public boolean isPrimitive() {
+        return type.getKind().isPrimitive();
+    }
 }

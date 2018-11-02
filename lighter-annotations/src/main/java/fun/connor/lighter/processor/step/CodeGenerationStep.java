@@ -73,7 +73,7 @@ public class CodeGenerationStep extends CompilerStep {
         List<GeneratedEndpoint> generatedTypes = new ArrayList<>();
         for (Endpoint e : c.getEndpoints()) {
             EndpointRequestResolverGenerator generator =
-                    new EndpointRequestResolverGenerator(c, e, env.getTypeUtils(), env.getFiler());
+                    new EndpointRequestResolverGenerator(c, e, typeUtils, env.getFiler());
 
             try {
                 GeneratedType type = generator.generateCodeFile();

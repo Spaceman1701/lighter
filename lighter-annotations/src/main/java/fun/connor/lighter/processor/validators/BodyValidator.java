@@ -13,7 +13,7 @@ public class BodyValidator implements AnnotationValidator {
         }
 
         if (!AnnotationValidationUtils.hasEndpointAnnotation(parentMethod)) {
-            throw new IllegalArgumentException("method must be an endpoint definition");
+            throw new IllegalArgumentException("method must be an codegen definition");
         }
     }
 }
