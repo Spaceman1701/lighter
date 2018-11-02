@@ -48,7 +48,7 @@ public class MethodParameterGenerator implements Statement {
         if (isOptional) {
             builder.add(buildOptionalBlock(tempStr));
         } else {
-            builder.add(buildRequiredBlock(tempStr));
+            builder.add(buildMarshalBlock(destination, tempStr, true));
         }
 
         return builder.build();
@@ -64,11 +64,7 @@ public class MethodParameterGenerator implements Statement {
         TypeMirror optionType = types.extractOptionalType((DeclaredType) destination.getType());
         LocalVariable nullableVar = new LocalVariable(optionType, destination.getName() + "_Nullable");
 
-        CodeBlock marshalBlock = ParameterMarshallerGenerator.builder(nullableVar, types)
-                .input(tempStr)
-                .typeAdaptorGenerator(getTypeAdaptor(optionType))
-                .shouldThrowOnNull(false)
-                .build().make();
+        CodeBlock marshalBlock = buildMarshalBlock(nullableVar, tempStr, false);
 
         OptionalGenerator optionalGenerator = new OptionalGenerator(nullableVar, types);
 
@@ -77,11 +73,11 @@ public class MethodParameterGenerator implements Statement {
                 .build();
     }
 
-    private CodeBlock buildRequiredBlock(LocalVariable tempStr) {
+    private CodeBlock buildMarshalBlock(Assignable destination, Readable input, boolean throwOnNull) {
         return ParameterMarshallerGenerator.builder(destination, types)
-                .shouldThrowOnNull(true)
+                .shouldThrowOnNull(throwOnNull)
                 .typeAdaptorGenerator(getTypeAdaptor(destination.getType()))
-                .input(tempStr)
+                .input(input)
                 .build().make();
     }
 }
