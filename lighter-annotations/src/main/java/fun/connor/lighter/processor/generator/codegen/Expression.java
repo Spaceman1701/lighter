@@ -17,7 +17,11 @@ public interface Expression extends TypedElement, Statement {
         return new Expression() {
             @Override
             public CodeBlock makeReadStub() {
-                return CodeBlock.of("$L", value);
+                if (type.equals(String.class)) { //String needs escaping quotes
+                    return CodeBlock.of("$S", value);
+                } else {
+                    return CodeBlock.of("$L", value);
+                }
             }
 
             @Override
@@ -25,5 +29,9 @@ public interface Expression extends TypedElement, Statement {
                 return types.mirrorOfClass(type);
             }
         };
+    }
+
+    static Expression nullExpr(LighterTypes types) {
+        return literal(Void.class, null, types);
     }
 }

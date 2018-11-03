@@ -23,7 +23,7 @@ public class OptionalGenerator implements Expression {
     @Override
     public CodeBlock makeReadStub() {
         //TODO: handle primitive types
-        return CodeBlock.of("$T.ofNullable($L)", Optional.class, source);
+        return CodeBlock.of("$T.ofNullable($L)", Optional.class, source.makeReadStub());
     }
 
     @Override

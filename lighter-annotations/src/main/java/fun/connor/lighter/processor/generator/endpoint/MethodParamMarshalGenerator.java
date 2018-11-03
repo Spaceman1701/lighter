@@ -29,6 +29,7 @@ public class MethodParamMarshalGenerator implements Statement {
         this.generatorMap = generatorMap;
 
         isOptional = MoreTypes.isTypeOptional(destination.getType());
+        System.out.println(isOptional);
     }
 
 
@@ -54,10 +55,6 @@ public class MethodParamMarshalGenerator implements Statement {
 
     private TypeAdaptorGenerator getTypeAdaptor(TypeMirror type) {
         TypeMirror erasedType = types.erasure(type);
-        for (TypeName typeName : generatorMap.keySet()) {
-            System.out.println(typeName + " is in map");
-        }
-        System.out.println(TypeName.get(erasedType) + " is required");
         return generatorMap.get(TypeName.get(erasedType));
     }
 
@@ -70,7 +67,9 @@ public class MethodParamMarshalGenerator implements Statement {
 
         OptionalGenerator optionalGenerator = new OptionalGenerator(nullableVar, types);
 
-        return marshalBlock.toBuilder()
+        return CodeBlock.builder()
+                .add(nullableVar.makeDeclaration())
+                .add(marshalBlock)
                 .addStatement(Assignment.of(destination, optionalGenerator).make())
                 .build();
     }

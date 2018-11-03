@@ -70,7 +70,27 @@ public class ResolveMethodGenerator {
 
         builder.addCode(makeParameterAssignments());
 
+        builder.addCode(makeReturnStatement());
+
         return builder.build();
+    }
+
+    private CodeBlock makeReturnStatement() {
+        return CodeBlock.builder()
+                .addStatement("return $L", controller.makeEndpointCall(makeOrderedMethodArgs()).makeReadStub())
+                .build();
+    }
+
+    private List<Expression> makeOrderedMethodArgs() {
+        List<LocalVariable> sorted = new ArrayList<>(controllerParamVariables.values());
+
+        sorted.sort((a, b) -> {
+            int aIndex = controllerParams.get(a.getName()).getIndex();
+            int bIndex = controllerParams.get(b.getName()).getIndex();
+            return aIndex - bIndex;
+        });
+
+        return new ArrayList<>(sorted);
     }
 
     private CodeBlock makeParameterAssignments() {
@@ -118,6 +138,7 @@ public class ResolveMethodGenerator {
         Map<String, LocalVariable> variables = new HashMap<>();
         for (Map.Entry<String, MethodParameter> entry : parameters.entrySet()) {
             MethodParameter param = entry.getValue();
+            System.out.println(param.getType());
             variables.put(entry.getKey(), new LocalVariable(param.getType(), param.getName()));
         }
         return variables;

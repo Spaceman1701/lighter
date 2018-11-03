@@ -25,11 +25,7 @@ public class MethodParameter {
 
 
     public TypeMirror getType() {
-        if (isOptional()) {
-            return ModelUtils.extractOptionalType((DeclaredType) type);
-        } else {
-            return type;
-        }
+        return type;
     }
 
     public String getName() {

@@ -100,6 +100,7 @@ public class Endpoint {
             String name = parameterVars.get(i).getSimpleName().toString();
             TypeMirror type = parameterTypes.get(i);
             endpointParamTypes.put(name, type);
+            System.out.println("paramtype: " + type.toString());
             methodParameters.put(name, makeMethodParam(i, type, name, bodyParamName, contextParamName));
         }
     }

@@ -2,10 +2,13 @@ package fun.connor.lighter.processor.generator;
 
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
+import fun.connor.lighter.handler.LighterRequestResolver;
 import fun.connor.lighter.processor.LighterTypes;
 import fun.connor.lighter.processor.MoreTypes;
 import fun.connor.lighter.processor.generator.codegen.TypeAdaptorGenerator;
+import fun.connor.lighter.processor.generator.endpoint.ControllerGenerator;
 import fun.connor.lighter.processor.generator.endpoint.ResolveMethodGenerator;
+import fun.connor.lighter.processor.generator.endpoint.ResolverConstructorGenerator;
 import fun.connor.lighter.processor.model.Controller;
 import fun.connor.lighter.processor.model.Endpoint;
 
@@ -37,13 +40,23 @@ public class EndpointResolverGenerator extends AbstractGenerator {
                 .collect(Collectors.toMap(a -> TypeName.get(a.getAdaptingType()), Function.identity()));
 
         TypeSpec.Builder builder = TypeSpec.classBuilder(makeClassName())
+                .addSuperinterface(LighterRequestResolver.class)
                 .addModifiers(Modifier.PUBLIC, Modifier.FINAL);
 
         typeAdaptorGenerators.values().stream()
                 .map(TypeAdaptorGenerator::getField)
                 .forEach(builder::addField);
 
-        builder.addMethod(new ResolveMethodGenerator(typeAdaptorGenerators, types, null, endpoint).make());
+        ControllerGenerator controllerGenerator =
+                new ControllerGenerator
+                        (controller.getElement().asType(), "controller",
+                                endpoint.getMethodName(), endpoint.getReturnType());
+
+        builder.addField(controllerGenerator.getField());
+
+        builder.addMethod(new ResolverConstructorGenerator(controllerGenerator, typeAdaptorGenerators, types).make());
+        builder.addMethod(new ResolveMethodGenerator(typeAdaptorGenerators, types, controllerGenerator, endpoint).make());
+
 
         return builder.build();
     }

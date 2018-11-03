@@ -38,7 +38,7 @@ public class ParameterMarshallerGenerator implements Statement {
                     .addStatement(Assignment.of(output, adaptor.makeDeserialize(inputStr)).make())
                 .endControlFlow()
                 .beginControlFlow("else")
-                    .add(makeNullCaseHandler())
+                    .addStatement(makeNullCaseHandler())
                 .endControlFlow()
                 .build();
     }
@@ -47,15 +47,13 @@ public class ParameterMarshallerGenerator implements Statement {
         if (exceptionOnNull) {
             return makeTypeMissingException();
         } else {
-            return CodeBlock.builder()
-                    .add("$L null", output.makeAssignmentStub())
-                    .build();
+            return Assignment.of(output, Expression.nullExpr(types)).make();
         }
     }
 
     private CodeBlock makeTypeMissingException() {
         return CodeBlock.builder()
-                .addStatement("throw new $T($S, $S, $T.class)",
+                .add("throw new $T($S, $S, $T.class)",
                         TypeMarshalException.class, "required type was missing", inputStr.makeReadStub(),
                         adaptor.getAdaptingType())
                 .build();
