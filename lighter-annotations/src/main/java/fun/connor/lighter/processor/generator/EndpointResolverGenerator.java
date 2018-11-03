@@ -83,7 +83,7 @@ public class EndpointResolverGenerator extends AbstractGenerator {
     }
 
     private String makeClassName() {
-        String methodName = endpoint.getMethodName() + "_TEST_";
+        String methodName = endpoint.getMethodName();
 
         String randomStr = UUID.nameUUIDFromBytes((endpoint.getHttpMethod().toString() + endpoint.pathTemplate())
                 .getBytes()).toString().replace("-", "");
