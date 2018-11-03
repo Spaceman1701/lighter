@@ -100,7 +100,6 @@ public class Endpoint {
             String name = parameterVars.get(i).getSimpleName().toString();
             TypeMirror type = parameterTypes.get(i);
             endpointParamTypes.put(name, type);
-            System.out.println("paramtype: " + type.toString());
             methodParameters.put(name, makeMethodParam(i, type, name, bodyParamName, contextParamName));
         }
     }
@@ -194,7 +193,6 @@ public class Endpoint {
 
         for (Map.Entry<String, String> entry : mapping.entrySet()) {
             String nameInMap = entry.getKey();
-            System.out.println(nameInMap);
             String nameOnMethod = entry.getValue();
             TypeMirror type = endpointParamTypes.get(nameOnMethod);
             requiredParams.add(new EndpointParam(nameInMap, nameOnMethod, type, location));

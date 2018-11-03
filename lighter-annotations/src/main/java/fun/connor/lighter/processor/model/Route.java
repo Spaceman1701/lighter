@@ -19,8 +19,6 @@ public class Route {
 
         parsePartsFromTemplate(templateStr);
         parseFromRouteParts(parts, hasTrailingSlash());
-
-        System.out.println("built route: " + templateStr);
     }
 
     private Route(List<RoutePart> parts, boolean trailingSlash) {
@@ -29,9 +27,6 @@ public class Route {
         this.parts = parts;
 
         parseFromRouteParts(parts, trailingSlash);
-
-
-        System.out.println("built route (from parts): " + templateStr);
     }
 
     private void parsePartsFromTemplate(String templateStr) {

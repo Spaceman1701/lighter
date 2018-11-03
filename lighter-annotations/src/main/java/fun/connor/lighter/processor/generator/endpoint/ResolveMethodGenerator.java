@@ -138,7 +138,6 @@ public class ResolveMethodGenerator {
         Map<String, LocalVariable> variables = new HashMap<>();
         for (Map.Entry<String, MethodParameter> entry : parameters.entrySet()) {
             MethodParameter param = entry.getValue();
-            System.out.println(param.getType());
             variables.put(entry.getKey(), new LocalVariable(param.getType(), param.getName()));
         }
         return variables;
