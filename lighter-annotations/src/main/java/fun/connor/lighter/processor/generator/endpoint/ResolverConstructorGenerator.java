@@ -26,7 +26,6 @@ public class ResolverConstructorGenerator {
     }
 
     public MethodSpec make() {
-        TypeName controllerType = TypeName.get(controllerGenerator.getType());
         return MethodSpec.constructorBuilder()
                 .addModifiers(Modifier.PUBLIC)
                 .addParameter(InjectionObjectFactory.class, "injector", Modifier.FINAL)

@@ -1,10 +1,8 @@
 package fun.connor.lighter.processor.model.endpoint;
 
-import fun.connor.lighter.processor.model.ModelUtils;
+import fun.connor.lighter.processor.MoreTypes;
 
-import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
-import java.util.Optional;
 
 public class MethodParameter {
     public enum Source {
@@ -37,7 +35,7 @@ public class MethodParameter {
     }
 
     public boolean isOptional() {
-        return ModelUtils.typeMirrorEqualsType(type, Optional.class);
+        return MoreTypes.isTypeOptional(type);
     }
 
     public Source getSource() {

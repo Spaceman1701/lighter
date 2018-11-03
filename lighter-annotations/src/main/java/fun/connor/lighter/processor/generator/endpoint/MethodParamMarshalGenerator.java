@@ -29,7 +29,6 @@ public class MethodParamMarshalGenerator implements Statement {
         this.generatorMap = generatorMap;
 
         isOptional = MoreTypes.isTypeOptional(destination.getType());
-        System.out.println(isOptional);
     }
 
 

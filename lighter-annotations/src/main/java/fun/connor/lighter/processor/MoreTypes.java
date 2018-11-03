@@ -22,7 +22,6 @@ public class MoreTypes {
     }
 
     public static boolean isTypeOptional(TypeMirror type) {
-        System.out.println(type.toString());
         return isTypeMirrorOfClass(type, Optional.class)
                 || isTypeMirrorOfClass(type, OptionalInt.class)
                 || isTypeMirrorOfClass(type, OptionalDouble.class)

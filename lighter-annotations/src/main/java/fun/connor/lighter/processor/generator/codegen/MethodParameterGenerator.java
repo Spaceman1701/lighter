@@ -14,7 +14,6 @@ public class MethodParameterGenerator implements Expression {
 
     public MethodParameterGenerator(TypeMirror type, String name) {
         this.type = type;
-        System.out.println("creating method param with " + TypeName.get(type));
         this.name = name;
     }
 
