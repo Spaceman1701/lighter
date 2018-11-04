@@ -3,6 +3,7 @@ package fun.connor.lighter.processor.step;
 import fun.connor.lighter.declarative.ResourceController;
 import fun.connor.lighter.processor.error.AbstractCompilerError;
 import fun.connor.lighter.processor.error.AnnotationValidationError;
+import fun.connor.lighter.processor.error.RouteError;
 import fun.connor.lighter.processor.model.Controller;
 import fun.connor.lighter.processor.model.Model;
 
@@ -44,12 +45,16 @@ public class ValidateModelStep extends CompilerStep {
         return new StepResult(errors);
     }
 
-    private Set<AnnotationValidationError> checkControllerFragments(List<Controller> controllers) {
-        Set<AnnotationValidationError> errors = new HashSet<>();
+    private Set<AbstractCompilerError> checkControllerFragments(List<Controller> controllers) {
+        Set<AbstractCompilerError> errors = new HashSet<>();
         for (Controller a : controllers) { //TODO: hash-table implementation here
             for (Controller b : controllers) {
-                if (a.getRouteFragment().captures(b.getRouteFragment())) {
-                    errors.add(new AnnotationValidationError(null, "bad route", ResourceController.class.getCanonicalName()));
+                if (a != b) {
+                    if (a.getRouteFragment().captures(b.getRouteFragment())) {
+                        AbstractCompilerError error =
+                                new RouteError(a.getElement(), b.getElement(), a.getRouteFragment(), b.getRouteFragment());
+                        errors.add(error);
+                    }
                 }
             }
         }

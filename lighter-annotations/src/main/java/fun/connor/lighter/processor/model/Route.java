@@ -1,9 +1,10 @@
 package fun.connor.lighter.processor.model;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.common.collect.Streams;
+import javafx.util.Pair;
+
+import java.util.*;
+import java.util.function.Predicate;
 
 public class Route {
 
@@ -97,7 +98,28 @@ public class Route {
      * route.
      */
     public boolean captures(Route other) {
-        return false;
+        Objects.requireNonNull(other);
+        if (other.getSpecificity() != this.getSpecificity()) {
+            return false; //routes with different specificity can never fully capture
+        }
+
+        boolean routesEqual = Streams.zip(parts.stream(), other.parts.stream(), Pair::new)
+                .map((p) -> {
+                    RoutePart a = p.getKey();
+                    RoutePart b = p.getValue();
+                    if (a.getKind() == b.getKind()) {
+                        if (a.getKind() != RoutePart.Kind.PARAMETER) {
+                            return a.getString().equals(b.getString());
+                        } else {
+                            return true;
+                        }
+                    }
+                    return false;
+                })
+                .reduce(Boolean::logicalAnd).orElse(false);
+
+
+        return routesEqual;
     }
 
     /**
