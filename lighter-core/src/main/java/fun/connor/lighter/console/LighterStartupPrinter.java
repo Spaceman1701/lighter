@@ -13,7 +13,7 @@ public class LighterStartupPrinter {
                     "███████╗██║╚██████╔╝██║  ██║   ██║   ███████╗██║  ██║\n" +
                     "╚══════╝╚═╝ ╚═════╝ ╚═╝  ╚═╝   ╚═╝   ╚══════╝╚═╝  ╚═╝\n" +
                     "                                                     \n" +
-                    " ::Lighter Framework                   (MVP version) \n";
+                    " ::Lighter Framework::                 (MVP version) \n";
 
     private PrintStream outStream;
 

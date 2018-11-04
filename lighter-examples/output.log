@@ -234,3 +234,20 @@
 19:29:49.655 [XNIO-1 Accept] DEBUG org.xnio.nio - Started channel thread 'XNIO-1 Accept', selector sun.nio.ch.KQueueSelectorImpl@59522433
 19:29:49.656 [main] DEBUG io.undertow - Configuring listener with protocol HTTP for interface 0.0.0.0 and port 8000
 19:29:49.706 [main] INFO  fun.connor.lighter.example.Main - BOOTED CONTAINER: 376 ms
+19:33:47.512 [main] DEBUG org.jboss.logging - Logging Provider: org.jboss.logging.Slf4jLoggerProvider found via system property
+19:33:47.523 [main] DEBUG fun.connor.lighter.marshal.gson.GsonTypeAdapterFactory - asked to make adaptor for Person
+19:33:47.528 [main] DEBUG fun.connor.lighter.marshal.gson.GsonTypeAdapterFactory - asked to make adaptor for Request
+19:33:47.539 [main] DEBUG fun.connor.lighter.undertow.LighterUndertow - adding route: POST: person
+19:33:47.541 [main] DEBUG fun.connor.lighter.marshal.gson.GsonTypeAdapterFactory - asked to make adaptor for Map
+19:33:47.542 [main] DEBUG fun.connor.lighter.marshal.gson.GsonTypeAdapterFactory - asked to make adaptor for Request
+19:33:47.543 [main] DEBUG fun.connor.lighter.undertow.LighterUndertow - adding route: GET: person/say_hello/{firstName}/{lastName}
+19:33:47.553 [main] DEBUG io.undertow - starting undertow server io.undertow.Undertow@4c1909a3
+19:33:47.562 [main] INFO  org.xnio - XNIO version 3.3.8.Final
+19:33:47.574 [main] INFO  org.xnio.nio - XNIO NIO Implementation Version 3.3.8.Final
+19:33:47.602 [XNIO-1 I/O-1] DEBUG org.xnio.nio - Started channel thread 'XNIO-1 I/O-1', selector sun.nio.ch.KQueueSelectorImpl@44de8d4a
+19:33:47.602 [XNIO-1 I/O-2] DEBUG org.xnio.nio - Started channel thread 'XNIO-1 I/O-2', selector sun.nio.ch.KQueueSelectorImpl@159886f2
+19:33:47.602 [XNIO-1 I/O-3] DEBUG org.xnio.nio - Started channel thread 'XNIO-1 I/O-3', selector sun.nio.ch.KQueueSelectorImpl@7ff887
+19:33:47.602 [XNIO-1 I/O-4] DEBUG org.xnio.nio - Started channel thread 'XNIO-1 I/O-4', selector sun.nio.ch.KQueueSelectorImpl@1d5fc898
+19:33:47.603 [XNIO-1 Accept] DEBUG org.xnio.nio - Started channel thread 'XNIO-1 Accept', selector sun.nio.ch.KQueueSelectorImpl@69b38d00
+19:33:47.604 [main] DEBUG io.undertow - Configuring listener with protocol HTTP for interface 0.0.0.0 and port 8000
+19:33:47.653 [main] INFO  fun.connor.lighter.example.Main - BOOTED CONTAINER: 395 ms
