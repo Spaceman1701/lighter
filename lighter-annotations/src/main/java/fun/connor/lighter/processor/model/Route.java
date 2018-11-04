@@ -57,12 +57,15 @@ public class Route {
         StringBuilder templateBuilder = new StringBuilder();
 
         for (RoutePart p : parts) {
-            templateBuilder.append(p.getString());
-            templateBuilder.append("/");
             if (p.getKind() == RoutePart.Kind.PARAMETER) {
                 ParameterParser parser = new ParameterParser(p.getString());
                 params.put(parser.getExposedName(), parser.getNameOnMethod());
+                templateBuilder.append("{").append(p.getString()).append("}");
+            } else {
+                templateBuilder.append(p.getString());
             }
+            templateBuilder.append("/");
+
         }
         templateStr = templateBuilder.toString();
         if (!trailingSlash && !templateStr.isEmpty()) {
