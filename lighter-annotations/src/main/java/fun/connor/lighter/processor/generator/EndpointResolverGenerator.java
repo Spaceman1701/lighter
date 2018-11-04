@@ -3,6 +3,7 @@ package fun.connor.lighter.processor.generator;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 import fun.connor.lighter.handler.LighterRequestResolver;
+import fun.connor.lighter.handler.Request;
 import fun.connor.lighter.processor.LighterTypes;
 import fun.connor.lighter.processor.MoreTypes;
 import fun.connor.lighter.processor.generator.codegen.TypeAdaptorGenerator;
@@ -71,6 +72,9 @@ public class EndpointResolverGenerator extends AbstractGenerator {
 
         requiredTypes.add(returnType);
         for (TypeMirror mirror : methodArguments) {
+            if (MoreTypes.isTypeMirrorOfClass(mirror, Request.class)) {
+                continue; //no requirement for adapting Request - it's provided
+            }
             if (MoreTypes.isTypeOptional(mirror)) {
                 mirror = types.extractOptionalType((DeclaredType) mirror);
             }
