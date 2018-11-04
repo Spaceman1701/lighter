@@ -9,8 +9,12 @@ import fun.connor.lighter.marshal.DelegatingAdaptorFactory;
 import fun.connor.lighter.marshal.gson.GsonTypeAdapterFactory;
 import fun.connor.lighter.marshal.java.JavaTypesAdaptorFactory;
 import fun.connor.lighter.undertow.LighterUndertow;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Main {
+
+    private static final Logger logger = LoggerFactory.getLogger(Main.class);
 
     public static void main(String[] args) {
         long startTime = System.currentTimeMillis();
@@ -25,14 +29,13 @@ public class Main {
                 .adapterFactory(adaptorFactory)
                 .injectionFactory(injector::getInstance)
                 .addRouter(AutomaticRouteConfigurationLoader.loadAutomaticConfiguration())
-                .hostHame("0.0.0.0")
+                .hostName("0.0.0.0")
                 .port(8000)
                 .build();
 
-        System.out.println("just testing the build");
 
-        long finishTime = System.currentTimeMillis();
         l.start();
-        System.out.println("total start->stop time was: " + (finishTime - startTime));
+        long finishTime = System.currentTimeMillis();
+        logger.info("BOOTED CONTAINER: " + (finishTime - startTime) + " ms");
     }
 }

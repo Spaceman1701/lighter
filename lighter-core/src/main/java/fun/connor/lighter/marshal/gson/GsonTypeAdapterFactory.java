@@ -3,10 +3,14 @@ package fun.connor.lighter.marshal.gson;
 import com.google.gson.Gson;
 import fun.connor.lighter.adapter.FilteringTypeAdaptorFactory;
 import fun.connor.lighter.adapter.TypeAdapter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.function.Predicate;
 
 public class GsonTypeAdapterFactory implements FilteringTypeAdaptorFactory {
+
+    private static final Logger log = LoggerFactory.getLogger(GsonTypeAdapterFactory.class);
 
     private Gson gson;
 
@@ -20,7 +24,7 @@ public class GsonTypeAdapterFactory implements FilteringTypeAdaptorFactory {
 
     @Override
     public <T> TypeAdapter<T> getAdapter(Class<T> clazz) {
-        System.out.println("asked to make adaptor for " + clazz.getSimpleName());
+        log.debug("asked to make adaptor for {}", clazz.getSimpleName());
         com.google.gson.TypeAdapter<T> adapter = gson.getAdapter(clazz);
         return new GsonTypeAdapter<>(adapter);
     }
