@@ -82,7 +82,8 @@ public class Route {
             if (part.getKind() == RoutePart.Kind.PARAMETER) {
                 ParameterParser parser = new ParameterParser(part.getString());
                 String simpleParamName = "{" + parser.getExposedName() + "}";
-                simpleTemplate = simpleTemplate.replaceAll(part.getString(), simpleParamName);
+                String fullParamName = "{" + part.getString() + "}";
+                simpleTemplate = simpleTemplate.replace(fullParamName, simpleParamName);
             }
         }
         return simpleTemplate;

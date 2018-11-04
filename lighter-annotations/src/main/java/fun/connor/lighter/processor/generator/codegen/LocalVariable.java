@@ -37,4 +37,9 @@ public class LocalVariable implements Assignable, Expression {
     public TypeMirror getType() {
         return type;
     }
+
+    @Override
+    public String toString() {
+        return "LocalVariable: " + name + "";
+    }
 }

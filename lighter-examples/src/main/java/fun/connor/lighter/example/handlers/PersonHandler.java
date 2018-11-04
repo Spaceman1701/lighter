@@ -12,6 +12,7 @@ import fun.connor.lighter.handler.Response;
 
 import javax.inject.Inject;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -58,5 +59,14 @@ public class PersonHandler {
                 .status(200)
                 .build();
 
+    }
+
+    @Get("/all")
+    public Response<List<Person>> getAll() {
+        List<Person> people = repository.getAllPeople();
+        return Response.<List<Person>>builder()
+                .content(people)
+                .status(200)
+                .build();
     }
 }

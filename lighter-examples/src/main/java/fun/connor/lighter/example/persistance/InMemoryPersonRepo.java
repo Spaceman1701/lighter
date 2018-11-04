@@ -3,7 +3,9 @@ package fun.connor.lighter.example.persistance;
 import fun.connor.lighter.example.domain.Name;
 import fun.connor.lighter.example.domain.Person;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class InMemoryPersonRepo implements PersonRepository {
@@ -24,6 +26,11 @@ public class InMemoryPersonRepo implements PersonRepository {
     public Person readPerson(Name name) {
         System.out.println("reading person:" + name);
         return people.get(name);
+    }
+
+    @Override
+    public List<Person> getAllPeople() {
+        return new ArrayList<>(people.values());
     }
 
     @Override

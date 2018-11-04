@@ -21,9 +21,14 @@ public class ParameterMarshallerGenerator implements Statement {
              TypeAdaptorGenerator adaptor, LighterTypes types, boolean exceptionOnNull) {
         this.output = requireNonNull(resultVariable);
         this.inputStr = requireNonNull(stringParam);
-        this.adaptor = requireNonNull(adaptor, "type adaptor was null");
+        this.adaptor = requireNonNull(adaptor, makeTypeAdaptorMissingMsg());
         this.types = requireNonNull(types);
         this.exceptionOnNull = exceptionOnNull;
+    }
+
+    private String makeTypeAdaptorMissingMsg() {
+        return "No possible type adaptor for output type " + output.getType().toString() + "\n"
+                + "The name of the parameter that caused the error was: " + output.toString();
     }
 
     public static Builder builder(Assignable output, LighterTypes types) {
