@@ -57,7 +57,7 @@ public class LighterUndertow implements Lighter {
                 LighterRequestResolver resolver = route.getHandlerFactory().newInstance(objectFactory, adapterFactory);
                 UndertowHttpHandler undertowHttpHandler = new UndertowHttpHandler(resolver);
                 log.debug("adding route: {}", route);
-                routingHandler.add(route.getMethod(), route.getTemplate(), undertowHttpHandler);
+                routingHandler.add(route.getMethod(), "/" + route.getTemplate(), undertowHttpHandler);
             });
 
 
