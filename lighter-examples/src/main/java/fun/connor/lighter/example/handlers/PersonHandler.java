@@ -1,11 +1,9 @@
 package fun.connor.lighter.example.handlers;
 
-import fun.connor.lighter.declarative.Get;
-import fun.connor.lighter.declarative.Post;
-import fun.connor.lighter.declarative.QueryParams;
-import fun.connor.lighter.declarative.ResourceController;
+import fun.connor.lighter.declarative.*;
 import fun.connor.lighter.example.domain.Name;
 import fun.connor.lighter.example.domain.Person;
+import fun.connor.lighter.example.domain.Subject;
 import fun.connor.lighter.example.persistance.PersonRepository;
 import fun.connor.lighter.handler.Request;
 import fun.connor.lighter.handler.Response;
@@ -59,6 +57,22 @@ public class PersonHandler {
                 .status(200)
                 .build();
 
+    }
+
+    @Put
+    public Response<Person> updatePerson(@Body Person person, Subject subject) {
+        if (!subject.isAdmin()) {
+           return Response.<Person>builder()
+                   .content(null)
+                   .status(400)
+                   .build();
+        }
+
+        repository.updatePerson(person);
+        return Response.<Person>builder()
+                .content(person)
+                .status(200)
+                .build();
     }
 
     @Get("/all")

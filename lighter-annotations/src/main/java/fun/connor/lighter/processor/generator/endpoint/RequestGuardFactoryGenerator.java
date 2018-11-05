@@ -4,6 +4,7 @@ import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.TypeName;
 import fun.connor.lighter.processor.LighterTypes;
+import fun.connor.lighter.processor.generator.codegen.Assignable;
 import fun.connor.lighter.processor.generator.codegen.Expression;
 import fun.connor.lighter.processor.generator.codegen.Field;
 import fun.connor.lighter.processor.model.RequestGuardFactory;
@@ -40,8 +41,26 @@ public class RequestGuardFactoryGenerator implements Field {
         return field;
     }
 
+    public TypeMirror getType() {
+        return type;
+    }
+
     public TypeMirror getProducingType() {
         return producesType;
+    }
+
+    public Assignable getAssignable() {
+        return new Assignable() {
+            @Override
+            public CodeBlock makeAssignmentStub() {
+                return CodeBlock.of("this.$N", field);
+            }
+
+            @Override
+            public TypeMirror getType() {
+                return type;
+            }
+        };
     }
 
     public Expression makeNewInstance(MapGenerator pathMap, MapGenerator queryMap, RequestGenerator request,

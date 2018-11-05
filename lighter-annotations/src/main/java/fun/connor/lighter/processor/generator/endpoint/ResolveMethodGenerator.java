@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 
 public class ResolveMethodGenerator {
 
-    private RequestGuards requestGuards;
+    private Map<TypeName, RequestGuardFactoryGenerator> requestGuards;
     private TypeAdaptorFactoryGenerator typeAdaptorFactory;
     private Map<TypeName, TypeAdaptorGenerator> adaptorGenerators;
     private LighterTypes types;
@@ -39,7 +39,8 @@ public class ResolveMethodGenerator {
 
     public ResolveMethodGenerator
             (Map<TypeName, TypeAdaptorGenerator> adaptorGenerators, LighterTypes types,
-             TypeAdaptorFactoryGenerator typeAdapterFactory, RequestGuards requestGuards,
+             TypeAdaptorFactoryGenerator typeAdapterFactory,
+             Map<TypeName, RequestGuardFactoryGenerator> requestGuards,
              ControllerGenerator controller, Endpoint endpoint) {
         this.adaptorGenerators = adaptorGenerators;
         this.types = types;
@@ -118,8 +119,12 @@ public class ResolveMethodGenerator {
     }
 
     private CodeBlock makeGuardParam(MethodParameter parameter, LocalVariable localVariable) {
-        TypeMirror guardType = parameter.getType();
-        return null;
+        TypeMirror guardType = types.erasure(parameter.getType());
+        RequestGuardFactoryGenerator generator = requestGuards.get(TypeName.get(guardType));
+        Expression factoryExpr =
+                generator.makeNewInstance(paramMapMaker, queryMapMaker, requestMaker, typeAdaptorFactory);
+
+        return CodeBlock.of("$L;\n", Assignment.of(localVariable, factoryExpr).make());
     }
 
     private Expression getMarshallerSource(MethodParameter param) {

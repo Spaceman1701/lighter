@@ -70,10 +70,10 @@ public class EndpointResolverGenerator extends AbstractGenerator {
         builder.addField(controllerGenerator.getField());
 
         builder.addMethod(new ResolverConstructorGenerator(controllerGenerator,
-                typeAdaptorGenerators, typeAdaptorFactoryGenerator, types).make());
+                typeAdaptorGenerators, typeAdaptorFactoryGenerator, requestGuardFactories, types).make());
         builder.addMethod(new ResolveMethodGenerator
                 (typeAdaptorGenerators, types, typeAdaptorFactoryGenerator,
-                       null ,controllerGenerator, endpoint).make());
+                       requestGuardFactories ,controllerGenerator, endpoint).make());
 
 
         return builder.build();
