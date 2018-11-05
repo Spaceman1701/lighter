@@ -31,6 +31,8 @@ public class ValidationStep extends CompilerStep {
         annotationValidators.registerValidator(Delete.class, new EndpointAnnotationValidator(env));
         annotationValidators.registerValidator(Post.class, new EndpointAnnotationValidator(env));
         annotationValidators.registerValidator(Put.class, new EndpointAnnotationValidator(env));
+
+        annotationValidators.registerValidator(ProducesRequestGuard.class, new ProducesRequestGuardValidator());
     }
 
     @Override
@@ -64,7 +66,8 @@ public class ValidationStep extends CompilerStep {
                 try {
                     annotationValidators.getInstance(entry.getKey()).validate(element);
                 } catch (Exception e) { //some other, unhandled error occurred. Print what we can and die
-                    errors.add(new AnnotationValidationError(element, e.getMessage(), entry.getKey()));
+                    errors.add(new AnnotationValidationError(element, e.getMessage() +
+                            " (annotation validator probably does not exist)", entry.getKey()));
                 }
             }
         }

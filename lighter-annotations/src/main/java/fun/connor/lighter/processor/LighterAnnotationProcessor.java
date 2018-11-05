@@ -29,6 +29,7 @@ public class LighterAnnotationProcessor extends AbstractProcessor {
 
         steps.add(new ValidationStep(env));
         steps.add(new BuildModelStep(env));
+        steps.add(new CollectRequestGuardProducersStep(env));
         steps.add(new ValidateModelStep(env));
         steps.add(new CodeGenerationStep(env));
     }
@@ -69,6 +70,7 @@ public class LighterAnnotationProcessor extends AbstractProcessor {
         annotations.add(Put.class.getCanonicalName());
         annotations.add(QueryParams.class.getCanonicalName());
         annotations.add(ResourceController.class.getCanonicalName());
+        annotations.add(ProducesRequestGuard.class.getCanonicalName());
         return annotations;
     }
 

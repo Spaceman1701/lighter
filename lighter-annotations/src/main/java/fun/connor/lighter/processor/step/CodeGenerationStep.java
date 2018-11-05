@@ -6,6 +6,7 @@ import fun.connor.lighter.processor.generator.*;
 import fun.connor.lighter.processor.model.Controller;
 import fun.connor.lighter.processor.model.Endpoint;
 import fun.connor.lighter.processor.model.Model;
+import fun.connor.lighter.processor.model.RequestGuards;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.RoundEnvironment;
@@ -18,6 +19,7 @@ import java.util.Set;
 public class CodeGenerationStep extends CompilerStep {
 
     private Model model;
+    private RequestGuards requestGuards;
 
     public CodeGenerationStep(ProcessingEnvironment env) {
         super(env);
@@ -25,15 +27,24 @@ public class CodeGenerationStep extends CompilerStep {
 
     @Override
     public Set<EnvironmentRequirement> getRequiredEnv() {
-        EnvironmentRequirement<Model> req =
+        EnvironmentRequirement<Model> modelReq =
                 new EnvironmentRequirement<>("model", Model.class, this::setModel);
+
+        EnvironmentRequirement<RequestGuards> requestGuardsReq =
+                new EnvironmentRequirement<>("requestGuards", RequestGuards.class, this::setRequestGuards);
+
         Set<EnvironmentRequirement> requirements = new HashSet<>();
-        requirements.add(req);
+        requirements.add(modelReq);
+        requirements.add(requestGuardsReq);
         return requirements;
     }
 
     private void setModel(Model m) {
         this.model = m;
+    }
+
+    private void setRequestGuards(RequestGuards requestGuards) {
+        this.requestGuards = requestGuards;
     }
 
     @Override
