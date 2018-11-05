@@ -34,4 +34,18 @@ public interface Expression extends TypedElement, Statement {
     static Expression nullExpr(LighterTypes types) {
         return literal(Void.class, null, types);
     }
+
+    static Expression code(TypeMirror type, String fragment) {
+        return new Expression() {
+            @Override
+            public CodeBlock makeReadStub() {
+                return CodeBlock.of(fragment);
+            }
+
+            @Override
+            public TypeMirror getType() {
+                return type;
+            }
+        };
+    }
 }

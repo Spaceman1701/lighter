@@ -103,8 +103,10 @@ public class Endpoint {
             source = MethodParameter.Source.BODY;
         } else if (queryParams != null && queryParams.containsValue(name)) {
             source = MethodParameter.Source.QUERY;
-        } else {
+        } else if (fullRoute.getParams().containsValue(name)){
             source = MethodParameter.Source.PATH;
+        } else {
+            source = MethodParameter.Source.GUARD;
         }
         return new MethodParameter(index, type, name, source);
     }

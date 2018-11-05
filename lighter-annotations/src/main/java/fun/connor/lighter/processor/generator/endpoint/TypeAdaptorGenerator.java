@@ -1,8 +1,10 @@
-package fun.connor.lighter.processor.generator.codegen;
+package fun.connor.lighter.processor.generator.endpoint;
 
 import com.squareup.javapoet.*;
 import fun.connor.lighter.adapter.TypeAdapter;
 import fun.connor.lighter.processor.LighterTypes;
+import fun.connor.lighter.processor.generator.codegen.Assignable;
+import fun.connor.lighter.processor.generator.codegen.Expression;
 
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
@@ -66,7 +68,7 @@ public class TypeAdaptorGenerator {
             @Override
             public CodeBlock makeReadStub() {
                 return CodeBlock.builder()
-                        .add("$N.deserialize($L)", field, fromStub)
+                        .add("this.$N.deserialize($L)", field, fromStub)
                         .build();
             }
 
@@ -84,7 +86,7 @@ public class TypeAdaptorGenerator {
             @Override
             public CodeBlock makeReadStub() {
                 return CodeBlock.builder()
-                        .add("$N.deserialize($L)", field, readStub)
+                        .add("this.$N.deserialize($L)", field, readStub)
                         .build();
             }
 

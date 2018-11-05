@@ -16,12 +16,16 @@ public class ResolverConstructorGenerator {
 
     private ControllerGenerator controllerGenerator;
     private Map<TypeName, TypeAdaptorGenerator> typeAdaptors;
+    private TypeAdaptorFactoryGenerator factoryGenerator;
     private LighterTypes types;
 
     public ResolverConstructorGenerator
-            (ControllerGenerator controllerGenerator, Map<TypeName, TypeAdaptorGenerator> typeAdaptors, LighterTypes types) {
+            (ControllerGenerator controllerGenerator, Map<TypeName,
+                TypeAdaptorGenerator> typeAdaptors,
+                TypeAdaptorFactoryGenerator typeAdaptorFactoryGenerator, LighterTypes types) {
         this.controllerGenerator = controllerGenerator;
         this.typeAdaptors = typeAdaptors;
+        this.factoryGenerator = typeAdaptorFactoryGenerator;
         this.types = types;
     }
 
@@ -34,6 +38,7 @@ public class ResolverConstructorGenerator {
                 .build();
     }
 
+
     private CodeBlock makeCode() {
         CodeBlock.Builder builder = CodeBlock.builder();
         for (TypeAdaptorGenerator generator : typeAdaptors.values()) {
@@ -41,6 +46,9 @@ public class ResolverConstructorGenerator {
         }
 
         builder.addStatement(makeControllerAssignment().make());
+
+        builder.addStatement(Assignment.of(factoryGenerator.makeAssignable(),
+                Expression.code(factoryGenerator.getType(), "adaptorFactory")).make());
 
         return builder.build();
     }

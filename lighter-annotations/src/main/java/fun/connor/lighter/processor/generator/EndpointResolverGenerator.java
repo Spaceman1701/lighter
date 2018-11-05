@@ -6,10 +6,7 @@ import fun.connor.lighter.handler.LighterRequestResolver;
 import fun.connor.lighter.handler.Request;
 import fun.connor.lighter.processor.LighterTypes;
 import fun.connor.lighter.processor.MoreTypes;
-import fun.connor.lighter.processor.generator.codegen.TypeAdaptorGenerator;
-import fun.connor.lighter.processor.generator.endpoint.ControllerGenerator;
-import fun.connor.lighter.processor.generator.endpoint.ResolveMethodGenerator;
-import fun.connor.lighter.processor.generator.endpoint.ResolverConstructorGenerator;
+import fun.connor.lighter.processor.generator.endpoint.*;
 import fun.connor.lighter.processor.model.Controller;
 import fun.connor.lighter.processor.model.Endpoint;
 
@@ -44,6 +41,10 @@ public class EndpointResolverGenerator extends AbstractGenerator {
                 .addSuperinterface(LighterRequestResolver.class)
                 .addModifiers(Modifier.PUBLIC, Modifier.FINAL);
 
+        TypeAdaptorFactoryGenerator typeAdaptorFactoryGenerator
+                = new TypeAdaptorFactoryGenerator("typeAdaptorFactory", types);
+        builder.addField(typeAdaptorFactoryGenerator.getField());
+
         typeAdaptorGenerators.values().stream()
                 .map(TypeAdaptorGenerator::getField)
                 .forEach(builder::addField);
@@ -55,7 +56,8 @@ public class EndpointResolverGenerator extends AbstractGenerator {
 
         builder.addField(controllerGenerator.getField());
 
-        builder.addMethod(new ResolverConstructorGenerator(controllerGenerator, typeAdaptorGenerators, types).make());
+        builder.addMethod(new ResolverConstructorGenerator(controllerGenerator,
+                typeAdaptorGenerators, typeAdaptorFactoryGenerator, types).make());
         builder.addMethod(new ResolveMethodGenerator(typeAdaptorGenerators, types, controllerGenerator, endpoint).make());
 
 

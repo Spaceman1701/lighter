@@ -6,7 +6,7 @@ import javax.lang.model.type.TypeMirror;
 
 public class MethodParameter {
     public enum Source {
-        PATH, QUERY, BODY, CONTEXT
+        PATH, QUERY, BODY, CONTEXT, GUARD
     }
 
     private String name;
@@ -32,10 +32,6 @@ public class MethodParameter {
 
     public int getIndex() {
         return index;
-    }
-
-    public boolean isOptional() {
-        return MoreTypes.isTypeOptional(type);
     }
 
     public Source getSource() {
