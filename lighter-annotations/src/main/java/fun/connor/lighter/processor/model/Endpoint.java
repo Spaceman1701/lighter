@@ -1,15 +1,11 @@
 package fun.connor.lighter.processor.model;
 
-import fun.connor.lighter.processor.MoreTypes;
 import fun.connor.lighter.processor.model.endpoint.MethodParameter;
 
 import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.element.Name;
-import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.ExecutableType;
-import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -18,39 +14,6 @@ public class Endpoint {
 
     public enum Method {
         GET, POST, PUT, DELETE
-    }
-
-    public static class EndpointParam {
-        public enum Location {
-            PATH, QUERY
-        }
-        private String nameInMap;
-        private TypeMirror type;
-        private String nameOnMethod;
-        private Location location;
-
-        private EndpointParam(String nameInMap, String nameOnMethod, TypeMirror type, Location location) {
-            this.nameInMap = nameInMap;
-            this.nameOnMethod = nameOnMethod;
-            this.type = type;
-            this.location = location;
-        }
-
-        public String getNameInMap() {
-            return nameInMap;
-        }
-
-        public String getNameOnMethod() {
-            return nameOnMethod;
-        }
-
-        public TypeMirror getType() {
-            return type;
-        }
-
-        public Location getLocation() {
-            return location;
-        }
     }
 
     private Method httpMethod;
@@ -144,13 +107,6 @@ public class Endpoint {
         return httpMethod;
     }
 
-
-    public List<TypeMirror> getMethodArgumentTypes() {
-        return endpointParamTypes.entrySet().stream()
-                .map(Map.Entry::getValue)
-                .collect(Collectors.toList());
-    }
-
     public ExecutableElement getMethodElement() {
         return methodElement;
     }
@@ -163,8 +119,21 @@ public class Endpoint {
         return ((DeclaredType)returnType).getTypeArguments().get(0);
     }
 
-
     public String getSimplePathTemplate() {
         return fullRoute.getTemplateWithSimpleNames();
+    }
+
+    public Map<MethodParameter.Source, List<MethodParameter>> getParametersBySource() {
+        Map<MethodParameter.Source, List<MethodParameter>> result = new HashMap<>();
+        Collection<MethodParameter> parameters = methodParameters.values();
+
+        for (MethodParameter p : parameters) {
+            MethodParameter.Source s = p.getSource();
+            if (!result.containsKey(s)) {
+                result.put(s, new ArrayList<>());
+            }
+            result.get(s).add(p);
+        }
+        return result;
     }
 }

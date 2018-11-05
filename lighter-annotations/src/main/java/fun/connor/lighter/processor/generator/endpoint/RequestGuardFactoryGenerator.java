@@ -10,6 +10,9 @@ import fun.connor.lighter.processor.model.RequestGuardFactory;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class RequestGuardFactoryGenerator {
 
@@ -31,5 +34,37 @@ public class RequestGuardFactoryGenerator {
                 .build();
     }
 
-    
+    public FieldSpec getField() {
+        return field;
+    }
+
+    public TypeMirror getProducingType() {
+        return producesType;
+    }
+
+    public Expression makeNewInstance(MapGenerator pathMap, MapGenerator queryMap, RequestGenerator request,
+                                      TypeAdaptorFactoryGenerator typeAdaptorFactory) {
+        List<Expression> argExpr = new ArrayList<>();
+        argExpr.add(pathMap.makeExpression());
+        argExpr.add(queryMap.makeExpression());
+        argExpr.add(request);
+        argExpr.add(typeAdaptorFactory.makeExpression());
+
+        List<CodeBlock> argCode = argExpr.stream()
+                .map(Expression::make)
+                .collect(Collectors.toList());
+
+        CodeBlock argList = CodeBlock.join(argCode, ", ");
+        return new Expression() {
+            @Override
+            public CodeBlock makeReadStub() {
+                return CodeBlock.of("this.$N.newInstance($L)", field, argList);
+            }
+
+            @Override
+            public TypeMirror getType() {
+                return producesType;
+            }
+        };
+    }
 }

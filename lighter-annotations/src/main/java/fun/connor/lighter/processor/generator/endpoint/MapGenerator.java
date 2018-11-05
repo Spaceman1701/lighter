@@ -38,4 +38,8 @@ public class MapGenerator {
             }
         };
     }
+
+    public Expression makeExpression() {
+        return source;
+    }
 }
