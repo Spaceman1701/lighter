@@ -63,7 +63,6 @@ public class Endpoint {
     private Map<String, TypeMirror> endpointParamTypes;
     private Map<String, MethodParameter> methodParameters;
 
-    private MethodParameter bodyParameter;
 
     public Endpoint
             (Method httpMethod, Route fullRoute,
@@ -78,15 +77,6 @@ public class Endpoint {
         methodParameters = new HashMap<>();
         extractMethodParams(bodyParamName, contextParamName);
 
-        this.bodyParameter = makeBodyParam(bodyParamName);
-    }
-
-    private MethodParameter makeBodyParam(String name) {
-        if (name != null) {
-            int index  = getMethodParamIndexByName(name);
-            return new MethodParameter(index, endpointParamTypes.get(name), name, MethodParameter.Source.BODY);
-        }
-        return null;
     }
 
     private void extractMethodParams(String bodyParamName, String contextParamName) {
@@ -117,17 +107,6 @@ public class Endpoint {
             source = MethodParameter.Source.PATH;
         }
         return new MethodParameter(index, type, name, source);
-    }
-
-    private int getMethodParamIndexByName(String name) {
-        int index = 0;
-        for (VariableElement element : methodElement.getParameters()) {
-            if (element.getSimpleName().toString().equals(name)) {
-                return index;
-            }
-            index++;
-        }
-        return -1;
     }
 
     public String getQueryParamName(String methodParamName) {
@@ -163,52 +142,11 @@ public class Endpoint {
         return httpMethod;
     }
 
-    public List<EndpointParam> getRequiredParams() {
-        List<EndpointParam> path = getParamFromMapping(fullRoute.getParams(), EndpointParam.Location.PATH);
-
-        if (queryParams != null) {
-            List<EndpointParam> query = getParamFromMapping(queryParams.getNameMappings(), EndpointParam.Location.QUERY)
-                    .stream()
-                    .filter(p -> !MoreTypes.isTypeOptional(p.type))
-                    .collect(Collectors.toList());
-
-            path.addAll(query);
-        }
-
-        return path;
-    }
-
-    public List<EndpointParam> getOptionalParams() {
-        if (queryParams == null) {
-            return new ArrayList<>();
-        }
-        return getParamFromMapping(queryParams.getNameMappings(), EndpointParam.Location.QUERY).stream()
-                .filter(p -> MoreTypes.isTypeOptional(p.type))
-                .collect(Collectors.toList());
-    }
-
-
-    private List<EndpointParam> getParamFromMapping(Map<String, String> mapping, EndpointParam.Location location) {
-        List<EndpointParam> requiredParams = new ArrayList<>();
-
-        for (Map.Entry<String, String> entry : mapping.entrySet()) {
-            String nameInMap = entry.getKey();
-            String nameOnMethod = entry.getValue();
-            TypeMirror type = endpointParamTypes.get(nameOnMethod);
-            requiredParams.add(new EndpointParam(nameInMap, nameOnMethod, type, location));
-        }
-
-        return requiredParams;
-    }
 
     public List<TypeMirror> getMethodArgumentTypes() {
         return endpointParamTypes.entrySet().stream()
                 .map(Map.Entry::getValue)
                 .collect(Collectors.toList());
-    }
-
-    public MethodParameter getBodyParameter() {
-        return bodyParameter;
     }
 
     public ExecutableElement getMethodElement() {
@@ -223,12 +161,6 @@ public class Endpoint {
         return ((DeclaredType)returnType).getTypeArguments().get(0);
     }
 
-    public List<String> getMethodArgs() {
-        return methodElement.getParameters().stream()
-                .map(VariableElement::getSimpleName)
-                .map(Name::toString)
-                .collect(Collectors.toList());
-    }
 
     public String getSimplePathTemplate() {
         return fullRoute.getTemplateWithSimpleNames();

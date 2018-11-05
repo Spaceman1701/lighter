@@ -6,10 +6,10 @@ import javax.lang.model.type.DeclaredType;
 
 public class RequestGuardFactory {
 
-    private final Class<? extends RequestGuard> producedType;
+    private final DeclaredType producedType;
     private final DeclaredType type;
 
-    public RequestGuardFactory(DeclaredType type, Class<? extends RequestGuard> produces) {
+    public RequestGuardFactory(DeclaredType type, DeclaredType produces) {
         this.producedType = produces;
         this.type = type;
     }
@@ -18,7 +18,7 @@ public class RequestGuardFactory {
         return type;
     }
 
-    public Class<? extends RequestGuard> getProduces() {
+    public DeclaredType getProduces() {
         return producedType;
     }
 }

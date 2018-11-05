@@ -1,16 +1,18 @@
 package fun.connor.lighter.processor.model;
 
+import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.TypeMirror;
 import java.util.HashMap;
 import java.util.Map;
 
 public class RequestGuards {
-    private Map<Class, RequestGuardFactory> requestGuards;
+    private Map<DeclaredType, RequestGuardFactory> requestGuards;
 
-    public RequestGuards(Map<Class, RequestGuardFactory> requestGuards) {
+    public RequestGuards(Map<DeclaredType, RequestGuardFactory> requestGuards) {
         this.requestGuards = requestGuards;
     }
 
-    public RequestGuardFactory getRequestGuard(Class toProduce) {
+    public RequestGuardFactory getRequestGuard(DeclaredType toProduce) {
         return requestGuards.get(toProduce);
     }
 }
