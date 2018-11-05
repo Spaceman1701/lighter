@@ -1,6 +1,8 @@
 package fun.connor.lighter.undertow;
 
 import com.google.gson.Gson;
+import fun.connor.lighter.adapter.TypeAdapter;
+import fun.connor.lighter.adapter.TypeAdapterFactory;
 import fun.connor.lighter.handler.LighterRequestResolver;
 import fun.connor.lighter.handler.Response;
 import io.undertow.server.HttpHandler;
@@ -16,9 +18,11 @@ import java.util.Map;
 public class UndertowHttpHandler implements HttpHandler {
 
     private LighterRequestResolver resolver;
+    private TypeAdapterFactory adapterFactory;
 
-    public UndertowHttpHandler(LighterRequestResolver resolver) {
+    public UndertowHttpHandler(LighterRequestResolver resolver, TypeAdapterFactory typeAdapterFactory) {
         this.resolver = resolver;
+        this.adapterFactory = typeAdapterFactory;
     }
 
     @Override @SuppressWarnings("unchecked")
@@ -47,8 +51,8 @@ public class UndertowHttpHandler implements HttpHandler {
         for (Map.Entry<String, String> header : customHeaders.entrySet()) {
             exchange.getResponseHeaders().put(HttpString.tryFromString(header.getKey()), header.getValue());
         }
-        Gson gson = new Gson();
         exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "application/json");
-        exchange.getResponseSender().send(gson.toJson(r.getContent()));
+        TypeAdapter typeAdapter = adapterFactory.getAdapter(r.getContent().getClass());
+        exchange.getResponseSender().send(typeAdapter.serialize(r.getContent()));
     }
 }

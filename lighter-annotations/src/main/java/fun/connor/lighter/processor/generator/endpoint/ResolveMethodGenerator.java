@@ -7,9 +7,12 @@ import fun.connor.lighter.handler.Request;
 import fun.connor.lighter.processor.LighterTypes;
 import fun.connor.lighter.processor.generator.codegen.*;
 import fun.connor.lighter.processor.model.Endpoint;
+import fun.connor.lighter.processor.model.RequestGuardFactory;
+import fun.connor.lighter.processor.model.RequestGuards;
 import fun.connor.lighter.processor.model.endpoint.MethodParameter;
 
 import javax.lang.model.element.Modifier;
+import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,6 +22,8 @@ import java.util.stream.Collectors;
 
 public class ResolveMethodGenerator {
 
+    private RequestGuards requestGuards;
+    private TypeAdaptorFactoryGenerator typeAdaptorFactory;
     private Map<TypeName, TypeAdaptorGenerator> adaptorGenerators;
     private LighterTypes types;
     private Endpoint endpoint;
@@ -34,11 +39,14 @@ public class ResolveMethodGenerator {
 
     public ResolveMethodGenerator
             (Map<TypeName, TypeAdaptorGenerator> adaptorGenerators, LighterTypes types,
+             TypeAdaptorFactoryGenerator typeAdapterFactory, RequestGuards requestGuards,
              ControllerGenerator controller, Endpoint endpoint) {
         this.adaptorGenerators = adaptorGenerators;
         this.types = types;
         this.endpoint = endpoint;
         this.controller = controller;
+        this.typeAdaptorFactory = typeAdapterFactory;
+        this.requestGuards = requestGuards;
 
         initGenerators();
     }
@@ -100,11 +108,18 @@ public class ResolveMethodGenerator {
                 Assignable assignable = controllerParamVariables.get(param.getKey());
                 Expression contextCreateExpr = makeContextFromRequest();
                 builder.addStatement(Assignment.of(assignable, contextCreateExpr).make());
+            } else if (param.getValue().getSource() == MethodParameter.Source.GUARD) {
+                builder.add(makeGuardParam(param.getValue(), controllerParamVariables.get(param.getKey())));
             } else {
                 builder.add(makeVariableMarshaling(param.getValue(), controllerParamVariables.get(param.getKey())));
             }
         }
         return builder.build();
+    }
+
+    private CodeBlock makeGuardParam(MethodParameter parameter, LocalVariable localVariable) {
+        TypeMirror guardType = parameter.getType();
+        return null;
     }
 
     private Expression getMarshallerSource(MethodParameter param) {
@@ -117,6 +132,8 @@ public class ResolveMethodGenerator {
                 return paramMapMaker.makeGet(Expression.literal(String.class, nameInParamMap, types));
             case BODY:
                 return requestMaker.makeGetBody();
+            case GUARD:
+                throw new IllegalArgumentException("gaurd param doesn't require marhsalling");
             case CONTEXT:
                 throw new IllegalArgumentException("context param doesn't require marshalling");
         }
