@@ -32,8 +32,6 @@ public class UndertowHttpHandler implements HttpHandler {
 
     @Override @SuppressWarnings("unchecked")
     public void handleRequest(HttpServerExchange exchange) throws Exception {
-        String url = exchange.getRequestURL();
-
         Map<String, String> pathParams = new HashMap<>();
         Map<String, String> queryParams = new HashMap<>();
 
@@ -57,7 +55,9 @@ public class UndertowHttpHandler implements HttpHandler {
             exchange.getResponseHeaders().put(HttpString.tryFromString(header.getKey()), header.getValue());
         }
         exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "application/json");
-        TypeAdapter typeAdapter = adapterFactory.getAdapter(r.getContent().getClass());
-        exchange.getResponseSender().send(typeAdapter.serialize(r.getContent()));
+        if (r.hasContent()) {
+            TypeAdapter typeAdapter = adapterFactory.getAdapter(r.getContent().getClass());
+            exchange.getResponseSender().send(typeAdapter.serialize(r.getContent()));
+        }
     }
 }

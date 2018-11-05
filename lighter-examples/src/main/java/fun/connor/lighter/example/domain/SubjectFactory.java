@@ -8,6 +8,7 @@ import fun.connor.lighter.handler.Request;
 import fun.connor.lighter.handler.RequestGuardFactory;
 
 import javax.inject.Inject;
+import java.util.Base64;
 import java.util.Map;
 
 @ProducesRequestGuard(Subject.class)
@@ -16,7 +17,8 @@ public class SubjectFactory implements RequestGuardFactory<Subject> {
     /**
      * Obviously, a very good security policy
      */
-    private static final Name adminName = new Name("Ethan", "Hunter");
+
+    private static final String passphrase = "parc";
 
     private PersonRepository repository;
 
@@ -28,17 +30,21 @@ public class SubjectFactory implements RequestGuardFactory<Subject> {
     @Override
     public final Subject newInstance(Map<String, String> pathParams, Map<String, String> queryParams,
                                      Request request, TypeAdapterFactory adapterFactory) {
-        TypeAdapter<Person> personTypeAdapter = adapterFactory.getAdapter(Person.class);
-        Person person = personTypeAdapter.deserialize(request.getBody());
 
-        if (person == null) {
-            throw new IllegalArgumentException("cannot make a subject from this request!");
+        String authHeader = request.getHeaderValue("Authorization");
+
+        //Username:Password
+        String[] authParts = authHeader.split(":");
+        if (authParts.length != 2) {
+            throw new IllegalArgumentException("cannot read authorization data from request");
         }
-        boolean isAdmin = person.getName().equals(adminName);
+
+        boolean isAdmin = authParts[1].equals(passphrase);
+
         return new Subject() {
             @Override
             public Object getId() {
-                return person;
+                return authParts[0];
             }
 
             @Override
