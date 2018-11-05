@@ -5,6 +5,7 @@ import fun.connor.lighter.adapter.TypeAdapter;
 import fun.connor.lighter.processor.LighterTypes;
 import fun.connor.lighter.processor.generator.codegen.Assignable;
 import fun.connor.lighter.processor.generator.codegen.Expression;
+import fun.connor.lighter.processor.generator.codegen.Field;
 
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
@@ -12,7 +13,7 @@ import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.PrimitiveType;
 import javax.lang.model.type.TypeMirror;
 
-public class TypeAdaptorGenerator {
+public class TypeAdaptorGenerator implements Field {
 
     private TypeMirror adaptingType;
     private DeclaredType fieldType;
@@ -39,6 +40,7 @@ public class TypeAdaptorGenerator {
         field = FieldSpec.builder(typeName, fieldName, Modifier.PRIVATE, Modifier.FINAL).build();
     }
 
+    @Override
     public FieldSpec getField() {
         return field;
     }

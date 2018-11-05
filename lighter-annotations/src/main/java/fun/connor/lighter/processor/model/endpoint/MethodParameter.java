@@ -21,6 +21,9 @@ public class MethodParameter {
         this.source = source;
     }
 
+    public boolean isOptional() {
+        return MoreTypes.isTypeOptional(type);
+    }
 
     public TypeMirror getType() {
         return type;

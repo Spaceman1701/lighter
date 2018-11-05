@@ -6,6 +6,7 @@ import fun.connor.lighter.handler.LighterRequestResolver;
 import fun.connor.lighter.handler.Request;
 import fun.connor.lighter.processor.LighterTypes;
 import fun.connor.lighter.processor.MoreTypes;
+import fun.connor.lighter.processor.generator.codegen.Field;
 import fun.connor.lighter.processor.generator.endpoint.*;
 import fun.connor.lighter.processor.model.Controller;
 import fun.connor.lighter.processor.model.Endpoint;
@@ -15,7 +16,9 @@ import fun.connor.lighter.processor.model.endpoint.MethodParameter;
 import javax.annotation.processing.Filer;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.PrimitiveType;
 import javax.lang.model.type.TypeMirror;
+import java.lang.reflect.Type;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -27,6 +30,8 @@ public class EndpointResolverGenerator extends AbstractGenerator {
     private RequestGuards requestGuards;
     private LighterTypes types;
 
+    private TypeSpec.Builder builder;
+
     public EndpointResolverGenerator(Controller controller, Endpoint endpoint,
                                      RequestGuards requestGuards, LighterTypes types, Filer filer) {
         super(filer);
@@ -34,41 +39,28 @@ public class EndpointResolverGenerator extends AbstractGenerator {
         this.endpoint = endpoint;
         this.requestGuards = requestGuards;
         this.types = types;
+
+        builder = TypeSpec.classBuilder(makeClassName())
+                .addSuperinterface(LighterRequestResolver.class)
+                .addModifiers(Modifier.PUBLIC, Modifier.FINAL);
     }
 
     @Override
     protected TypeSpec generateType() {
-        TypeSpec.Builder builder = TypeSpec.classBuilder(makeClassName())
-                .addSuperinterface(LighterRequestResolver.class)
-                .addModifiers(Modifier.PUBLIC, Modifier.FINAL);
-
         Map<MethodParameter.Source, List<MethodParameter>> params =
                 endpoint.getParametersBySource();
 
-        List<TypeMirror> parametersForAdapting = params.entrySet().stream()
-                .filter(e -> requiresAdaptor(e.getKey()))
-                .map(Map.Entry::getValue)
-                .flatMap(List::stream)
-                .map(MethodParameter::getType)
-                .collect(Collectors.toList());
-        Map<TypeName, TypeAdaptorGenerator> typeAdaptorGenerators = makeTypeAdaptors(parametersForAdapting);
 
-        typeAdaptorGenerators.values().stream()
-                .map(TypeAdaptorGenerator::getField)
-                .forEach(builder::addField);
+        Map<TypeName, TypeAdaptorGenerator> typeAdaptorGenerators = makeTypeAdaptorsMap(params);
+        attachFields(typeAdaptorGenerators.values());
 
         TypeAdaptorFactoryGenerator typeAdaptorFactoryGenerator
                 = new TypeAdaptorFactoryGenerator("typeAdaptorFactory", types);
         builder.addField(typeAdaptorFactoryGenerator.getField());
 
-        List<TypeMirror> typesForGuards = params.get(MethodParameter.Source.GUARD).stream()
-                .map(MethodParameter::getType)
-                .collect(Collectors.toList());
-        Map<TypeName, RequestGuardFactoryGenerator> requestGuardFactories = makeRequestGuardFactories(typesForGuards);
 
-        requestGuardFactories.values().stream()
-                .map(RequestGuardFactoryGenerator::getField)
-                .forEach(builder::addField);
+        Map<TypeName, RequestGuardFactoryGenerator> requestGuardFactories = makeRequestGuardFactories(params);
+        attachFields(requestGuardFactories.values());
 
         ControllerGenerator controllerGenerator =
                 new ControllerGenerator
@@ -87,48 +79,53 @@ public class EndpointResolverGenerator extends AbstractGenerator {
         return builder.build();
     }
 
+    private void attachFields(Collection<? extends Field> fields) {
+        fields.stream()
+                .map(Field::getField)
+                .forEach(builder::addField);
+    }
+
+    private Map<TypeName, TypeAdaptorGenerator> makeTypeAdaptorsMap
+            (Map<MethodParameter.Source, List<MethodParameter>> params) {
+        List<MethodParameter> parametersForAdapting = params.entrySet().stream()
+                .filter(e -> requiresAdaptor(e.getKey()))
+                .map(Map.Entry::getValue)
+                .flatMap(List::stream)
+                .collect(Collectors.toList());
+        return makeObjectFromTypes(parametersForAdapting, (t) -> new TypeAdaptorGenerator(t, types));
+    }
+
+    private Map<TypeName, RequestGuardFactoryGenerator> makeRequestGuardFactories
+            (Map<MethodParameter.Source, List<MethodParameter>> params) {
+        List<MethodParameter> typesForGuards =
+                new ArrayList<>(params.getOrDefault(MethodParameter.Source.GUARD, new ArrayList<>()));
+        return makeObjectFromTypes(typesForGuards, (t) ->
+                        new RequestGuardFactoryGenerator(requestGuards.getRequestGuard((DeclaredType)t), types));
+    }
+
     private boolean requiresAdaptor(MethodParameter.Source source) {
         return source == MethodParameter.Source.BODY
                 || source == MethodParameter.Source.QUERY
                 || source == MethodParameter.Source.PATH;
     }
 
-    private Map<TypeName, TypeAdaptorGenerator> makeTypeAdaptors(List<TypeMirror> forTypes) {
-        return forTypes.stream()
-                .map(t -> new TypeAdaptorGenerator(t, types))
-                .collect(Collectors.toMap(a -> TypeName.get(a.getAdaptingType()), Function.identity()));
-    }
-
-    private Map<TypeName, RequestGuardFactoryGenerator> makeRequestGuardFactories(List<TypeMirror> forTypes) {
-        return forTypes.stream()
-                .map(t -> new RequestGuardFactoryGenerator(requestGuards.getRequestGuard((DeclaredType) t), types))
-                .collect(Collectors.toMap(a -> TypeName.get(a.getProducingType()), Function.identity()));
-
-    }
-
-    private List<TypeMirror> getAllRequiredTypes() {
-        List<TypeMirror> requiredTypes = new ArrayList<>();
-
-        TypeMirror returnType = endpoint.getReturnTypeParameter();
-        List<MethodParameter> methodParameters = new ArrayList<>(endpoint.getMethodParameters().values());
-
-        requiredTypes.add(returnType);
-        for (MethodParameter parameter : methodParameters) {
+    private <T> Map<TypeName, T> makeObjectFromTypes(List<MethodParameter> forTypes, Function<TypeMirror, T> constructor) {
+        Map<TypeName, T> results = new HashMap<>();
+        for (MethodParameter parameter : forTypes) {
             TypeMirror type = parameter.getType();
-            if (MoreTypes.isTypeMirrorOfClass(type, Request.class)) {
-                continue; //no requirement for adapting Request - it's provided
-            }
-            if (MoreTypes.isTypeOptional(type)) {
+            if (parameter.isOptional()) {
                 type = types.extractOptionalType((DeclaredType) type);
             }
-            TypeMirror erased = types.erasure(type);
-            if (!types.collectionContains(requiredTypes, erased)) {
-                requiredTypes.add(erased);
+            if (type.getKind().isPrimitive()) {
+                type = types.boxedClass((PrimitiveType) type).asType();
+            }
+            TypeName typeName = TypeName.get(type);
+            if (!results.containsKey(typeName)) {
+                results.put(typeName, constructor.apply(type));
             }
         }
-        return requiredTypes;
+        return results;
     }
-
 
     private String makeClassName() {
         String methodName = endpoint.getMethodName();

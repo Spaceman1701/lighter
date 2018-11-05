@@ -8,11 +8,12 @@ import fun.connor.lighter.processor.LighterTypes;
 import fun.connor.lighter.processor.MoreTypes;
 import fun.connor.lighter.processor.generator.codegen.Assignable;
 import fun.connor.lighter.processor.generator.codegen.Expression;
+import fun.connor.lighter.processor.generator.codegen.Field;
 
 import javax.lang.model.element.Modifier;
 import javax.lang.model.type.TypeMirror;
 
-public class TypeAdaptorFactoryGenerator {
+public class TypeAdaptorFactoryGenerator implements Field {
 
     private FieldSpec field;
     private TypeMirror type;
@@ -28,6 +29,7 @@ public class TypeAdaptorFactoryGenerator {
                 .build();
     }
 
+    @Override
     public FieldSpec getField() {
         return field;
     }

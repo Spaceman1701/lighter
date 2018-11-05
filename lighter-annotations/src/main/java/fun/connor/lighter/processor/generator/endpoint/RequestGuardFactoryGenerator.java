@@ -5,6 +5,7 @@ import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.TypeName;
 import fun.connor.lighter.processor.LighterTypes;
 import fun.connor.lighter.processor.generator.codegen.Expression;
+import fun.connor.lighter.processor.generator.codegen.Field;
 import fun.connor.lighter.processor.model.RequestGuardFactory;
 
 import javax.lang.model.element.Modifier;
@@ -14,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class RequestGuardFactoryGenerator {
+public class RequestGuardFactoryGenerator implements Field {
 
     private FieldSpec field;
     private LighterTypes types;
@@ -34,6 +35,7 @@ public class RequestGuardFactoryGenerator {
                 .build();
     }
 
+    @Override
     public FieldSpec getField() {
         return field;
     }
