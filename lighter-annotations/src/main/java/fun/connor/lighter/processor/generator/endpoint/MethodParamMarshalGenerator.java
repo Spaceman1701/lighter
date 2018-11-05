@@ -5,7 +5,6 @@ import com.squareup.javapoet.TypeName;
 import fun.connor.lighter.processor.LighterTypes;
 import fun.connor.lighter.processor.MoreTypes;
 import fun.connor.lighter.processor.generator.codegen.*;
-import fun.connor.lighter.processor.generator.codegen.Expression;
 
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;

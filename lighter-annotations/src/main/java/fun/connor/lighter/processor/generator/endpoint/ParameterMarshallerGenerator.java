@@ -3,7 +3,10 @@ package fun.connor.lighter.processor.generator.endpoint;
 import com.squareup.javapoet.CodeBlock;
 import fun.connor.lighter.handler.TypeMarshalException;
 import fun.connor.lighter.processor.LighterTypes;
-import fun.connor.lighter.processor.generator.codegen.*;
+import fun.connor.lighter.processor.generator.codegen.Assignable;
+import fun.connor.lighter.processor.generator.codegen.Assignment;
+import fun.connor.lighter.processor.generator.codegen.Expression;
+import fun.connor.lighter.processor.generator.codegen.Statement;
 
 import static java.util.Objects.requireNonNull;
 

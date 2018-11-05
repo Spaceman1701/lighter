@@ -6,8 +6,10 @@ import com.squareup.javapoet.TypeName;
 import fun.connor.lighter.adapter.TypeAdapterFactory;
 import fun.connor.lighter.injection.InjectionObjectFactory;
 import fun.connor.lighter.processor.LighterTypes;
-import fun.connor.lighter.processor.generator.codegen.*;
-import fun.connor.lighter.processor.model.RequestGuardFactory;
+import fun.connor.lighter.processor.generator.codegen.Assignable;
+import fun.connor.lighter.processor.generator.codegen.Assignment;
+import fun.connor.lighter.processor.generator.codegen.Expression;
+import fun.connor.lighter.processor.generator.codegen.Statement;
 
 import javax.lang.model.element.Modifier;
 import javax.lang.model.type.TypeMirror;

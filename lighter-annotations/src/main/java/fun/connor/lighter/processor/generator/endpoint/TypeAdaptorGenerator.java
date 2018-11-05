@@ -1,6 +1,9 @@
 package fun.connor.lighter.processor.generator.endpoint;
 
-import com.squareup.javapoet.*;
+import com.squareup.javapoet.CodeBlock;
+import com.squareup.javapoet.FieldSpec;
+import com.squareup.javapoet.ParameterizedTypeName;
+import com.squareup.javapoet.TypeName;
 import fun.connor.lighter.adapter.TypeAdapter;
 import fun.connor.lighter.processor.LighterTypes;
 import fun.connor.lighter.processor.generator.codegen.Assignable;

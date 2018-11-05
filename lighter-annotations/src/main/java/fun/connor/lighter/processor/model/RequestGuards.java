@@ -1,8 +1,6 @@
 package fun.connor.lighter.processor.model;
 
 import javax.lang.model.type.DeclaredType;
-import javax.lang.model.type.TypeMirror;
-import java.util.HashMap;
 import java.util.Map;
 
 public class RequestGuards {

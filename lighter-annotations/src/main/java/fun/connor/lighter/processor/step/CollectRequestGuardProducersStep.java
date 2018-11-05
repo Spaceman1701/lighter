@@ -1,8 +1,6 @@
 package fun.connor.lighter.processor.step;
 
 import fun.connor.lighter.declarative.ProducesRequestGuard;
-import fun.connor.lighter.handler.RequestGuard;
-import fun.connor.lighter.processor.LighterTypes;
 import fun.connor.lighter.processor.MoreTypes;
 import fun.connor.lighter.processor.model.RequestGuardFactory;
 import fun.connor.lighter.processor.model.RequestGuards;
@@ -10,10 +8,8 @@ import fun.connor.lighter.processor.model.RequestGuards;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.element.AnnotationMirror;
-import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.Element;
 import javax.lang.model.type.DeclaredType;
-import javax.lang.model.type.TypeMirror;
 import java.util.*;
 
 public class CollectRequestGuardProducersStep extends CompilerStep {

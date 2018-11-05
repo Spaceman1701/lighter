@@ -14,8 +14,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static fun.connor.lighter.handler.Response.builder;
-
 @ResourceController("/person")
 public class PersonHandler {
 

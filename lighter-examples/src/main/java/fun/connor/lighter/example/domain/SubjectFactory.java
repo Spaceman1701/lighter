@@ -1,6 +1,5 @@
 package fun.connor.lighter.example.domain;
 
-import fun.connor.lighter.adapter.TypeAdapter;
 import fun.connor.lighter.adapter.TypeAdapterFactory;
 import fun.connor.lighter.declarative.ProducesRequestGuard;
 import fun.connor.lighter.example.persistance.PersonRepository;
@@ -8,7 +7,6 @@ import fun.connor.lighter.handler.Request;
 import fun.connor.lighter.handler.RequestGuardFactory;
 
 import javax.inject.Inject;
-import java.util.Base64;
 import java.util.Map;
 
 @ProducesRequestGuard(Subject.class)

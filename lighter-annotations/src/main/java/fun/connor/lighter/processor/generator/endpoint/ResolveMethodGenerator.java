@@ -7,12 +7,9 @@ import fun.connor.lighter.handler.Request;
 import fun.connor.lighter.processor.LighterTypes;
 import fun.connor.lighter.processor.generator.codegen.*;
 import fun.connor.lighter.processor.model.Endpoint;
-import fun.connor.lighter.processor.model.RequestGuardFactory;
-import fun.connor.lighter.processor.model.RequestGuards;
 import fun.connor.lighter.processor.model.endpoint.MethodParameter;
 
 import javax.lang.model.element.Modifier;
-import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
 import java.util.ArrayList;
 import java.util.HashMap;

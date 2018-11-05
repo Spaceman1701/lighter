@@ -1,7 +1,5 @@
 package fun.connor.lighter.processor.model;
 
-import fun.connor.lighter.handler.RequestGuard;
-
 import javax.lang.model.type.DeclaredType;
 
 public class RequestGuardFactory {

@@ -1,6 +1,5 @@
 package fun.connor.lighter.processor.step;
 
-import fun.connor.lighter.declarative.ResourceController;
 import fun.connor.lighter.processor.error.AbstractCompilerError;
 import fun.connor.lighter.processor.error.AnnotationValidationError;
 import fun.connor.lighter.processor.error.RouteError;

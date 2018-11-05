@@ -5,7 +5,6 @@ import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.TypeName;
 import fun.connor.lighter.adapter.TypeAdapterFactory;
 import fun.connor.lighter.processor.LighterTypes;
-import fun.connor.lighter.processor.MoreTypes;
 import fun.connor.lighter.processor.generator.codegen.Assignable;
 import fun.connor.lighter.processor.generator.codegen.Expression;
 import fun.connor.lighter.processor.generator.codegen.Field;
