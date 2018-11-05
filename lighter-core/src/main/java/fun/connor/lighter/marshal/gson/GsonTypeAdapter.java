@@ -23,6 +23,7 @@ public class GsonTypeAdapter<T> implements TypeAdapter<T> {
         try {
             return adapter.fromJson(serializedData);
         } catch (IOException e) {
+            e.printStackTrace();
             throw new TypeMarshalException("failed to deserialize type", serializedData, Class.class);
         }
     }

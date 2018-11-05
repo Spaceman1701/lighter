@@ -10,6 +10,7 @@ import fun.connor.lighter.injection.InjectionObjectFactory;
 import io.undertow.Handlers;
 import io.undertow.Undertow;
 import io.undertow.server.RoutingHandler;
+import io.undertow.server.handlers.BlockingHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,8 +57,9 @@ public class LighterUndertow implements Lighter {
             .forEach(route -> {
                 LighterRequestResolver resolver = route.getHandlerFactory().newInstance(objectFactory, adapterFactory);
                 UndertowHttpHandler undertowHttpHandler = new UndertowHttpHandler(resolver, adapterFactory);
+                BlockingHandler handlerWrapper = new BlockingHandler(undertowHttpHandler);
                 log.debug("adding route: {}", route);
-                routingHandler.add(route.getMethod(), "/" + route.getTemplate(), undertowHttpHandler);
+                routingHandler.add(route.getMethod(), "/" + route.getTemplate(), handlerWrapper);
             });
 
 
