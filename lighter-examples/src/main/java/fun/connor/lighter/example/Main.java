@@ -25,6 +25,11 @@ public class Main {
                 .addDelegateFactory(GsonTypeAdapterFactory.create())
                 .build();
 
+        AutoConfigFactory autoConfig = AutoConfigFactory.getInstance();
+
+        injector.injectMembers(autoConfig);
+        autoConfig.loadReverseInjector();
+
         Lighter l = LighterUndertow.builder()
                 .adapterFactory(adaptorFactory)
                 .injectionFactory(injector::getInstance)
