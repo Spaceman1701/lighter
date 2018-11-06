@@ -22,6 +22,11 @@ Generally, Lighter is designed with a paradigm of questioning assumptions about 
 design. Instead, every feature is designed with the intent of providing a simple, easy to 
 understand, and flexible API to users. As such, Lighter does not explicitly implement any JSRs.
 
+Lighter also focuses on making application logic easy to test. Unlike some other frameworks, all of the
+data that is passed to a Lighter endpoint is in the form of POJOs. Similarly, endpoints also return
+POJOs. There's no need to start a test server or use any complex configuration - testing controllers is as easy 
+as testing any other object.
+
 ### What is This (And should I use this)?
 
 I decided to roll my own stack for a school project.
@@ -65,3 +70,22 @@ specifying conditions that must be met for a endpoint handler to be invoked and 
 
 (`ResponseConverter` is not yet implemented. In the current pre-MVP version, responses are
 hardcoded to send `application/json` content type and convert any response to JSON).
+
+
+## Performance
+
+One of Lighter's goals is improved performance over other frameworks which provide similar levels
+of abstraction. Lighter uses compile-time wiring and defaults to the JBoss Undertow webserver 
+to achieve this goal. 
+
+While I have yet to do comprehensive benchmarking on any kind, starting the example Lighter app with 4 
+routes, Guice dependency injection and Log4j 2 requires about 300-400 ms on a 2017 MacBook Pro. Starting
+the example Spring-Boot application requires 3.5-4.5 seconds. This represents an order of magnitude 
+faster start-up times.
+
+In this test, creating the Guice Injector object required between 200-250ms. Upcoming support for Dagger 2 
+or hand-written dependency injection could significantly reduce startup times. Basic testing using Dagger 2
+has shown start-up times for the whole application are closer to ~150ms.
+
+These start-up times make Lighter viable in use-cases where fast deployment is required (such as 
+fast horizontal scale-out situations)
