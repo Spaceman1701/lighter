@@ -7,6 +7,7 @@ import fun.connor.lighter.processor.model.RequestGuards;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.RoundEnvironment;
+import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
 import java.util.HashSet;
 import java.util.Set;
@@ -44,10 +45,10 @@ public class CollectDependenciesStep extends CompilerStep {
 
     @Override
     public StepResult process(RoundEnvironment roundEnv) {
-        Set<TypeMirror> dependencies = new HashSet<>(); //TODO: ensure object equality is sufficient here
+        Set<DeclaredType> dependencies = new HashSet<>(); //TODO: ensure object equality is sufficient here
 
         for (Controller c : model.getControllers()) {
-            dependencies.add(env.getTypeUtils().erasure(c.getElement().asType()));
+            dependencies.add((DeclaredType) env.getTypeUtils().erasure(c.getElement().asType()));
         }
 
         for (RequestGuardFactory guardFactory : requestGuards.getAll()) {
