@@ -3,7 +3,7 @@ package fun.connor.lighter.example;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import fun.connor.lighter.Lighter;
-import fun.connor.lighter.autoconfig.AutomaticRouteConfigurationLoader;
+import fun.connor.lighter.autoconfig.AutoConfigFactory;
 import fun.connor.lighter.example.modules.ExampleModule;
 import fun.connor.lighter.marshal.DelegatingAdaptorFactory;
 import fun.connor.lighter.marshal.gson.GsonTypeAdapterFactory;
@@ -28,7 +28,7 @@ public class Main {
         Lighter l = LighterUndertow.builder()
                 .adapterFactory(adaptorFactory)
                 .injectionFactory(injector::getInstance)
-                .addRouter(AutomaticRouteConfigurationLoader.loadAutomaticConfiguration())
+                .addRouter(AutoConfigFactory.loadAutomaticConfiguration())
                 .hostName("0.0.0.0")
                 .port(8000)
                 .build();
