@@ -14,8 +14,6 @@ import fun.connor.lighter.undertow.LighterUndertow;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import fun.connor.lighter.example.modules.DaggerExampleComponent;
-import fun.connor.lighter.generated.dependency.GeneratedReverseInjector;
 
 public class Main {
 
@@ -23,7 +21,7 @@ public class Main {
 
     public static void main(String[] args) {
         long startTime = System.currentTimeMillis();
-//        Injector injector = Guice.createInjector(new ExampleModule());
+        Injector injector = Guice.createInjector(new ExampleModule());
 
         DelegatingAdaptorFactory adaptorFactory = DelegatingAdaptorFactory.builder()
                 .addDelegateFactory(new JavaTypesAdaptorFactory())
@@ -33,12 +31,12 @@ public class Main {
         AutoConfigFactory autoConfig = AutoConfigFactory.getInstance();
         ReverseInjector lighterConfigBean = autoConfig.loadReverseInjector();
 
-        ExampleComponent component = DaggerExampleComponent.builder()
-                .build();
+//        ExampleComponent component = DaggerExampleComponent.builder()
+//                .build();
 
-//        injector.injectMembers(lighterConfigBean);
+        injector.injectMembers(lighterConfigBean);
 
-        component.inject((GeneratedReverseInjector)lighterConfigBean);
+//        component.inject((GeneratedReverseInjector)lighterConfigBean);
 
         Lighter l = LighterUndertow.builder()
                 .adapterFactory(adaptorFactory)

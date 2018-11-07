@@ -2,9 +2,11 @@ package fun.connor.lighter.processor.step;
 
 import fun.connor.lighter.processor.error.AbstractCompilerError;
 import fun.connor.lighter.processor.error.AnnotationValidationError;
+import fun.connor.lighter.processor.error.PreformattedError;
 import fun.connor.lighter.processor.error.RouteError;
 import fun.connor.lighter.processor.model.Controller;
 import fun.connor.lighter.processor.model.Model;
+import fun.connor.lighter.processor.model.ValidationReport;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.RoundEnvironment;
@@ -38,8 +40,15 @@ public class ValidateModelStep extends CompilerStep {
         List<Controller> controllers = model.getControllers();
         Set<AbstractCompilerError> errors = new HashSet<>();
 
-        errors.addAll(checkControllerFragments(controllers));
-        errors.addAll(checkEndpointRoutes(controllers));
+        ValidationReport.Builder modelReportBuilder = ValidationReport.builder("While validating model");
+        model.validate(modelReportBuilder);
+        ValidationReport modelReport = modelReportBuilder.build();
+
+        if (modelReport.containsErrors()) {
+            errors.add(new PreformattedError(modelReport.toString()));
+        }
+//        errors.addAll(checkControllerFragments(controllers));
+//        errors.addAll(checkEndpointRoutes(controllers));
 
         return new StepResult(errors);
     }

@@ -41,6 +41,12 @@ public class ValidationReport implements ReportFormatable {
         return s.toString();
     }
 
+    public boolean containsErrors() {
+        return !errors.isEmpty() || children.stream()
+                .map(ValidationReport::containsErrors)
+                .reduce(Boolean::logicalOr).orElse(false);
+    }
+
     public static Builder builder(String contextStr) {
         return new Builder(contextStr);
     }
