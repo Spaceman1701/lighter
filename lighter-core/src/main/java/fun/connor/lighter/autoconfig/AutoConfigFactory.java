@@ -2,7 +2,8 @@ package fun.connor.lighter.autoconfig;
 
 public class AutoConfigFactory {
 
-    private static final String CLASS_NAME = "fun.connor.lighter.generated.routing.GeneratedRouteConfiguration";
+    private static final String ROUTE_CONFIG_CLASS = "fun.connor.lighter.generated.routing.GeneratedRouteConfiguration";
+    private static final String BEAN_CONFIG_CLASS = "fun.connor.lighter.generated.dependency.GeneratedReverseInjector";
 
     private static AutoConfigFactory INSTANCE = new AutoConfigFactory();
 
@@ -16,7 +17,7 @@ public class AutoConfigFactory {
 
     public RouteConfiguration loadRouteConfiguration() {
         try {
-            Class<?> clazz = AutoConfigFactory.class.getClassLoader().loadClass(CLASS_NAME);
+            Class<?> clazz = AutoConfigFactory.class.getClassLoader().loadClass(ROUTE_CONFIG_CLASS);
             return (RouteConfiguration) clazz.newInstance();
         } catch (ReflectiveOperationException e) {
             throw new AutoConfigException("Error loading autoconfiguration data");
@@ -25,7 +26,12 @@ public class AutoConfigFactory {
 
 
     public ReverseInjector loadReverseInjector() {
-        return null;
+        try {
+            Class<?> injectorClass = AutoConfigFactory.class.getClassLoader().loadClass(BEAN_CONFIG_CLASS);
+            return (ReverseInjector) injectorClass.newInstance();
+        } catch (ReflectiveOperationException e) {
+            throw new AutoConfigException("Error loading reverse inject");
+        }
     }
 
 

@@ -14,6 +14,7 @@ import javax.annotation.processing.Filer;
 import javax.inject.Inject;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.type.DeclaredType;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -55,6 +56,7 @@ public class ReverseInjectorGenerator extends AbstractGenerator {
         return MethodSpec.constructorBuilder()
                 .addAnnotation(Inject.class)
                 .addModifiers(Modifier.PUBLIC)
+                .addStatement("this.classMap = new $T<>()", HashMap.class)
                 .build();
     }
 
@@ -70,6 +72,6 @@ public class ReverseInjectorGenerator extends AbstractGenerator {
 
     @Override
     protected String getGeneratedPackageName() {
-        return GENERATED_PACKAGE_NAME;
+        return GENERATED_PACKAGE_NAME + ".dependency";
     }
 }

@@ -4,6 +4,7 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import fun.connor.lighter.Lighter;
 import fun.connor.lighter.autoconfig.AutoConfigFactory;
+import fun.connor.lighter.autoconfig.ReverseInjector;
 import fun.connor.lighter.example.modules.ExampleModule;
 import fun.connor.lighter.marshal.DelegatingAdaptorFactory;
 import fun.connor.lighter.marshal.gson.GsonTypeAdapterFactory;
@@ -26,13 +27,13 @@ public class Main {
                 .build();
 
         AutoConfigFactory autoConfig = AutoConfigFactory.getInstance();
+        ReverseInjector lighterConfigBean = autoConfig.loadReverseInjector();
 
-        injector.injectMembers(autoConfig);
-        autoConfig.loadReverseInjector();
+        injector.injectMembers(lighterConfigBean);
 
         Lighter l = LighterUndertow.builder()
                 .adapterFactory(adaptorFactory)
-                .injectionFactory(injector::getInstance)
+                .injectionFactory(lighterConfigBean.getInjector())
                 .addRouter(AutoConfigFactory.loadAutomaticConfiguration())
                 .hostName("0.0.0.0")
                 .port(8000)
