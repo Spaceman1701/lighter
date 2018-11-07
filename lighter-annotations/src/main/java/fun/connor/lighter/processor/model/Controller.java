@@ -3,7 +3,7 @@ package fun.connor.lighter.processor.model;
 import javax.lang.model.element.TypeElement;
 import java.util.List;
 
-public class Controller {
+public class Controller implements Validatable {
 
     private TypeElement element;
     private Route routeFragment;
@@ -39,5 +39,10 @@ public class Controller {
 
     public TypeElement getElement() {
         return element;
+    }
+
+    @Override
+    public void validate(ValidationReport.Builder reportBuilder) {
+
     }
 }
