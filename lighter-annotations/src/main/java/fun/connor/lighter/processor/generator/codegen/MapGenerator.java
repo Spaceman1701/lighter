@@ -1,4 +1,4 @@
-package fun.connor.lighter.processor.generator.endpoint;
+package fun.connor.lighter.processor.generator.codegen;
 
 import com.squareup.javapoet.CodeBlock;
 import fun.connor.lighter.processor.LighterTypes;
@@ -35,6 +35,20 @@ public class MapGenerator {
             @Override
             public TypeMirror getType() {
                 return valueType;
+            }
+        };
+    }
+
+    public Expression makePut(Expression keyExpr, Expression valueExpr) {
+        return new Expression() {
+            @Override
+            public CodeBlock makeReadStub() {
+                return CodeBlock.of("$L.put($L, $L)", source.makeReadStub(), keyExpr.makeReadStub(), valueExpr.makeReadStub());
+            }
+
+            @Override
+            public TypeMirror getType() {
+                return valueExpr.getType();
             }
         };
     }

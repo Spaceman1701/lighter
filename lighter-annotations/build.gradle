@@ -17,4 +17,5 @@ dependencies {
     compile 'com.google.guava:guava:26.0-jre'
     compile group: 'com.google.auto.service', name: 'auto-service', version: '1.0-rc4'
     compile 'com.squareup:javapoet:1.11.1'
+    compile group: 'javax.inject', name: 'javax.inject', version: '1'
 }

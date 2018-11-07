@@ -1,5 +1,6 @@
 package fun.connor.lighter.processor.step;
 
+import fun.connor.lighter.processor.LighterTypes;
 import fun.connor.lighter.processor.generator.injection.ReverseInjectorGenerator;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -13,12 +14,14 @@ import java.util.Set;
 public class ReverseInjectorCodeGenerationStep extends CompilerStep {
 
     private Set<DeclaredType> dependencies;
+    private LighterTypes types;
 
     public ReverseInjectorCodeGenerationStep(ProcessingEnvironment env) {
         super(env);
+        this.types = new LighterTypes(env.getTypeUtils(), env.getElementUtils());
     }
 
-    @Override
+    @Override @SuppressWarnings("unchecked")
     public Set<EnvironmentRequirement> getRequiredEnv() {
         EnvironmentRequirement<Set> depsReq =
                 new EnvironmentRequirement<>("dependencies", Set.class, this::setDependencies);
@@ -35,7 +38,7 @@ public class ReverseInjectorCodeGenerationStep extends CompilerStep {
     @Override
     public StepResult process(RoundEnvironment roundEnv) {
         if (!dependencies.isEmpty()) {
-            ReverseInjectorGenerator generator = new ReverseInjectorGenerator(dependencies, env.getFiler());
+            ReverseInjectorGenerator generator = new ReverseInjectorGenerator(dependencies, types, env.getFiler());
             try {
                 generator.generateCodeFile();
             } catch (IOException e) {

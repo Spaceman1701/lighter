@@ -7,6 +7,7 @@ import fun.connor.lighter.processor.LighterTypes;
 import fun.connor.lighter.processor.generator.codegen.Assignable;
 import fun.connor.lighter.processor.generator.codegen.Expression;
 import fun.connor.lighter.processor.generator.codegen.Field;
+import fun.connor.lighter.processor.generator.codegen.MapGenerator;
 import fun.connor.lighter.processor.model.RequestGuardFactory;
 
 import javax.lang.model.element.Modifier;

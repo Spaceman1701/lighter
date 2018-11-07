@@ -18,7 +18,7 @@ import fun.connor.lighter.injection.InjectionObjectFactory;
  * <br><br>
  *
  * While it is possible to write this class by hand, Lighter will generate
- * one for you. This will be accessible through the {@link AutoConfigFactory}
+ * one for you. This will be accessible through the {@code AutoConfigFactory}
  * link other generated classes.
  *
  * Example:
