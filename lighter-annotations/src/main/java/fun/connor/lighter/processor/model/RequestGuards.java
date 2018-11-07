@@ -12,7 +12,11 @@ public class RequestGuards {
     }
 
     public RequestGuardFactory getRequestGuard(DeclaredType toProduce) {
-        return requestGuards.get(toProduce);
+        RequestGuardFactory result = requestGuards.get(toProduce);
+        if (result == null) {
+            throw new IllegalArgumentException("Could not find request guard for type: " + toProduce.asElement().getSimpleName().toString());
+        }
+        return result;
     }
 
     public Collection<RequestGuardFactory> getAll() {

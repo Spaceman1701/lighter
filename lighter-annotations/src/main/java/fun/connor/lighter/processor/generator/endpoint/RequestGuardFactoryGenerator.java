@@ -15,6 +15,7 @@ import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class RequestGuardFactoryGenerator implements Field {
@@ -26,6 +27,7 @@ public class RequestGuardFactoryGenerator implements Field {
     private DeclaredType producesType;
 
     public RequestGuardFactoryGenerator(RequestGuardFactory factory, LighterTypes types) {
+        Objects.requireNonNull(factory, "provided null request guard factory. This is a bug in Lighter.");
         this.type = factory.getType();
         this.producesType = factory.getProduces();
 
