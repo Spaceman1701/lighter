@@ -20,5 +20,7 @@ dependencies {
     compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.11.1'
     compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.11.1'
     compile group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: '2.11.1'
+    compile 'com.google.dagger:dagger:2.19'
+    compileOnly 'com.google.dagger:dagger-compiler:2.19'
     compile project(':lighter-core')
 }
