@@ -197,5 +197,7 @@ public class Endpoint implements Validatable {
             Validators.Endpoint.allParamsExist(queryParams.getNameMappings(), methodParameters).validate(reportBuilder);
             reportBuilder.addChild(queryParamsReport);
         }
+
+        Validators.Endpoint.allParametersUnique(fullRoute.getParams(), queryParams).validate(reportBuilder);
     }
 }
