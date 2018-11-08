@@ -1,6 +1,7 @@
 package fun.connor.lighter.processor.model;
 
 import fun.connor.lighter.processor.model.endpoint.MethodParameter;
+import fun.connor.lighter.processor.model.validators.Validators;
 
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
@@ -187,5 +188,14 @@ public class Endpoint implements Validatable {
     @Override
     public void validate(ValidationReport.Builder reportBuilder) {
 
+        ValidationReport.Builder pathParamsReport = ValidationReport.builder("while checking path template");
+        Validators.Endpoint.allParamsExist(fullRoute.getParams(), methodParameters).validate(pathParamsReport);
+        reportBuilder.addChild(pathParamsReport);
+
+        if (queryParams != null) {
+            ValidationReport.Builder queryParamsReport = ValidationReport.builder("while checking query params");
+            Validators.Endpoint.allParamsExist(queryParams.getNameMappings(), methodParameters).validate(reportBuilder);
+            reportBuilder.addChild(queryParamsReport);
+        }
     }
 }

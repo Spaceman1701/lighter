@@ -1,8 +1,6 @@
 package fun.connor.lighter.processor.model;
 
-import fun.connor.lighter.processor.Combinations;
-import fun.connor.lighter.processor.model.validators.AllRoutesUniqueValidator;
-import fun.connor.lighter.processor.model.validators.ModelValidators;
+import fun.connor.lighter.processor.model.validators.Validators;
 
 import java.util.Collection;
 import java.util.List;
@@ -24,7 +22,8 @@ public class Model implements Validatable {
     public void validate(ValidationReport.Builder reportBuilder) {
         for (Controller c : controllers) {
             ValidationReport.Builder controllerReport = ValidationReport.builder(makeControllerContext(c));
-            c.validate(reportBuilder);
+            c.validate(controllerReport);
+            reportBuilder.addChild(controllerReport);
         }
 
         validateControllerStubs(reportBuilder);
@@ -36,7 +35,7 @@ public class Model implements Validatable {
         List<Route> routeFragments = controllers.stream()
                         .map(Controller::getRouteFragment)
                         .collect(Collectors.toList());
-        ModelValidators.allRoutesUnique(routeFragments).validate(report);
+        Validators.allRoutesUnique(routeFragments).validate(report);
     }
 
     private void validateNoDuplicateRoutes(ValidationReport.Builder report) {
@@ -44,12 +43,12 @@ public class Model implements Validatable {
                 .map(Controller::getEndpoints)
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());
-        ModelValidators.allEndpointsUnique(endpoints).validate(report);
+        Validators.allEndpointsUnique(endpoints).validate(report);
     }
 
 
     private String makeControllerContext(Controller c) {
-        return "At " + c.getSimpleName();
+        return "at " + c.getSimpleName();
     }
 
     @Override

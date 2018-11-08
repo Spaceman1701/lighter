@@ -55,7 +55,7 @@ public class Controller implements Validatable {
     @Override
     public void validate(ValidationReport.Builder reportBuilder) {
         for (Endpoint e : endpoints) {
-            ValidationReport.Builder endpointReport = ValidationReport.builder("At method " + e.getMethodName());
+            ValidationReport.Builder endpointReport = ValidationReport.builder("at method " + e.getMethodName());
             e.validate(endpointReport);
             reportBuilder.addChild(endpointReport);
         }

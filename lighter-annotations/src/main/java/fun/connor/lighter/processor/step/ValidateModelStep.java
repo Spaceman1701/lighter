@@ -39,7 +39,7 @@ public class ValidateModelStep extends CompilerStep {
     public StepResult process(RoundEnvironment roundEnv) {
         List<Controller> controllers = model.getControllers();
 
-        ValidationReport.Builder modelReportBuilder = ValidationReport.builder("While validating model");
+        ValidationReport.Builder modelReportBuilder = ValidationReport.builder("while validating model");
         model.validate(modelReportBuilder);
         ValidationReport modelReport = modelReportBuilder.build();
 
