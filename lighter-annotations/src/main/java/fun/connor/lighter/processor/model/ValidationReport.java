@@ -29,8 +29,9 @@ public class ValidationReport implements ReportFormatable {
     public String toStringRelative(String prefix) {
         StringBuilder s = new StringBuilder();
         String nextPrefix = prefix + INDENT;
+        int errorCount = errorCount();
         s.append(prefix)
-                .append("found ").append(errorCount()).append(" error(s) ")
+                .append("found ").append(errorCount()).append(errorCount > 1 ? " errors " : " error ")
                 .append(contextStr).append(":").append("\n");
 
         for (ValidationError e : errors) {
@@ -38,8 +39,10 @@ public class ValidationReport implements ReportFormatable {
             s.append("\n");
         }
         for (ValidationReport r : children) {
-            s.append(prefix).append(INDENT).append(r.toStringRelative(nextPrefix));
-            s.append("\n");
+            if (r.containsErrors()) {
+                s.append(prefix).append(INDENT).append(r.toStringRelative(nextPrefix));
+                s.append("\n");
+            }
         }
 
         return s.toString();
@@ -62,20 +65,14 @@ public class ValidationReport implements ReportFormatable {
         return new Builder(contextStr);
     }
 
-    public static Builder builder() {
-        return new Builder(null);
-    }
-
     public static class Builder {
 
         private String contextStr;
-        private boolean hasContext;
         private List<ValidationError> errors;
         private List<ValidationReport.Builder> children;
 
         private Builder(String contextStr) {
             this.contextStr = contextStr;
-            this.hasContext = contextStr != null;
             errors = new ArrayList<>();
             children = new ArrayList<>();
         }
@@ -86,11 +83,7 @@ public class ValidationReport implements ReportFormatable {
         }
 
         public Builder addChild(ValidationReport.Builder builder) {
-            if (builder.hasContext) {
-                children.add(builder);
-            } else {
-                errors.addAll(builder.errors);
-            }
+            children.add(builder);
             return this;
         }
 

@@ -3,13 +3,14 @@ package fun.connor.lighter.processor.model;
 import fun.connor.lighter.processor.model.endpoint.MethodParameter;
 
 import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.ExecutableType;
 import javax.lang.model.type.TypeMirror;
 import java.util.*;
 
-public class Endpoint {
+public class Endpoint implements Validatable {
 
     public enum Method {
         GET, POST, PUT, DELETE
@@ -174,5 +175,17 @@ public class Endpoint {
     @Override
     public int hashCode() {
         return methodElement.hashCode();
+    }
+
+    public String getFullName() {
+        String methodName = getMethodName();
+        TypeElement containingType = (TypeElement) methodElement.getEnclosingElement(); //method must be in class
+        String className = containingType.getQualifiedName().toString();
+        return className + "#" + methodName;
+    }
+
+    @Override
+    public void validate(ValidationReport.Builder reportBuilder) {
+
     }
 }

@@ -75,7 +75,7 @@ public class ValidationStep extends CompilerStep {
         }
 
         //TODO: stopgap while refactoring all error reporting
-        ValidationReport.Builder reportBuilder = ValidationReport.builder();
+        ValidationReport.Builder reportBuilder = ValidationReport.builder("While validating annotations");
 
         for (AbstractCompilerError error : errors) {
             reportBuilder.addError(new ValidationError(error.toString()));

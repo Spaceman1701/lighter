@@ -30,8 +30,8 @@ public class AllEndpointsUniqueValidator implements Validatable {
     private String makeDuplicateRoutesMessage(Endpoint a, Endpoint b) {
         return "There indistinguishable Endpoints. At least one must be changed: \n" +
                 "  First: " + a.getHttpMethod() + " " + a.pathTemplate() + " found at: \n" +
-                "    " + a.getMethodName() + "\n" +
+                "    " + a.getFullName() + "\n" +
                 "  Second: " + b.getHttpMethod() + " " + b.pathTemplate() + " found at: \n" +
-                "    " + b.getMethodName();
+                "    " + b.getFullName();
     }
 }
