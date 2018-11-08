@@ -45,6 +45,6 @@ public class ReverseInjectorCodeGenerationStep extends CompilerStep {
                 e.printStackTrace();
             }
         }
-        return new StepResult(new HashSet<>());
+        return new StepResult();
     }
 }

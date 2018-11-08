@@ -1,26 +1,36 @@
 package fun.connor.lighter.processor.step;
 
 import fun.connor.lighter.processor.error.AbstractCompilerError;
+import fun.connor.lighter.processor.model.ValidationReport;
 
+import java.util.Optional;
 import java.util.Set;
 
 public class StepResult {
-    private final Set<AbstractCompilerError> errors;
+    private final ValidationReport validationReport;
     private final String resultName;
     private final Object result;
 
-    StepResult(Set<AbstractCompilerError> errors, String resultName, Object result) {
-        this.errors = errors;
+    StepResult(ValidationReport validationReport, String resultName, Object result) {
+        this.validationReport = validationReport;
         this.resultName = resultName;
         this.result = result;
     }
 
-    StepResult(Set<AbstractCompilerError> errors) {
-        this(errors, null, null);
+    StepResult(ValidationReport validationReport) {
+        this(validationReport, null, null);
     }
 
-    public Set<AbstractCompilerError> getErrors() {
-        return errors;
+    StepResult(String resultName, Object result) {
+        this(null, resultName, result);
+    }
+
+    StepResult() {
+        this(null, null, null);
+    }
+
+    public Optional<ValidationReport> getErrors() {
+        return Optional.ofNullable(validationReport);
     }
 
     public String getResultName() {

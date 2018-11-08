@@ -41,7 +41,7 @@ public class BuildModelStep extends CompilerStep {
         }
 
 
-        return new StepResult(new HashSet<>(), "model", new Model(controllers));
+        return new StepResult("model", new Model(controllers));
     }
 
 }

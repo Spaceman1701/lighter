@@ -28,14 +28,14 @@ public class ValidationReport implements ReportFormatable {
     @Override
     public String toStringRelative(String prefix) {
         StringBuilder s = new StringBuilder();
-        String nextPrefx = prefix + INDENT;
+        String nextPrefix = prefix + INDENT;
         s.append(prefix).append(contextStr).append(":").append("\n");
 
         for (ValidationError e : errors) {
-            s.append(prefix).append(INDENT).append(e.toStringRelative(nextPrefx));
+            s.append(prefix).append(INDENT).append(e.toStringRelative(nextPrefix));
         }
         for (ValidationReport r : children) {
-            s.append(prefix).append(INDENT).append(r.toStringRelative(nextPrefx));
+            s.append(prefix).append(INDENT).append(r.toStringRelative(nextPrefix));
         }
 
         return s.toString();

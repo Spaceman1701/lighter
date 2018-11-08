@@ -3,6 +3,7 @@ package fun.connor.lighter.processor;
 import com.google.auto.service.AutoService;
 import fun.connor.lighter.declarative.*;
 import fun.connor.lighter.processor.error.AbstractCompilerError;
+import fun.connor.lighter.processor.model.ValidationReport;
 import fun.connor.lighter.processor.step.*;
 
 import javax.annotation.processing.AbstractProcessor;
@@ -46,12 +47,19 @@ public class LighterAnnotationProcessor extends AbstractProcessor {
             step.validateEnv(stepEnv);
             StepResult result = step.process(roundEnv);
 
-            if (!result.getErrors().isEmpty()) {
-                for (AbstractCompilerError error : result.getErrors()) {
-                    processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, error.toString());
+            if (result.getErrors().isPresent()) {
+                ValidationReport report = result.getErrors().get();
+                if (report.containsErrors()) {
+                    processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, report.toString());
+                    return true;
                 }
-                return true;
             }
+//            if (!result.getErrors().isEmpty()) {
+//                for (AbstractCompilerError error : result.getErrors()) {
+//                    processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, error.toString());
+//                }
+//                return true;
+//            }
 
             if (result.hasResult()) {
                 stepEnv.put(result.getResultName(), result.getResult());

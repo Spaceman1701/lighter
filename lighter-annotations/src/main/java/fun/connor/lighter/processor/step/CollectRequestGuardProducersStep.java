@@ -32,7 +32,7 @@ public class CollectRequestGuardProducersStep extends CompilerStep {
             RequestGuardFactory requestGuardFactory = new RequestGuardFactory((DeclaredType) e.asType(), produces);
             guards.put(produces, requestGuardFactory);
         }
-        return new StepResult(new HashSet<>(), "requestGuards" , new RequestGuards(guards));
+        return new StepResult("requestGuards" , new RequestGuards(guards));
     }
 
     private DeclaredType getProducesType(Element e) {

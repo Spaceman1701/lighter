@@ -38,19 +38,12 @@ public class ValidateModelStep extends CompilerStep {
     @Override
     public StepResult process(RoundEnvironment roundEnv) {
         List<Controller> controllers = model.getControllers();
-        Set<AbstractCompilerError> errors = new HashSet<>();
 
         ValidationReport.Builder modelReportBuilder = ValidationReport.builder("While validating model");
         model.validate(modelReportBuilder);
         ValidationReport modelReport = modelReportBuilder.build();
 
-        if (modelReport.containsErrors()) {
-            errors.add(new PreformattedError(modelReport.toString()));
-        }
-//        errors.addAll(checkControllerFragments(controllers));
-//        errors.addAll(checkEndpointRoutes(controllers));
-
-        return new StepResult(errors);
+        return new StepResult(modelReport);
     }
 
     private Set<AbstractCompilerError> checkControllerFragments(List<Controller> controllers) {

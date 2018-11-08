@@ -3,6 +3,8 @@ package fun.connor.lighter.processor.step;
 import fun.connor.lighter.declarative.*;
 import fun.connor.lighter.processor.error.AbstractCompilerError;
 import fun.connor.lighter.processor.error.AnnotationValidationError;
+import fun.connor.lighter.processor.model.ValidationError;
+import fun.connor.lighter.processor.model.ValidationReport;
 import fun.connor.lighter.processor.validators.*;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -71,6 +73,14 @@ public class ValidationStep extends CompilerStep {
                 }
             }
         }
-        return new StepResult(errors);
+
+        //TODO: stopgap while refactoring all error reporting
+        ValidationReport.Builder reportBuilder = ValidationReport.builder();
+
+        for (AbstractCompilerError error : errors) {
+            reportBuilder.addError(new ValidationError(error.toString()));
+        }
+
+        return new StepResult(reportBuilder.build());
     }
 }

@@ -9,7 +9,7 @@ public class ValidationError implements ReportFormatable {
 
     @Override
     public String toStringRelative(String prefix) {
-        String[] messageByLine = prefix.split("\n");
+        String[] messageByLine = message.split("\n");
 
         StringBuilder builder = new StringBuilder();
         for (String line : messageByLine) {

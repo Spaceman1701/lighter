@@ -55,6 +55,6 @@ public class CollectDependenciesStep extends CompilerStep {
             dependencies.add(guardFactory.getType());
         }
 
-        return new StepResult(new HashSet<>(), "dependencies", dependencies);
+        return new StepResult("dependencies", dependencies);
     }
 }

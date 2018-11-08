@@ -3,10 +3,7 @@ package fun.connor.lighter.processor.step;
 import fun.connor.lighter.processor.error.AbstractCompilerError;
 import fun.connor.lighter.processor.error.CodeGenerationError;
 import fun.connor.lighter.processor.generator.*;
-import fun.connor.lighter.processor.model.Controller;
-import fun.connor.lighter.processor.model.Endpoint;
-import fun.connor.lighter.processor.model.Model;
-import fun.connor.lighter.processor.model.RequestGuards;
+import fun.connor.lighter.processor.model.*;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.RoundEnvironment;
@@ -77,7 +74,14 @@ public class CodeGenerationStep extends CompilerStep {
             //TODO: error handling
         }
 
-        return new StepResult(errors);
+        //TODO: stopgap while refactoring all error reporting
+        ValidationReport.Builder reportBuilder = ValidationReport.builder();
+
+        for (AbstractCompilerError error : errors) {
+            reportBuilder.addError(new ValidationError(error.toString()));
+        }
+
+        return new StepResult(reportBuilder.build());
     }
 
     private List<GeneratedEndpoint> generateEndpoints(Controller c, Set<AbstractCompilerError> errors) {
