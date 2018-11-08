@@ -27,7 +27,7 @@ public class Model implements Validatable {
         }
 
         ValidationReport.Builder uniqueValidatorReport = ValidationReport.builder(); //context-free validator
-        validateNoDuplicateRoutes(uniqueValidatorReport);
+        validateControllerStubs(uniqueValidatorReport);
         reportBuilder.addChild(uniqueValidatorReport);
 
         ValidationReport.Builder uniqueRoutesReport = ValidationReport.builder();
@@ -36,7 +36,7 @@ public class Model implements Validatable {
 
     }
 
-    private void validateNoDuplicateControllerPaths(ValidationReport.Builder report) {
+    private void validateControllerStubs(ValidationReport.Builder report) {
         AllRoutesUniqueValidator uniqueValidator = new AllRoutesUniqueValidator(
                 controllers.stream()
                         .map(Controller::getRouteFragment)
@@ -54,7 +54,6 @@ public class Model implements Validatable {
         Combinations.CombinationsOf(endpoints).forEach(p -> {
                     Endpoint a = p.first;
                     Endpoint b = p.second;
-                    System.out.println("a: " + a.getMethodName() + " b: " + b.getMethodName());
                     if (!a.equals(b) && a.isSameEndpoint(b)) {
                         report.addError(new ValidationError(makeDuplicateRoutesMessage(a, b)));
                     }
@@ -71,5 +70,25 @@ public class Model implements Validatable {
 
     private String makeControllerContext(Controller c) {
         return "At " + c.getSimpleName();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) {
+            return true;
+        }
+        if (!(o instanceof Model)) {
+            return false;
+        }
+
+        Model that = (Model) o;
+        boolean thatContainsAll = controllers.stream()
+                .map((c) -> that.getControllers().contains(c))
+                .reduce(Boolean::logicalAnd).orElse(true);
+        boolean thisContainsAll = that.getControllers().stream()
+                .map(controllers::contains)
+                .reduce(Boolean::logicalAnd).orElse(true);
+
+        return thatContainsAll && thisContainsAll;
     }
 }

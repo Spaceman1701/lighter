@@ -16,7 +16,6 @@ import java.util.Set;
 
 public class BuildModelStep extends CompilerStep {
 
-
     public BuildModelStep(ProcessingEnvironment env) {
         super(env);
     }
@@ -39,7 +38,6 @@ public class BuildModelStep extends CompilerStep {
             TypeElement type = (TypeElement) e;
             controllers.add(type.accept(new ControllerVisitor(), null));
         }
-
 
         return new StepResult("model", new Model(controllers));
     }

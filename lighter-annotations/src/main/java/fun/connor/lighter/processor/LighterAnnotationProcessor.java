@@ -54,12 +54,6 @@ public class LighterAnnotationProcessor extends AbstractProcessor {
                     return true;
                 }
             }
-//            if (!result.getErrors().isEmpty()) {
-//                for (AbstractCompilerError error : result.getErrors()) {
-//                    processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, error.toString());
-//                }
-//                return true;
-//            }
 
             if (result.hasResult()) {
                 stepEnv.put(result.getResultName(), result.getResult());

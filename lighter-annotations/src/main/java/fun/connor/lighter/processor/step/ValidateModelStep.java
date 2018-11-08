@@ -45,24 +45,4 @@ public class ValidateModelStep extends CompilerStep {
 
         return new StepResult(modelReport);
     }
-
-    private Set<AbstractCompilerError> checkControllerFragments(List<Controller> controllers) {
-        Set<AbstractCompilerError> errors = new HashSet<>();
-        for (Controller a : controllers) { //TODO: hash-table implementation here
-            for (Controller b : controllers) {
-                if (a != b) {
-                    if (a.getRouteFragment().captures(b.getRouteFragment())) {
-                        AbstractCompilerError error =
-                                new RouteError(a.getElement(), b.getElement(), a.getRouteFragment(), b.getRouteFragment());
-                        errors.add(error);
-                    }
-                }
-            }
-        }
-        return errors;
-    }
-
-    private Set<AnnotationValidationError> checkEndpointRoutes(List<Controller> controllers) {
-        return new HashSet<>();
-    }
 }

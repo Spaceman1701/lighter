@@ -42,6 +42,17 @@ public class Controller implements Validatable {
     }
 
     @Override
+    public boolean equals(Object other) {
+        if (other == this) {
+            return true;
+        }
+        if (!(other instanceof Controller)) {
+            return false;
+        }
+        return element.equals(((Controller) other).element);
+    }
+
+    @Override
     public void validate(ValidationReport.Builder reportBuilder) {
 
     }

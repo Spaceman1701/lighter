@@ -157,4 +157,22 @@ public class Endpoint {
         return other.getHttpMethod().equals(this.getHttpMethod())
                 && other.fullRoute.captures(fullRoute);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) {
+            return true;
+        }
+        if (!(o instanceof Endpoint)) {
+            return false;
+        }
+        Endpoint that = (Endpoint) o;
+
+        return methodElement.equals(that.methodElement);
+    }
+
+    @Override
+    public int hashCode() {
+        return methodElement.hashCode();
+    }
 }

@@ -29,7 +29,9 @@ public class ValidationReport implements ReportFormatable {
     public String toStringRelative(String prefix) {
         StringBuilder s = new StringBuilder();
         String nextPrefix = prefix + INDENT;
-        s.append(prefix).append(contextStr).append(":").append("\n");
+        s.append(prefix)
+                .append("found ").append(errorCount()).append(" error(s) ")
+                .append(contextStr).append(":").append("\n");
 
         for (ValidationError e : errors) {
             s.append(prefix).append(INDENT).append(e.toStringRelative(nextPrefix));
@@ -41,6 +43,13 @@ public class ValidationReport implements ReportFormatable {
         }
 
         return s.toString();
+    }
+
+    public int errorCount() {
+        return errors.size() + children.stream()
+                .map(ValidationReport::errorCount)
+                .reduce((a, b) -> a + b)
+                .orElse(0);
     }
 
     public boolean containsErrors() {
