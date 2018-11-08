@@ -33,9 +33,11 @@ public class ValidationReport implements ReportFormatable {
 
         for (ValidationError e : errors) {
             s.append(prefix).append(INDENT).append(e.toStringRelative(nextPrefix));
+            s.append("\n");
         }
         for (ValidationReport r : children) {
             s.append(prefix).append(INDENT).append(r.toStringRelative(nextPrefix));
+            s.append("\n");
         }
 
         return s.toString();

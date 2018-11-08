@@ -1,6 +1,7 @@
 package fun.connor.lighter.processor.model;
 
 import com.google.common.collect.Lists;
+import fun.connor.lighter.processor.Combinations;
 
 import java.util.List;
 
@@ -15,10 +16,10 @@ public class AllRoutesUniqueValidator implements Validatable {
 
     @Override
     public void validate(ValidationReport.Builder report) {
-        Lists.cartesianProduct(routes, routes).forEach(l ->
+        Combinations.CombinationsOf(routes).forEach(l ->
                 {
-                    Route a = l.get(0);
-                    Route b = l.get(1);
+                    Route a = l.first;
+                    Route b = l.second;
                     if (!a.equals(b) && a.captures(b)) {
                         report.addError(new ValidationError(makeErrorMessage(a, b)));
                     }

@@ -135,4 +135,26 @@ public class Endpoint {
         }
         return result;
     }
+
+    /**
+     * Semantic equality between two endpoints.
+     * <br>
+     * Endpoints are the same if either:
+     * <br>
+     * 1) They are equal (see {@link Endpoint#equals(Object)})
+     * <br>
+     * 2) Both endpoint's routes capture each other (see {@link Route#captures(Route)}) and
+     * they have the same HTTP method
+     * @return <code>true</code> iff this endpoint is the same as the other
+     */
+    public boolean isSameEndpoint(Endpoint other) {
+        if (other == null) {
+            return false;
+        }
+        if (equals(other)) {
+            return true;
+        }
+        return other.getHttpMethod().equals(this.getHttpMethod())
+                && other.fullRoute.captures(fullRoute);
+    }
 }

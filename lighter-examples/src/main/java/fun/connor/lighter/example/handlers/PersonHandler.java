@@ -57,6 +57,11 @@ public class PersonHandler {
 
     }
 
+    @Get("/say_hello/{anotherVariable}/{butStillTheSame}")
+    public Response<Void> thisIsADuplicate() {
+        return null;
+    }
+
     @Put
     public Response<Person> updatePerson(@Body Person person, Subject subject) {
         if (!subject.isAdmin()) {
