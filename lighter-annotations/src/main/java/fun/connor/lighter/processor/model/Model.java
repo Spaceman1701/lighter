@@ -1,7 +1,8 @@
 package fun.connor.lighter.processor.model;
 
-import com.google.common.collect.Lists;
 import fun.connor.lighter.processor.Combinations;
+import fun.connor.lighter.processor.model.validators.AllRoutesUniqueValidator;
+import fun.connor.lighter.processor.model.validators.ModelValidators;
 
 import java.util.Collection;
 import java.util.List;
@@ -26,23 +27,16 @@ public class Model implements Validatable {
             c.validate(reportBuilder);
         }
 
-        ValidationReport.Builder uniqueValidatorReport = ValidationReport.builder(); //context-free validator
-        validateControllerStubs(uniqueValidatorReport);
-        reportBuilder.addChild(uniqueValidatorReport);
-
-        ValidationReport.Builder uniqueRoutesReport = ValidationReport.builder();
-        validateNoDuplicateRoutes(uniqueRoutesReport);
-        reportBuilder.addChild(uniqueRoutesReport);
+        validateControllerStubs(reportBuilder);
+        validateNoDuplicateRoutes(reportBuilder);
 
     }
 
     private void validateControllerStubs(ValidationReport.Builder report) {
-        AllRoutesUniqueValidator uniqueValidator = new AllRoutesUniqueValidator(
-                controllers.stream()
+        List<Route> routeFragments = controllers.stream()
                         .map(Controller::getRouteFragment)
-                        .collect(Collectors.toList())
-        );
-        uniqueValidator.validate(report);
+                        .collect(Collectors.toList());
+        ModelValidators.allRoutesUnique(routeFragments).validate(report);
     }
 
     private void validateNoDuplicateRoutes(ValidationReport.Builder report) {
@@ -50,23 +44,9 @@ public class Model implements Validatable {
                 .map(Controller::getEndpoints)
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());
-
-        Combinations.CombinationsOf(endpoints).forEach(p -> {
-                    Endpoint a = p.first;
-                    Endpoint b = p.second;
-                    if (!a.equals(b) && a.isSameEndpoint(b)) {
-                        report.addError(new ValidationError(makeDuplicateRoutesMessage(a, b)));
-                    }
-                });
+        ModelValidators.allEndpointsUnique(endpoints).validate(report);
     }
 
-    private String makeDuplicateRoutesMessage(Endpoint a, Endpoint b) {
-        return "There indistinguishable Endpoints. At least one must be changed: \n" +
-                "  First: " + a.getHttpMethod() + " " + a.pathTemplate() + " found at: \n" +
-                "    " + a.getMethodName() + "\n" +
-                "  Second: " + b.getHttpMethod() + " " + b.pathTemplate() + " found at: \n" +
-                "    " + b.getMethodName();
-    }
 
     private String makeControllerContext(Controller c) {
         return "At " + c.getSimpleName();

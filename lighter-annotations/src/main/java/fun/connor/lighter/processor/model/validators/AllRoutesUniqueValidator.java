@@ -1,7 +1,11 @@
-package fun.connor.lighter.processor.model;
+package fun.connor.lighter.processor.model.validators;
 
 import com.google.common.collect.Lists;
 import fun.connor.lighter.processor.Combinations;
+import fun.connor.lighter.processor.model.Route;
+import fun.connor.lighter.processor.model.Validatable;
+import fun.connor.lighter.processor.model.ValidationError;
+import fun.connor.lighter.processor.model.ValidationReport;
 
 import java.util.List;
 
