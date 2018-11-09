@@ -15,8 +15,12 @@ library at a later data).
 
 Like JAX-RS, Lighter uses annotations to mark routes and other application meta-data. Unlike most
 JAX-RS implementations, Lighter uses compile-time processing to wire together the application.
-This avoids significant amounts of reflection (especially at startup time), allowing Lighter
-to (in theory) achieve better performance than other solutions.
+The primary advantage of this is compile-time checking. The Lighter compiler can check for most
+configuration and logic errors at compile time. At compile-time, Lighter also has more control regarding the presentation
+of errors allowing it to present easy to read and detailed error reports. This means that configuration 
+errors will (almost) never cause difficult to understand exceptions at start up. Another advantage to the
+compile time approach is that it avoids significant amounts of reflection (especially at startup time), 
+allowing Lighter to (in theory) achieve better performance than other solutions.
 
 Generally, Lighter is designed with a paradigm of questioning assumptions about framework 
 design. Instead, every feature is designed with the intent of providing a simple, easy to 
@@ -41,6 +45,20 @@ coverage is... not existent.
 - Compile Time Verification
 - Fast Startup Times
 - Easy Handler Composition
+
+## Advantages of Lighter
+
+1) Compile-time saftey - Lighter can verify application configuration and logic at compile time. This means that a 
+Lighter application will never crash with an unreadable stack trace because of a configuration error
+2) High performance (and limited reflection) - Since lighter configures your application at compile time, it doesn't
+need to do any expensive reflection at runtime
+3) Easy debugging and testing - all lighter controllers are POJOs and all endpoints are plain Java methods.
+All generated code is human readable. Lighter even follows readable naming conventions - it never gives
+generic names like `provider1` or `endpoint123`.
+4) Deployment size - Since all of Lighter's complex logic lives in the compiler, deployed binaries only need
+a few dependencies. A simple Lighter application is easily less than 8mb (this includes a DI framework, GSON, Log4J2,
+and Guava). For comparison, a Spring Boot
+"Hello World" application is closer to 20mb.
 
 ## Using Lighter
 
