@@ -62,6 +62,17 @@ and Guava). For comparison, a Spring Boot
 
 ## Using Lighter
 
+## Configuration through Configuration
+
+Unlike many Java frameworks, Lighter _only_ exposes configuration directly
+through a builder object. Lighter will **NEVER** attempt to guess at appropriate
+configurations by examining the classpath or files on the disk (unless the application
+developer writes their own code to do this). This makes Lighter configuration very
+straightforward and predictable.
+
+Lighter also attempts to be _light_ on configuration options. **Lighter enforces it's
+conventions**. There is no way to configure around them.
+
 ### Annotations
 
 While lighter does not require the use of annotations to define endpoints, it is 
@@ -88,6 +99,22 @@ specifying conditions that must be met for a endpoint handler to be invoked and 
 
 (`ResponseConverter` is not yet implemented. In the current pre-MVP version, responses are
 hardcoded to send `application/json` content type and convert any response to JSON).
+
+## Plugins
+
+Since Lighter exposes configuration up front, it has no real need for plugins. 
+Instead, additional functionality can be provided through normal libraries. For example,
+support for Jackson instead of GSON can simply be added through a library that
+provides the required adaptor implementations. 
+
+Even more complex features can be added through libraries. Currently, Lighter
+has awkward support for Dagger 2. However, this will eventually be resolved
+through a Dagger compatibility library that will add code generation that allows
+Lighter configuration objects to be generated directly from Dagger modules. Since 
+Lighter configuration objects are just `javax.inject` annotated POJOs (which also
+follow the Java Beans convention), there's no need to work with Lighter internals
+to build this library. Lighter does not even have to know the library exists (as one
+would expect). 
 
 
 ## Performance
