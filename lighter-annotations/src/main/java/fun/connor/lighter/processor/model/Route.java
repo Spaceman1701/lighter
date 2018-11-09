@@ -38,19 +38,27 @@ public class Route {
                     parts.add(new RoutePart(strippedString, RoutePart.Kind.PARAMETER));
                 } else if (isWildcard(s)) {
                     parts.add(new RoutePart(s, RoutePart.Kind.WILDCARD));
-                } else {
+                } else if (isNormal(s)) {
                     parts.add(new RoutePart(s, RoutePart.Kind.NORMAL));
+                } else {
+                    throw new IllegalArgumentException("unparseable template part: " + templateStr);
                 }
             }
         }
     }
 
     private boolean isWildcard(String templatePart) {
-        return templatePart.equals("*") || templatePart.equals("**");
+        return templatePart.equals("*");
     }
 
     private boolean isParameter(String templatePart) {
         return templatePart.startsWith("{") && templatePart.endsWith("}");
+    }
+
+    private boolean isNormal(String templatePart) {
+        return !(templatePart.contains("*")
+                || templatePart.contains(":")
+                || templatePart.contains("/"));
     }
 
     private void parseFromRouteParts(List<RoutePart> parts, boolean trailingSlash) {
@@ -59,6 +67,9 @@ public class Route {
         for (RoutePart p : parts) {
             if (p.getKind() == RoutePart.Kind.PARAMETER) {
                 ParameterParser parser = new ParameterParser(p.getString());
+                if (params.containsKey(parser.getExposedName())) {
+                    throw new IllegalArgumentException("duplicate route parameter name");
+                }
                 params.put(parser.getExposedName(), parser.getNameOnMethod());
                 templateBuilder.append("{").append(p.getString()).append("}");
             } else {
@@ -147,20 +158,6 @@ public class Route {
         return params;
     }
 
-
-    /**
-     * Two routes are equal iff they identify the same resources
-     * at the same specificity
-     * @param o the other object
-     * @return true if the routes are equal
-     */
-    public boolean identityEquals(Object o) {
-        if (o instanceof Route) {
-            Route other = (Route) o;
-            return captures(other) && getSpecificity() == other.getSpecificity();
-        }
-        return false;
-    }
 
     public boolean hasTrailingSlash() {
         if (templateStr.isEmpty()) {
