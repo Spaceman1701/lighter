@@ -1,0 +1,26 @@
+group 'fun.connor'
+version '0.1-SNAPSHOT'
+
+apply plugin: 'java'
+apply plugin: 'maven'
+
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    testCompile 'com.google.truth:truth:0.30'
+    testCompile 'com.google.testing.compile:compile-testing:0.10'
+
+    compile 'com.google.guava:guava:26.0-jre'
+    compile group: 'com.google.auto.service', name: 'auto-service', version: '1.0-rc4'
+    compile 'com.squareup:javapoet:1.11.1'
+    compile group: 'javax.inject', name: 'javax.inject', version: '1'
+
+    compile project(':lighter-core')
+}

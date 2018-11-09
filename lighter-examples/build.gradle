@@ -23,4 +23,5 @@ dependencies {
     compile 'com.google.dagger:dagger:2.19'
     compileOnly 'com.google.dagger:dagger-compiler:2.19'
     compile project(':lighter-core')
+    compileOnly project(":lighter-compiler")
 }

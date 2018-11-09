@@ -5,7 +5,6 @@ import com.google.inject.Injector;
 import fun.connor.lighter.Lighter;
 import fun.connor.lighter.autoconfig.AutoConfigFactory;
 import fun.connor.lighter.autoconfig.ReverseInjector;
-import fun.connor.lighter.example.modules.ExampleComponent;
 import fun.connor.lighter.example.modules.ExampleModule;
 import fun.connor.lighter.marshal.DelegatingAdaptorFactory;
 import fun.connor.lighter.marshal.gson.GsonTypeAdapterFactory;
