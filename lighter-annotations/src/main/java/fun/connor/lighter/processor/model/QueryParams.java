@@ -21,6 +21,7 @@ public class QueryParams {
                 if (parts.length != 2) {
                     throw new IllegalArgumentException("query java had illegal mapping: " + s);
                 }
+                checkNonEmpty(parts);
                 fromName = parts[0];
                 toName = parts[1];
             } else {
@@ -28,6 +29,14 @@ public class QueryParams {
                 toName = s;
             }
             nameMappings.put(fromName, toName);
+        }
+    }
+
+    private void checkNonEmpty(String[] strings) {
+        for (String s : strings) {
+            if (s.isEmpty()) {
+                throw new IllegalArgumentException("malformed parameter string: " + s);
+            }
         }
     }
 
