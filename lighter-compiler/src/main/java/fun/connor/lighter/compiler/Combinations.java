@@ -26,6 +26,13 @@ public class Combinations {
         public T second() {
             return second;
         }
+
+        @Override
+        public boolean equals(Object o) {
+            if (!(o instanceof Pair)) return false;
+            Pair that = (Pair) o;
+            return first.equals(that.first) && second.equals(that.second);
+        }
     }
 
     private Combinations() {}
