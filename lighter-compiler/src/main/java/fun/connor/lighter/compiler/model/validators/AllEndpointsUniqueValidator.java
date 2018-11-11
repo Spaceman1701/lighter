@@ -6,6 +6,7 @@ import fun.connor.lighter.compiler.validation.LocationHint;
 import fun.connor.lighter.compiler.validation.Validatable;
 import fun.connor.lighter.compiler.validation.ValidationError;
 import fun.connor.lighter.compiler.validation.ValidationReport;
+import fun.connor.lighter.compiler.validation.cause.ErrorCause;
 
 import java.util.List;
 
@@ -24,7 +25,8 @@ public class AllEndpointsUniqueValidator implements Validatable {
             Endpoint b = p.second;
             if (!a.equals(b) && a.isSameEndpoint(b)) {
                 LocationHint locationHint = new LocationHint(a.getMethodElement());
-                reportBuilder.addError(new ValidationError(makeDuplicateRoutesMessage(a, b), locationHint));
+                String detail = makeDuplicateRoutesMessage(a, b);
+                reportBuilder.addError(new ValidationError(detail, locationHint, ErrorCause.INDISTINGUISHABLE_ROUTES));
             }
         });
     }
