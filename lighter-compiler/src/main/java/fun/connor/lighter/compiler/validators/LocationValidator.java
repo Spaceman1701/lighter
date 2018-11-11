@@ -1,13 +1,16 @@
 package fun.connor.lighter.compiler.validators;
 
+import fun.connor.lighter.compiler.validation.LocationHint;
 import fun.connor.lighter.compiler.validation.Validatable;
 import fun.connor.lighter.compiler.validation.ValidationError;
 import fun.connor.lighter.compiler.validation.ValidationReport;
+import fun.connor.lighter.compiler.validation.cause.ErrorCause;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
+import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -18,18 +21,22 @@ public class LocationValidator implements Validatable {
     private final List<Predicate<Element>> conditions;
     private final Element element;
     private final String message;
+    private final ErrorCause errorCause;
+    private final LocationHint locationHint;
 
     private LocationValidator(Builder builder) {
         this.conditions = builder.conditions;
         this.element = builder.element;
         this.message = builder.message;
+        this.errorCause = builder.errorCause;
+        this.locationHint = builder.locationHint;
     }
 
     @Override
     public void validate(ValidationReport.Builder reportBuilder) {
         for (Predicate<Element> predicate : conditions) {
             if (!predicate.test(element)) {
-                reportBuilder.addError(new ValidationError(message));
+                reportBuilder.addError(new ValidationError(message, locationHint, errorCause));
                 return;
             }
         }
@@ -45,6 +52,8 @@ public class LocationValidator implements Validatable {
         private List<Predicate<Element>> conditions;
         private Element element;
         private String message;
+        private ErrorCause errorCause;
+        private LocationHint locationHint;
 
         private Builder() {
             conditions = new ArrayList<>();
@@ -66,6 +75,16 @@ public class LocationValidator implements Validatable {
             return this;
         }
 
+        public final Builder errorCause(ErrorCause cause) {
+            this.errorCause = cause;
+            return this;
+        }
+
+        public final Builder locationHint(LocationHint locationHint) {
+            this.locationHint = locationHint;
+            return this;
+        }
+
         public LocationValidator build() {
             return new LocationValidator(this);
         }
@@ -83,6 +102,13 @@ public class LocationValidator implements Validatable {
 
         static Predicate<Element> requireModifier(Modifier m) {
             return e -> e.getModifiers().contains(m);
+        }
+
+        static Predicate<Element> enclosingHasAnnotation(Class<? extends Annotation> annotation) {
+            return element -> {
+                Element enclosing = element.getEnclosingElement();
+                return (enclosing != null) && (enclosing.getAnnotation(annotation) != null);
+            };
         }
     }
 }

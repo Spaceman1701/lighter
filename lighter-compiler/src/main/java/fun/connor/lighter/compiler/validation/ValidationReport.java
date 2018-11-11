@@ -71,6 +71,10 @@ public class ValidationReport implements Printable {
             }
         }
 
+        public LocationHint getLocationHint() {
+            return reportLocation;
+        }
+
         public Builder addError(ValidationError error) {
             if (reportLocation != null && !error.getLocationHint().isPresent()) {
                 error.setLocationHint(reportLocation);

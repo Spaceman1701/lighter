@@ -1,7 +1,9 @@
 package fun.connor.lighter.compiler.validators;
 
+import fun.connor.lighter.compiler.validation.LocationHint;
 import fun.connor.lighter.compiler.validation.Validatable;
 import fun.connor.lighter.compiler.validation.ValidationReport;
+import fun.connor.lighter.compiler.validation.cause.ErrorCause;
 import fun.connor.lighter.declarative.ResourceController;
 
 import javax.lang.model.element.Element;
@@ -21,6 +23,8 @@ public class ResourceControllerValidator extends AnnotationValidator<ResourceCon
         LocationValidator locationValidator = LocationValidator.builder()
                 .element(annotatedElement)
                 .message("@ResourceController can only be placed on concrete public classes")
+                .errorCause(ErrorCause.BAD_RESOURCE_CONTROLLER_LOCATION)
+                .locationHint(reportBuilder.getLocationHint())
                 .withPredicates(requireModifier(Modifier.PUBLIC), requireConcreteClass)
                 .build();
 

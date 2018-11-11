@@ -3,11 +3,8 @@ package fun.connor.lighter.compiler.step;
 import fun.connor.lighter.compiler.LighterTypes;
 import fun.connor.lighter.compiler.validation.LocationHint;
 import fun.connor.lighter.compiler.validation.ValidationReport;
-import fun.connor.lighter.compiler.validators.AnnotationValidator;
-import fun.connor.lighter.compiler.validators.AnnotationValidatorFactory;
-import fun.connor.lighter.compiler.validators.AnnotationValidatorMap;
-import fun.connor.lighter.compiler.validators.ResourceControllerValidator;
-import fun.connor.lighter.declarative.ResourceController;
+import fun.connor.lighter.compiler.validators.*;
+import fun.connor.lighter.declarative.*;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.RoundEnvironment;
@@ -34,6 +31,10 @@ public class ValidationStep extends CompilerStep {
         validatorMap = new AnnotationValidatorMap();
 
         validatorMap.register(ResourceController.class, ResourceControllerValidator::new);
+        validatorMap.register(Post.class, EndpointAnnotationValidator::new);
+        validatorMap.register(Get.class, EndpointAnnotationValidator::new);
+        validatorMap.register(Put.class, EndpointAnnotationValidator::new);
+        validatorMap.register(Delete.class, EndpointAnnotationValidator::new);
 
         types = new LighterTypes(env.getTypeUtils(), env.getElementUtils());
     }

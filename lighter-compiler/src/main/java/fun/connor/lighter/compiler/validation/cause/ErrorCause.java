@@ -1,8 +1,13 @@
 package fun.connor.lighter.compiler.validation.cause;
 
 public enum  ErrorCause {
-    UNKNOWN                     (0, "an error occurred"),
-    INDISTINGUISHABLE_ROUTES    (1, "there were indistinguishable routes");
+    UNKNOWN                             (0, "an error occurred"),
+    INDISTINGUISHABLE_ROUTES            (1, "there were indistinguishable routes"),
+    BAD_RESOURCE_CONTROLLER_LOCATION    (2, "@ResourceController cannot be placed here"),
+    BAD_ENDPOINT_ANNOTATION_LOCATION    (3, "Endpoint annotations cannot be placed here"),
+    BAD_QUERY_PARAMS_LOCATION           (4, "@QueryParams cannot be placed here"),
+    BAD_BODY_LOCATION                   (5, "@Body cannot be placed here"),
+    BAD_PORODUCES_REQ_GUARD_LOCATION    (6, "@ProducesRequestGuard cannot be placed here");
 
 
     private final int id;
