@@ -30,7 +30,6 @@ public class EndpointAnnotationValidator<T extends Annotation> extends Annotatio
 
         LocationValidator.builder()
                 .element(annotatedElement)
-                .locationHint(reportBuilder.getLocationHint())
                 .errorCause(ErrorCause.BAD_ENDPOINT_ANNOTATION_LOCATION)
                 .message("@" + annotationName + " can only be placed on concrete public methods")
                 .withPredicates(requireModifier(Modifier.PUBLIC), requireModifier(Modifier.ABSTRACT).negate())
@@ -38,7 +37,6 @@ public class EndpointAnnotationValidator<T extends Annotation> extends Annotatio
 
         LocationValidator.builder()
                 .element(annotatedElement)
-                .locationHint(reportBuilder.getLocationHint())
                 .errorCause(ErrorCause.BAD_ENDPOINT_ANNOTATION_LOCATION)
                 .message(getResourceControllerRequiredMessage(annotationName))
                 .withPredicates(enclosingHasAnnotation(ResourceController.class))

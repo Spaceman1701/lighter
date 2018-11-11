@@ -26,7 +26,6 @@ public class ResourceControllerValidator extends AnnotationValidator<ResourceCon
                 .element(annotatedElement)
                 .message("@ResourceController can only be placed on concrete public classes")
                 .errorCause(ErrorCause.BAD_RESOURCE_CONTROLLER_LOCATION)
-                .locationHint(reportBuilder.getLocationHint())
                 .withPredicates(requireModifier(Modifier.PUBLIC), requireConcreteClass)
                 .build();
 

@@ -22,21 +22,19 @@ public class LocationValidator implements Validatable {
     private final Element element;
     private final String message;
     private final ErrorCause errorCause;
-    private final LocationHint locationHint;
 
     private LocationValidator(Builder builder) {
         this.conditions = builder.conditions;
         this.element = builder.element;
         this.message = builder.message;
         this.errorCause = builder.errorCause;
-        this.locationHint = builder.locationHint;
     }
 
     @Override
     public void validate(ValidationReport.Builder reportBuilder) {
         for (Predicate<Element> predicate : conditions) {
             if (!predicate.test(element)) {
-                reportBuilder.addError(new ValidationError(message, locationHint, errorCause));
+                reportBuilder.addError(new ValidationError(message, errorCause));
                 return;
             }
         }
@@ -53,7 +51,6 @@ public class LocationValidator implements Validatable {
         private Element element;
         private String message;
         private ErrorCause errorCause;
-        private LocationHint locationHint;
 
         private Builder() {
             conditions = new ArrayList<>();
@@ -77,11 +74,6 @@ public class LocationValidator implements Validatable {
 
         public final Builder errorCause(ErrorCause cause) {
             this.errorCause = cause;
-            return this;
-        }
-
-        public final Builder locationHint(LocationHint locationHint) {
-            this.locationHint = locationHint;
             return this;
         }
 
