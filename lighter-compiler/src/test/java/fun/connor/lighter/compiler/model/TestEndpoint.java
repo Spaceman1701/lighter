@@ -7,6 +7,7 @@ import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeSpec;
 import fun.connor.lighter.handler.Response;
+import io.github.spaceman1701.footing.annotation.RunFootingTest;
 import io.github.spaceman1701.footing.api.FootingCompiler;
 import org.junit.Assert;
 import org.junit.Test;
@@ -30,6 +31,7 @@ public class TestEndpoint {
                 .addModifiers(Modifier.PUBLIC)
                 .returns(ParameterizedTypeName.get(Response.class, Object.class))
                 .addStatement("return null")
+                .addAnnotation(RunFootingTest.class)
                 .build();
 
         TypeSpec testType = TypeSpec.classBuilder("aController")
