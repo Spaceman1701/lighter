@@ -57,7 +57,6 @@ public class PersonHandler {
 
     }
 
-
     @Put
     public Response<Person> updatePerson(@Body Person person, Subject subject) {
         if (!subject.isAdmin()) {

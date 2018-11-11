@@ -76,7 +76,7 @@ public class ValidationStep extends CompilerStep {
 
 
     private ValidationReport doValidation(Map<Class<? extends Annotation>, Set<? extends Element>> elementsByAnnotation) {
-        ValidationReport.Builder validationReportBuilder = ValidationReport.builder("while validating annotations");
+        ValidationReport.Builder validationReportBuilder = ValidationReport.builder();
 
         for (Map.Entry<Class<? extends Annotation>, Set<? extends Element>> entry : elementsByAnnotation.entrySet()) {
             Class<? extends Annotation> annotationClass = entry.getKey();

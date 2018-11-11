@@ -1,6 +1,7 @@
 package fun.connor.lighter.compiler.model;
 
 import fun.connor.lighter.compiler.model.validators.Validators;
+import fun.connor.lighter.compiler.validation.LocationHint;
 import fun.connor.lighter.compiler.validation.Validatable;
 import fun.connor.lighter.compiler.validation.ValidationReport;
 
@@ -23,7 +24,8 @@ public class Model implements Validatable {
     @Override
     public void validate(ValidationReport.Builder reportBuilder) {
         for (Controller c : controllers) {
-            ValidationReport.Builder controllerReport = ValidationReport.builder(makeControllerContext(c));
+            LocationHint locationHint = new LocationHint(c.getElement());
+            ValidationReport.Builder controllerReport = ValidationReport.builder(locationHint);
             c.validate(controllerReport);
             reportBuilder.addChild(controllerReport);
         }
@@ -48,10 +50,6 @@ public class Model implements Validatable {
         Validators.allEndpointsUnique(endpoints).validate(report);
     }
 
-
-    private String makeControllerContext(Controller c) {
-        return "at " + c.getSimpleName();
-    }
 
     @Override
     public boolean equals(Object o) {

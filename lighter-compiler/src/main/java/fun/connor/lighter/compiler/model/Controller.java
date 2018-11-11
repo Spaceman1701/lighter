@@ -1,5 +1,6 @@
 package fun.connor.lighter.compiler.model;
 
+import fun.connor.lighter.compiler.validation.LocationHint;
 import fun.connor.lighter.compiler.validation.Validatable;
 import fun.connor.lighter.compiler.validation.ValidationReport;
 
@@ -58,7 +59,8 @@ public class Controller implements Validatable {
     @Override
     public void validate(ValidationReport.Builder reportBuilder) {
         for (Endpoint e : endpoints) {
-            ValidationReport.Builder endpointReport = ValidationReport.builder("at method " + e.getMethodName());
+            LocationHint locationHint = new LocationHint(e.getMethodElement());
+            ValidationReport.Builder endpointReport = ValidationReport.builder(locationHint);
             e.validate(endpointReport);
             reportBuilder.addChild(endpointReport);
         }

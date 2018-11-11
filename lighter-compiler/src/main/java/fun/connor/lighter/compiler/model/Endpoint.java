@@ -190,13 +190,14 @@ public class Endpoint implements Validatable {
 
     @Override
     public void validate(ValidationReport.Builder reportBuilder) {
-        ValidationReport.Builder pathParamsReport = ValidationReport.builder("while checking path template");
-        pathParamsReport.setLocation(new LocationHint(methodElement));
+        LocationHint hint = new LocationHint(methodElement);
+
+        ValidationReport.Builder pathParamsReport = ValidationReport.builder(hint);
         Validators.Endpoint.allParamsExist(fullRoute.getParams(), methodParameters).validate(pathParamsReport);
         reportBuilder.addChild(pathParamsReport);
 
         if (queryParams != null) {
-            ValidationReport.Builder queryParamsReport = ValidationReport.builder("while checking query params");
+            ValidationReport.Builder queryParamsReport = ValidationReport.builder(hint);
             Validators.Endpoint.allParamsExist(queryParams.getNameMappings(), methodParameters).validate(reportBuilder);
             reportBuilder.addChild(queryParamsReport);
         }

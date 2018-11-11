@@ -2,6 +2,7 @@ package fun.connor.lighter.compiler.model.validators;
 
 import fun.connor.lighter.compiler.Combinations;
 import fun.connor.lighter.compiler.model.Endpoint;
+import fun.connor.lighter.compiler.validation.LocationHint;
 import fun.connor.lighter.compiler.validation.Validatable;
 import fun.connor.lighter.compiler.validation.ValidationError;
 import fun.connor.lighter.compiler.validation.ValidationReport;
@@ -22,7 +23,8 @@ public class AllEndpointsUniqueValidator implements Validatable {
             Endpoint a = p.first;
             Endpoint b = p.second;
             if (!a.equals(b) && a.isSameEndpoint(b)) {
-                reportBuilder.addError(new ValidationError(makeDuplicateRoutesMessage(a, b)));
+                LocationHint locationHint = new LocationHint(a.getMethodElement());
+                reportBuilder.addError(new ValidationError(makeDuplicateRoutesMessage(a, b), locationHint));
             }
         });
     }

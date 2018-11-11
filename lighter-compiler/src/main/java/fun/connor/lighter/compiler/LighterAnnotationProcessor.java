@@ -48,12 +48,11 @@ public class LighterAnnotationProcessor extends AbstractProcessor {
             step.validateEnv(stepEnv);
             StepResult result = step.process(roundEnv);
 
-            result.getErrors().ifPresent(report -> {
-                if (report.containsErrors()) {
-                    report.print("", reportPrinter);
-                }
-            });
-            if (result.getErrors().isPresent()) {
+
+            boolean wereErrors = result.getErrors()
+                    .map(r -> handleStepErrors(reportPrinter, r))
+                    .orElse(false);
+            if (wereErrors) {
                 return true;
             }
 
@@ -63,6 +62,14 @@ public class LighterAnnotationProcessor extends AbstractProcessor {
         }
 
 
+        return false;
+    }
+
+    private boolean handleStepErrors(ReportPrinter printer, ValidationReport report) {
+        if (report.containsErrors()) {
+            report.print(printer);
+            return true;
+        }
         return false;
     }
 
