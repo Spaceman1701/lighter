@@ -42,7 +42,7 @@ public class TestEndpoint {
         List<JavaFileObject> objects = new ArrayList<>();
         objects.add(fileObject);
 
-        Compilation c = FootingCompiler.compileAndRun(objects, env -> {
+        FootingCompiler.compileAndRun(objects, env -> {
             if (env.processingOver()) {
                 return;
             }
