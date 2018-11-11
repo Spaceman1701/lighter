@@ -4,6 +4,8 @@ import fun.connor.lighter.compiler.error.AbstractCompilerError;
 import fun.connor.lighter.compiler.error.CodeGenerationError;
 import fun.connor.lighter.compiler.generator.*;
 import fun.connor.lighter.compiler.model.*;
+import fun.connor.lighter.compiler.validation.ValidationError;
+import fun.connor.lighter.compiler.validation.ValidationReport;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.RoundEnvironment;

@@ -1,6 +1,8 @@
 package fun.connor.lighter.compiler.model;
 
 import fun.connor.lighter.compiler.model.validators.Validators;
+import fun.connor.lighter.compiler.validation.Validatable;
+import fun.connor.lighter.compiler.validation.ValidationReport;
 
 import java.util.Collection;
 import java.util.List;

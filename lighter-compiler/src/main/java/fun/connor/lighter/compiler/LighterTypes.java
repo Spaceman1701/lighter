@@ -1,10 +1,12 @@
 package fun.connor.lighter.compiler;
 
+import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.*;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
+import java.lang.annotation.Annotation;
 import java.util.*;
 
 import static fun.connor.lighter.compiler.MoreTypes.isTypeMirrorOfClass;
@@ -165,5 +167,19 @@ public class LighterTypes implements Types {
             }
         }
         return false;
+    }
+
+    public AnnotationMirror getAnnotationMirror(Element annotatedElement, DeclaredType annotationType) {
+        for (AnnotationMirror mirror : annotatedElement.getAnnotationMirrors()) {
+            if (isSameType(mirror.getAnnotationType(), annotationType)) {
+                return mirror;
+            }
+        }
+        return null;
+    }
+
+    public AnnotationMirror getAnnotationMirror(Element annotatedElement, Class<? extends Annotation> annotationType) {
+        DeclaredType declaredType = (DeclaredType) mirrorOfClass(annotationType);
+        return getAnnotationMirror(annotatedElement, declaredType);
     }
 }

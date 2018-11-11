@@ -1,7 +1,8 @@
 package fun.connor.lighter.compiler;
 
 import com.google.auto.service.AutoService;
-import fun.connor.lighter.compiler.model.ValidationReport;
+import fun.connor.lighter.compiler.validation.ReportPrinter;
+import fun.connor.lighter.compiler.validation.ValidationReport;
 import fun.connor.lighter.compiler.step.*;
 import fun.connor.lighter.declarative.*;
 
@@ -38,6 +39,7 @@ public class LighterAnnotationProcessor extends AbstractProcessor {
 
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+        ReportPrinter reportPrinter = new ReportPrinter(processingEnv.getMessager());
         Map<String, Object> stepEnv = new HashMap<>();
 
         stepEnv.put("annotations", annotations);
@@ -46,12 +48,13 @@ public class LighterAnnotationProcessor extends AbstractProcessor {
             step.validateEnv(stepEnv);
             StepResult result = step.process(roundEnv);
 
-            if (result.getErrors().isPresent()) {
-                ValidationReport report = result.getErrors().get();
+            result.getErrors().ifPresent(report -> {
                 if (report.containsErrors()) {
-                    processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, report.toString());
-                    return true;
+                    report.print("", reportPrinter);
                 }
+            });
+            if (result.getErrors().isPresent()) {
+                return true;
             }
 
             if (result.hasResult()) {

@@ -1,25 +1,31 @@
 package fun.connor.lighter.compiler.validators;
 
+import fun.connor.lighter.compiler.validation.Validatable;
+import fun.connor.lighter.compiler.validation.ValidationReport;
 import fun.connor.lighter.declarative.ResourceController;
 
 import javax.lang.model.element.Element;
-import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.Modifier;
 
-public class ResourceControllerValidator implements AnnotationValidator {
+import static fun.connor.lighter.compiler.validators.LocationValidator.Predicates.*;
+
+public class ResourceControllerValidator extends AnnotationValidator<ResourceController> {
+
+
+    public ResourceControllerValidator(Element annotatedElement, ResourceController annotation) {
+        super(annotatedElement, annotation);
+    }
 
     @Override
-    public void validate(Element annotatedElement) throws IllegalArgumentException {
-        if (annotatedElement.getKind() != ElementKind.CLASS) {
-            throw new IllegalArgumentException("ResourceController can only be applied to class types");
-        }
+    public void validate(ValidationReport.Builder reportBuilder) {
+        LocationValidator locationValidator = LocationValidator.builder()
+                .element(annotatedElement)
+                .message("@ResourceController can only be placed on concrete public classes")
+                .withPredicates(requireModifier(Modifier.PUBLIC), requireConcreteClass)
+                .build();
 
-        ResourceController rc = annotatedElement.getAnnotation(ResourceController.class);
+        locationValidator.validate(reportBuilder);
 
-        String pathTemplate = rc.value();
-        if (pathTemplate.isEmpty()) {
-            throw new IllegalArgumentException("ResourceController must have a not-empty path");
-        }
-        //do some syntax checking
-
+        //TODO: route syntax checking
     }
 }

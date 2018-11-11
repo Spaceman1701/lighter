@@ -1,16 +1,20 @@
 package fun.connor.lighter.compiler.step;
 
-import fun.connor.lighter.compiler.error.AbstractCompilerError;
-import fun.connor.lighter.compiler.error.AnnotationValidationError;
-import fun.connor.lighter.compiler.model.ValidationError;
-import fun.connor.lighter.compiler.model.ValidationReport;
-import fun.connor.lighter.compiler.validators.*;
-import fun.connor.lighter.declarative.*;
+import fun.connor.lighter.compiler.LighterTypes;
+import fun.connor.lighter.compiler.validation.LocationHint;
+import fun.connor.lighter.compiler.validation.ValidationReport;
+import fun.connor.lighter.compiler.validators.AnnotationValidator;
+import fun.connor.lighter.compiler.validators.AnnotationValidatorFactory;
+import fun.connor.lighter.compiler.validators.AnnotationValidatorMap;
+import fun.connor.lighter.compiler.validators.ResourceControllerValidator;
+import fun.connor.lighter.declarative.ResourceController;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.RoundEnvironment;
+import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
+import java.lang.annotation.Annotation;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -18,23 +22,20 @@ import java.util.Set;
 
 public class ValidationStep extends CompilerStep {
 
-    private final AnnotationValidatorDatabase annotationValidators;
 
     private Set<? extends TypeElement> annotations;
 
+    private AnnotationValidatorMap validatorMap;
+
+    private LighterTypes types;
+
     public ValidationStep(ProcessingEnvironment env) {
         super(env);
-        annotationValidators = new AnnotationValidatorDatabase();
-        annotationValidators.registerValidator(ResourceController.class, new ResourceControllerValidator());
-        annotationValidators.registerValidator(QueryParams.class, new QueryParamsValidator(env));
-        annotationValidators.registerValidator(Body.class, new BodyValidator());
+        validatorMap = new AnnotationValidatorMap();
 
-        annotationValidators.registerValidator(Get.class, new EndpointAnnotationValidator(env));
-        annotationValidators.registerValidator(Delete.class, new EndpointAnnotationValidator(env));
-        annotationValidators.registerValidator(Post.class, new EndpointAnnotationValidator(env));
-        annotationValidators.registerValidator(Put.class, new EndpointAnnotationValidator(env));
+        validatorMap.register(ResourceController.class, ResourceControllerValidator::new);
 
-        annotationValidators.registerValidator(ProducesRequestGuard.class, new ProducesRequestGuardValidator());
+        types = new LighterTypes(env.getTypeUtils(), env.getElementUtils());
     }
 
     @Override
@@ -51,36 +52,54 @@ public class ValidationStep extends CompilerStep {
         this.annotations = annotations;
     }
 
-    @Override
+    @Override @SuppressWarnings("unchecked")
     public StepResult process(RoundEnvironment roundEnv) {
 
-        Map<String, Set<? extends Element>> elementsByAnnotation = new HashMap<>();
-
+        Map<Class<? extends Annotation>, Set<? extends Element>> elementsByAnnotation = new HashMap<>();
+        ClassLoader classLoader = this.getClass().getClassLoader();
         for (TypeElement annotation : annotations) {
             String annotationName = annotation.getQualifiedName().toString();
             Set<? extends Element> elements = roundEnv.getElementsAnnotatedWith(annotation);
-            elementsByAnnotation.put(annotationName, elements);
-        }
 
-        Set<AbstractCompilerError> errors = new HashSet<>();
-        for (Map.Entry<String, Set<? extends Element>> entry : elementsByAnnotation.entrySet()) {
-            for (Element element : entry.getValue()) {
-                try {
-                    annotationValidators.getInstance(entry.getKey()).validate(element);
-                } catch (Exception e) { //some other, unhandled error occurred. Print what we can and die
-                    errors.add(new AnnotationValidationError(element, e.getMessage() +
-                            " (annotation validator probably does not exist)", entry.getKey()));
-                }
+            try {
+                elementsByAnnotation.put((Class<? extends Annotation>) classLoader.loadClass(annotationName), elements);
+            } catch (ReflectiveOperationException e) {
+                throw new RuntimeException("something went very, very, very wrong", e);
             }
         }
 
-        //TODO: stopgap while refactoring all error reporting
-        ValidationReport.Builder reportBuilder = ValidationReport.builder("While validating annotations");
 
-        for (AbstractCompilerError error : errors) {
-            reportBuilder.addError(new ValidationError(error.toString()));
+
+
+        return new StepResult(doValidation(elementsByAnnotation));
+    }
+
+
+    private ValidationReport doValidation(Map<Class<? extends Annotation>, Set<? extends Element>> elementsByAnnotation) {
+        ValidationReport.Builder validationReportBuilder = ValidationReport.builder("while validating annotations");
+
+        for (Map.Entry<Class<? extends Annotation>, Set<? extends Element>> entry : elementsByAnnotation.entrySet()) {
+            Class<? extends Annotation> annotationClass = entry.getKey();
+            for (Element e : entry.getValue()) {
+                validateSingleElement(e, annotationClass, validationReportBuilder);
+            }
         }
 
-        return new StepResult(reportBuilder.build());
+        return validationReportBuilder.build();
+    }
+
+    private void validateSingleElement
+            (Element annotatedElement, Class<? extends Annotation> clazz, ValidationReport.Builder report)
+    {
+        Annotation annotation = annotatedElement.getAnnotation(clazz);
+        AnnotationValidator validator = validatorMap.getAnnotationValidator(annotatedElement, annotation, clazz);
+        if (validator != null) {
+            AnnotationMirror annotationMirror = types.getAnnotationMirror(annotatedElement, clazz);
+            LocationHint locationHint = new LocationHint(annotatedElement, annotationMirror);
+            ValidationReport.Builder annotationReport = ValidationReport.builder(locationHint);
+            validator.validate(annotationReport);
+
+            report.addChild(annotationReport);
+        }
     }
 }

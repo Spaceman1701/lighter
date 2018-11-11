@@ -2,9 +2,9 @@ package fun.connor.lighter.compiler.model.validators;
 
 import fun.connor.lighter.compiler.Combinations;
 import fun.connor.lighter.compiler.model.Route;
-import fun.connor.lighter.compiler.model.Validatable;
-import fun.connor.lighter.compiler.model.ValidationError;
-import fun.connor.lighter.compiler.model.ValidationReport;
+import fun.connor.lighter.compiler.validation.Validatable;
+import fun.connor.lighter.compiler.validation.ValidationError;
+import fun.connor.lighter.compiler.validation.ValidationReport;
 
 import java.util.List;
 

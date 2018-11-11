@@ -1,5 +1,8 @@
 package fun.connor.lighter.compiler.model;
 
+import fun.connor.lighter.compiler.validation.Validatable;
+import fun.connor.lighter.compiler.validation.ValidationReport;
+
 import javax.lang.model.element.TypeElement;
 import java.util.List;
 

@@ -1,10 +1,13 @@
-package fun.connor.lighter.compiler.model;
+package fun.connor.lighter.compiler.validation;
 
+import fun.connor.lighter.compiler.model.ReportFormatable;
+
+import javax.lang.model.element.Element;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ValidationReport implements ReportFormatable {
+public class ValidationReport implements ReportFormatable, Printable {
 
     private static final String INDENT = "  ";
 
@@ -65,11 +68,38 @@ public class ValidationReport implements ReportFormatable {
         return new Builder(contextStr);
     }
 
+    public static Builder builder(LocationHint contextHint) {
+        return new Builder(contextHint);
+    }
+
+    @Override
+    public void print(String prefix, ReportPrinter printer) {
+        String nextPrefix = prefix + INDENT;
+
+        printer.printContextMessage(prefix, getContextMessage());
+
+        for (ValidationError e : errors) {
+            printer.printError(nextPrefix, e);
+        }
+
+        for (ValidationReport report : children) {
+            if (report.containsErrors()) {
+                report.print(nextPrefix, printer);
+            }
+        }
+    }
+
+    private String getContextMessage() {
+        return "found " + errorCount() + (errorCount() > 1 ? " error " : " errors ") +
+                contextStr + ":";
+    }
+
     public static class Builder {
 
         private String contextStr;
         private List<ValidationError> errors;
         private List<ValidationReport.Builder> children;
+        private LocationHint reportLocation;
 
         private Builder(String contextStr) {
             this.contextStr = contextStr;
@@ -77,8 +107,23 @@ public class ValidationReport implements ReportFormatable {
             children = new ArrayList<>();
         }
 
+        private Builder(LocationHint contextLocation) {
+            this.reportLocation = contextLocation;
+            errors = new ArrayList<>();
+            children = new ArrayList<>();
+            this.contextStr = "";
+        }
+
         public Builder addError(ValidationError error) {
+            if (reportLocation != null && !error.getLocationHint().isPresent()) {
+                error.setLocationHint(reportLocation);
+            }
             errors.add(error);
+            return this;
+        }
+
+        public Builder setLocation(LocationHint reportLocation) {
+            this.reportLocation = reportLocation;
             return this;
         }
 

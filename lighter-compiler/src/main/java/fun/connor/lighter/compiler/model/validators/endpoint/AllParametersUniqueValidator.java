@@ -1,9 +1,9 @@
 package fun.connor.lighter.compiler.model.validators.endpoint;
 
 import fun.connor.lighter.compiler.model.QueryParams;
-import fun.connor.lighter.compiler.model.Validatable;
-import fun.connor.lighter.compiler.model.ValidationError;
-import fun.connor.lighter.compiler.model.ValidationReport;
+import fun.connor.lighter.compiler.validation.Validatable;
+import fun.connor.lighter.compiler.validation.ValidationError;
+import fun.connor.lighter.compiler.validation.ValidationReport;
 
 import java.util.*;
 

@@ -2,7 +2,7 @@ package fun.connor.lighter.compiler.step;
 
 import fun.connor.lighter.compiler.model.Controller;
 import fun.connor.lighter.compiler.model.Model;
-import fun.connor.lighter.compiler.model.ValidationReport;
+import fun.connor.lighter.compiler.validation.ValidationReport;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.RoundEnvironment;

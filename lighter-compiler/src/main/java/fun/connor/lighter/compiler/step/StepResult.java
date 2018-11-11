@@ -1,6 +1,6 @@
 package fun.connor.lighter.compiler.step;
 
-import fun.connor.lighter.compiler.model.ValidationReport;
+import fun.connor.lighter.compiler.validation.ValidationReport;
 
 import java.util.Optional;
 

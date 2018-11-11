@@ -2,6 +2,9 @@ package fun.connor.lighter.compiler.model;
 
 import fun.connor.lighter.compiler.model.endpoint.MethodParameter;
 import fun.connor.lighter.compiler.model.validators.Validators;
+import fun.connor.lighter.compiler.validation.LocationHint;
+import fun.connor.lighter.compiler.validation.Validatable;
+import fun.connor.lighter.compiler.validation.ValidationReport;
 
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
@@ -187,8 +190,8 @@ public class Endpoint implements Validatable {
 
     @Override
     public void validate(ValidationReport.Builder reportBuilder) {
-
         ValidationReport.Builder pathParamsReport = ValidationReport.builder("while checking path template");
+        pathParamsReport.setLocation(new LocationHint(methodElement));
         Validators.Endpoint.allParamsExist(fullRoute.getParams(), methodParameters).validate(pathParamsReport);
         reportBuilder.addChild(pathParamsReport);
 
