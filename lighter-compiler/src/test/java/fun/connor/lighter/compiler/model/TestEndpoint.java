@@ -34,7 +34,7 @@ public class TestEndpoint {
                 .addAnnotation(RunFootingTest.class)
                 .build();
 
-        TypeSpec testType = TypeSpec.classBuilder("aController")
+        TypeSpec testType = TypeSpec.classBuilder("Controller")
                 .addMethod(method)
                 .build();
 
@@ -42,23 +42,11 @@ public class TestEndpoint {
         List<JavaFileObject> objects = new ArrayList<>();
         objects.add(fileObject);
 
-        Compilation c = FootingCompiler.compileAndRun(objects, (procEnv, roundEnv) -> {
-            if (roundEnv.processingOver()) {
+        Compilation c = FootingCompiler.compileAndRun(objects, env -> {
+            if (env.processingOver()) {
                 return;
             }
-            Set<? extends Element> elements = roundEnv.getRootElements();
-            ExecutableElement theElement = null;
-            for (Element e : elements) {
-               TypeElement type = (TypeElement) e;
-               if (type.getQualifiedName().toString().equals("test.aController")) {
-                   for (Element e2 : type.getEnclosedElements()) {
-                       if (e2.getSimpleName().toString().equals("endpoint")) {
-                           theElement = (ExecutableElement) e2;
-                       }
-                   }
-               }
-            }
-            Assert.assertNotNull(theElement);
+            ExecutableElement theElement = env.requireMethodByName("test.Controller", "endpoint");
             Route route = new Route("/foo/bar");
             Endpoint endpoint = new Endpoint
                     (Endpoint.Method.GET,
@@ -69,7 +57,5 @@ public class TestEndpoint {
                             theElement);
             Assert.assertNotNull(endpoint);
         });
-
-        CompilationSubject.assertThat(c).succeededWithoutWarnings();
     }
 }
