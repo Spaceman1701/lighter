@@ -20,6 +20,10 @@ public class ValidationError implements ReportFormatable {
         this(message, null, ErrorCause.UNKNOWN);
     }
 
+    public ValidationError(String message, ErrorCause cause) {
+        this(message, null, cause);
+    }
+
     void setLocationHint(LocationHint hint) {
         System.out.println("location hint set!");
         this.locationHint = hint;

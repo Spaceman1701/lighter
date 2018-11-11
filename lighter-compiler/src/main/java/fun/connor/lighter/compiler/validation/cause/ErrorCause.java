@@ -7,7 +7,9 @@ public enum  ErrorCause {
     BAD_ENDPOINT_ANNOTATION_LOCATION    (3, "Endpoint annotations cannot be placed here"),
     BAD_QUERY_PARAMS_LOCATION           (4, "@QueryParams cannot be placed here"),
     BAD_BODY_LOCATION                   (5, "@Body cannot be placed here"),
-    BAD_PORODUCES_REQ_GUARD_LOCATION    (6, "@ProducesRequestGuard cannot be placed here");
+    BAD_PORODUCES_REQ_GUARD_LOCATION    (6, "@ProducesRequestGuard cannot be placed here"),
+    BAD_RESOURCE_CONTROLLER_PATH        (7, "An illegal path was provided to @ResourceController"),
+    BAD_ENDPOINT_PATH                   (8, "An illegal path was provided to an endpoint annotation");
 
 
     private final int id;

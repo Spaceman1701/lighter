@@ -1,5 +1,6 @@
 package fun.connor.lighter.compiler.validators;
 
+import fun.connor.lighter.compiler.model.Route;
 import fun.connor.lighter.compiler.validation.ValidationError;
 import fun.connor.lighter.compiler.validation.ValidationReport;
 import fun.connor.lighter.compiler.validation.cause.ErrorCause;
@@ -9,7 +10,10 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.util.Optional;
 
 import static fun.connor.lighter.compiler.validators.LocationValidator.Predicates.*;
 
@@ -21,7 +25,8 @@ public class EndpointAnnotationValidator<T extends Annotation> extends Annotatio
 
     @Override
     public void validate(ValidationReport.Builder reportBuilder) {
-        String annotationName = annotation.getClass().getInterfaces()[0].getSimpleName(); //proxy annotation type.
+        Class<?> actualType = annotation.getClass().getInterfaces()[0]; //proxy annotation type.
+        String annotationName = actualType.getSimpleName();
 
         LocationValidator.builder()
                 .element(annotatedElement)
@@ -38,6 +43,20 @@ public class EndpointAnnotationValidator<T extends Annotation> extends Annotatio
                 .message(getResourceControllerRequiredMessage(annotationName))
                 .withPredicates(enclosingHasAnnotation(ResourceController.class))
                 .build().validate(reportBuilder);
+
+        String path = getPath(actualType);
+        Optional<String> routeSyntaxError = Route.checkRouteTemplateSyntax(path);
+        routeSyntaxError.ifPresent(s ->
+                reportBuilder.addError(new ValidationError(s, ErrorCause.BAD_ENDPOINT_PATH)));
+    }
+
+    private String getPath(Class<?> actualType) {
+        try {
+            Method valueMethod = actualType.getMethod("value");
+            return (String) valueMethod.invoke(annotation);
+        } catch (ReflectiveOperationException e) {
+            throw new RuntimeException("Something went very, very, very wrong", e);
+        }
     }
 
     private String getResourceControllerRequiredMessage(String annotationName) {

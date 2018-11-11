@@ -165,4 +165,20 @@ public class Route {
         }
         return templateStr.charAt(templateStr.length() - 1) == '/';
     }
+
+    /**
+     * Check that the given template string is syntactically correct. I.e. that no
+     * exceptions will be thrown if a Route is constructed from this string.
+     * @param templateStr the path template string to check
+     * @return just an error message if there is an error or nothing if there is not
+     */
+    //TODO: find a better way to do this
+    public static Optional<String> checkRouteTemplateSyntax(String templateStr) {
+        try {
+            new Route(templateStr);
+            return Optional.empty();
+        } catch (Exception e) {
+            return Optional.of(e.getMessage());
+        }
+    }
 }
