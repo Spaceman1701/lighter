@@ -1,8 +1,6 @@
 package fun.connor.lighter.compiler.validators;
 
 import fun.connor.lighter.compiler.model.Route;
-import fun.connor.lighter.compiler.validation.LocationHint;
-import fun.connor.lighter.compiler.validation.Validatable;
 import fun.connor.lighter.compiler.validation.ValidationError;
 import fun.connor.lighter.compiler.validation.ValidationReport;
 import fun.connor.lighter.compiler.validation.cause.ErrorCause;
@@ -36,7 +34,7 @@ public class ResourceControllerValidator extends AnnotationValidator<ResourceCon
 
         String path = annotation.value();
         if (path.isEmpty()) {
-            reportBuilder.addError(new ValidationError(getEmptyPathMesssage(), ErrorCause.BAD_RESOURCE_CONTROLLER_PATH));
+            reportBuilder.addError(new ValidationError(getEmptyPathMessage(), ErrorCause.BAD_RESOURCE_CONTROLLER_PATH));
             return;
         }
         Optional<String> routeSyntaxError = Route.checkRouteTemplateSyntax(path);
@@ -44,7 +42,7 @@ public class ResourceControllerValidator extends AnnotationValidator<ResourceCon
                 reportBuilder.addError(new ValidationError(s, ErrorCause.BAD_RESOURCE_CONTROLLER_PATH)));
     }
 
-    private String getEmptyPathMesssage() {
+    private String getEmptyPathMessage() {
         return "@ResourceController cannot have an empty path fragment. Every resource controller should" +
                 " have a unique path";
     }
