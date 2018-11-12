@@ -1,8 +1,5 @@
 package fun.connor.lighter.compiler.validation;
 
-import fun.connor.lighter.compiler.model.ReportFormatable;
-
-import javax.lang.model.element.Element;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;

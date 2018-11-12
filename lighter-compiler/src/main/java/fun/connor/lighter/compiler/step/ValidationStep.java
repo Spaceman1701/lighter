@@ -3,7 +3,10 @@ package fun.connor.lighter.compiler.step;
 import fun.connor.lighter.compiler.LighterTypes;
 import fun.connor.lighter.compiler.validation.LocationHint;
 import fun.connor.lighter.compiler.validation.ValidationReport;
-import fun.connor.lighter.compiler.validators.*;
+import fun.connor.lighter.compiler.validators.AnnotationValidator;
+import fun.connor.lighter.compiler.validators.AnnotationValidatorMap;
+import fun.connor.lighter.compiler.validators.EndpointAnnotationValidator;
+import fun.connor.lighter.compiler.validators.ResourceControllerValidator;
 import fun.connor.lighter.declarative.*;
 
 import javax.annotation.processing.ProcessingEnvironment;

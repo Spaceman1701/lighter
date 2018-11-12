@@ -1,9 +1,9 @@
 package fun.connor.lighter.compiler;
 
 import com.google.auto.service.AutoService;
+import fun.connor.lighter.compiler.step.*;
 import fun.connor.lighter.compiler.validation.ReportPrinter;
 import fun.connor.lighter.compiler.validation.ValidationReport;
-import fun.connor.lighter.compiler.step.*;
 import fun.connor.lighter.declarative.*;
 
 import javax.annotation.processing.AbstractProcessor;
@@ -12,7 +12,6 @@ import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.TypeElement;
-import javax.tools.Diagnostic;
 import java.util.*;
 
 

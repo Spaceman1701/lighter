@@ -3,7 +3,10 @@ package fun.connor.lighter.compiler.step;
 import fun.connor.lighter.compiler.error.AbstractCompilerError;
 import fun.connor.lighter.compiler.error.CodeGenerationError;
 import fun.connor.lighter.compiler.generator.*;
-import fun.connor.lighter.compiler.model.*;
+import fun.connor.lighter.compiler.model.Controller;
+import fun.connor.lighter.compiler.model.Endpoint;
+import fun.connor.lighter.compiler.model.Model;
+import fun.connor.lighter.compiler.model.RequestGuards;
 import fun.connor.lighter.compiler.validation.ValidationError;
 import fun.connor.lighter.compiler.validation.ValidationReport;
 

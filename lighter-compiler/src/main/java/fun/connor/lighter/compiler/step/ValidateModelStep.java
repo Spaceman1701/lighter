@@ -1,13 +1,11 @@
 package fun.connor.lighter.compiler.step;
 
-import fun.connor.lighter.compiler.model.Controller;
 import fun.connor.lighter.compiler.model.Model;
 import fun.connor.lighter.compiler.validation.ValidationReport;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.RoundEnvironment;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public class ValidateModelStep extends CompilerStep {

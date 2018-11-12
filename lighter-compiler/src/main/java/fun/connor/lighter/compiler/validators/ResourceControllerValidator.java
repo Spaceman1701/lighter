@@ -8,10 +8,10 @@ import fun.connor.lighter.declarative.ResourceController;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
-
 import java.util.Optional;
 
-import static fun.connor.lighter.compiler.validators.LocationValidator.Predicates.*;
+import static fun.connor.lighter.compiler.validators.LocationValidator.Predicates.requireConcreteClass;
+import static fun.connor.lighter.compiler.validators.LocationValidator.Predicates.requireModifier;
 
 public class ResourceControllerValidator extends AnnotationValidator<ResourceController> {
 

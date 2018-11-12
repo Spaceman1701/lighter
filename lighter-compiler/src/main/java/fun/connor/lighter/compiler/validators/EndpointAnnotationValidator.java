@@ -10,12 +10,11 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
 import java.util.Optional;
 
-import static fun.connor.lighter.compiler.validators.LocationValidator.Predicates.*;
+import static fun.connor.lighter.compiler.validators.LocationValidator.Predicates.enclosingHasAnnotation;
+import static fun.connor.lighter.compiler.validators.LocationValidator.Predicates.requireModifier;
 
 public class EndpointAnnotationValidator<T extends Annotation> extends AnnotationValidator<T> {
 
