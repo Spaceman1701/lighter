@@ -54,7 +54,7 @@ public abstract class AbstractCompilerError {
     @Override
     public boolean equals(Object other) {
         if (other != null && other.getClass() == this.getClass()) {
-            AnnotationValidationError otherError = (AnnotationValidationError) other;
+            AbstractCompilerError otherError = (AbstractCompilerError) other;
             return otherError.getDetailedTargetName().equals(getDetailedTargetName())
                     && otherError.getDetail().equals(getDetail());
         }
