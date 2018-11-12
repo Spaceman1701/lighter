@@ -1,12 +1,11 @@
 package fun.connor.lighter.compiler.model;
 
-public class
-ParameterParser {
+class ParameterParser {
 
     private final String exposedName;
     private final String nameOnMethod;
 
-    public ParameterParser(String param) {
+    ParameterParser(String param) {
         if (param.indexOf(":") == 0 || param.indexOf(":") == param.length() - 1) {
             throw new IllegalArgumentException("malformed parameter string");
         }
@@ -22,11 +21,11 @@ ParameterParser {
         }
     }
 
-    public String getExposedName() {
+    String getExposedName() {
         return exposedName;
     }
 
-    public String getNameOnMethod() {
+    String getNameOnMethod() {
         return nameOnMethod;
     }
 }

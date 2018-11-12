@@ -1,6 +1,5 @@
 package fun.connor.lighter.compiler.step;
 
-import fun.connor.lighter.compiler.LighterTypes;
 import fun.connor.lighter.compiler.generator.injection.ReverseInjectorGenerator;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -13,11 +12,9 @@ import java.util.Set;
 public class ReverseInjectorCodeGenerationStep extends CompilerStep {
 
     private Set<DeclaredType> dependencies;
-    private LighterTypes types;
 
     public ReverseInjectorCodeGenerationStep(ProcessingEnvironment env) {
         super(env);
-        this.types = new LighterTypes(env.getTypeUtils(), env.getElementUtils());
     }
 
     @Override @SuppressWarnings("unchecked")

@@ -1,6 +1,5 @@
 package fun.connor.lighter.compiler.step;
 
-import fun.connor.lighter.compiler.LighterTypes;
 import fun.connor.lighter.compiler.validation.LocationHint;
 import fun.connor.lighter.compiler.validation.ValidationReport;
 import fun.connor.lighter.compiler.validators.AnnotationValidator;
@@ -27,8 +26,6 @@ public class ValidationStep extends CompilerStep {
 
     private AnnotationValidatorMap validatorMap;
 
-    private LighterTypes types;
-
     public ValidationStep(ProcessingEnvironment env) {
         super(env);
         validatorMap = new AnnotationValidatorMap();
@@ -38,8 +35,6 @@ public class ValidationStep extends CompilerStep {
         validatorMap.register(Get.class, EndpointAnnotationValidator::new);
         validatorMap.register(Put.class, EndpointAnnotationValidator::new);
         validatorMap.register(Delete.class, EndpointAnnotationValidator::new);
-
-        types = new LighterTypes(env.getTypeUtils(), env.getElementUtils());
     }
 
     @Override

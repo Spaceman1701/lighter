@@ -9,7 +9,6 @@ import fun.connor.lighter.compiler.validation.ValidationReport;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
-import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.ExecutableType;
 import javax.lang.model.type.TypeMirror;
 import java.util.*;
@@ -27,7 +26,6 @@ public class Endpoint implements Validatable {
 
     private ExecutableElement methodElement;
     private TypeMirror returnType;
-    private Map<String, TypeMirror> endpointParamTypes;
     private Map<String, MethodParameter> methodParameters;
 
 
@@ -40,7 +38,6 @@ public class Endpoint implements Validatable {
         this.queryParams = queryParams;
         this.methodElement = methodElement;
 
-        endpointParamTypes = new HashMap<>();
         methodParameters = new HashMap<>();
         extractMethodParams(bodyParamName, contextParamName);
 
@@ -56,7 +53,6 @@ public class Endpoint implements Validatable {
         for (int i = 0; i < parameterTypes.size(); i++) {
             String name = parameterVars.get(i).getSimpleName().toString();
             TypeMirror type = parameterTypes.get(i);
-            endpointParamTypes.put(name, type);
             methodParameters.put(name, makeMethodParam(i, type, name, bodyParamName, contextParamName));
         }
     }
@@ -117,10 +113,6 @@ public class Endpoint implements Validatable {
 
     public TypeMirror getReturnType() {
         return returnType;
-    }
-
-    public TypeMirror getReturnTypeParameter() {
-        return ((DeclaredType)returnType).getTypeArguments().get(0);
     }
 
     public String getSimplePathTemplate() {

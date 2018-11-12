@@ -12,7 +12,7 @@ public class AllRoutesUniqueValidator implements Validatable {
 
     private List<Route> routes;
 
-    public AllRoutesUniqueValidator(List<Route> routes) {
+    AllRoutesUniqueValidator(List<Route> routes) {
         this.routes = routes;
     }
 

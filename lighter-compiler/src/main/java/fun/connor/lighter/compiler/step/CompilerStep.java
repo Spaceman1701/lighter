@@ -11,9 +11,9 @@ import java.util.function.Consumer;
 public abstract class CompilerStep {
 
     protected ProcessingEnvironment env;
-    protected LighterTypes typeUtils;
+    protected LighterTypes types;
 
-    protected static class EnvironmentRequirement<T> {
+    static class EnvironmentRequirement<T> {
         final String name;
         final Class<T> type;
         final Consumer<T> handler;
@@ -25,9 +25,9 @@ public abstract class CompilerStep {
         }
     }
 
-    protected CompilerStep(ProcessingEnvironment env) {
+    CompilerStep(ProcessingEnvironment env) {
         this.env = env;
-        this.typeUtils = new LighterTypes(env.getTypeUtils(), env.getElementUtils());
+        this.types = new LighterTypes(env.getTypeUtils(), env.getElementUtils());
     }
 
     @SuppressWarnings("unchecked") //handler.accept - this method manually does type checking

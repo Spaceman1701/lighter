@@ -14,7 +14,7 @@ public class AllEndpointsUniqueValidator implements Validatable {
 
     private List<Endpoint> endpoints;
 
-    public AllEndpointsUniqueValidator(List<Endpoint> endpoints) {
+    AllEndpointsUniqueValidator(List<Endpoint> endpoints) {
         this.endpoints = endpoints;
     }
 

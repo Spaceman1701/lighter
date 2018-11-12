@@ -18,21 +18,21 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-public class EndpointParser {
+class EndpointParser {
 
     private ExecutableElement element;
     private Set<Class<? extends Annotation>> endpointAnnotations;
     private Route controllerRoute;
 
 
-    public EndpointParser
+    EndpointParser
             (ExecutableElement element, Set<Class<? extends Annotation>> endpointAnnotations, Route controllerRoute) {
         this.element = element;
         this.endpointAnnotations = endpointAnnotations;
         this.controllerRoute = controllerRoute;
     }
 
-    public List<Endpoint> parse() {
+    List<Endpoint> parse() {
 
         List<Endpoint> endpoints = new ArrayList<>();
         for (Class<? extends Annotation> annotation : endpointAnnotations) {

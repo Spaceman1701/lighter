@@ -9,7 +9,7 @@ public class RoutePart {
     private final String string;
     private final Kind kind;
 
-    public RoutePart(String string, Kind kind) {
+    RoutePart(String string, Kind kind) {
         this.string = string;
         this.kind = kind;
     }
