@@ -9,7 +9,8 @@ public enum  ErrorCause {
     BAD_BODY_LOCATION                   (5, "@Body cannot be placed here"),
     BAD_PORODUCES_REQ_GUARD_LOCATION    (6, "@ProducesRequestGuard cannot be placed here"),
     BAD_RESOURCE_CONTROLLER_PATH        (7, "An illegal path was provided to @ResourceController"),
-    BAD_ENDPOINT_PATH                   (8, "An illegal path was provided to an endpoint annotation");
+    BAD_ENDPOINT_PATH                   (8, "An illegal path was provided to an endpoint annotation"),
+    CODE_GENERATION_ERROR               (9, "An IOException occurred when writing a code file");
 
 
     private final int id;

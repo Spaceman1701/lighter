@@ -1,7 +1,5 @@
 package fun.connor.lighter.compiler.step;
 
-import fun.connor.lighter.compiler.error.AbstractCompilerError;
-import fun.connor.lighter.compiler.error.CodeGenerationError;
 import fun.connor.lighter.compiler.generator.*;
 import fun.connor.lighter.compiler.model.Controller;
 import fun.connor.lighter.compiler.model.Endpoint;
@@ -9,6 +7,7 @@ import fun.connor.lighter.compiler.model.Model;
 import fun.connor.lighter.compiler.model.RequestGuards;
 import fun.connor.lighter.compiler.validation.ValidationError;
 import fun.connor.lighter.compiler.validation.ValidationReport;
+import fun.connor.lighter.compiler.validation.cause.ErrorCause;
 
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.RoundEnvironment;
@@ -51,7 +50,10 @@ public class CodeGenerationStep extends CompilerStep {
 
     @Override
     public StepResult process(RoundEnvironment roundEnv) {
-        Set<AbstractCompilerError> errors = new HashSet<>();
+        if (model.getControllers().isEmpty()) {
+            return new StepResult(); //TODO: better way to handle no-op cases
+        }
+        ValidationReport.Builder validationReportBuilder = ValidationReport.builder();
 
         List<GeneratedEndpoint> endpointHandlers = new ArrayList<>();
         for (Controller c : model.getControllers()) {
@@ -61,10 +63,10 @@ public class CodeGenerationStep extends CompilerStep {
             try {
                 containerGenerator.generateCodeFile();
             } catch (IOException e) {
-                errors.add(new CodeGenerationError(c.getElement(), e.getMessage()));
+                validationReportBuilder.addError(new ValidationError(e.getMessage(), ErrorCause.CODE_GENERATION_ERROR));
             }
 
-            endpointHandlers.addAll(generateEndpoints(c, errors));
+            endpointHandlers.addAll(generateEndpoints(c, validationReportBuilder));
         }
 
 
@@ -76,20 +78,13 @@ public class CodeGenerationStep extends CompilerStep {
         try {
             routeGenerator.generateCodeFile();
         } catch (IOException e) {
-            //TODO: error handling
+            validationReportBuilder.addError(new ValidationError(e.getMessage(), ErrorCause.CODE_GENERATION_ERROR));
         }
 
-        //TODO: stopgap while refactoring all error reporting
-        ValidationReport.Builder reportBuilder = ValidationReport.builder();
-
-        for (AbstractCompilerError error : errors) {
-            reportBuilder.addError(new ValidationError(error.toString()));
-        }
-
-        return new StepResult(reportBuilder.build());
+        return new StepResult(validationReportBuilder.build());
     }
 
-    private List<GeneratedEndpoint> generateEndpoints(Controller c, Set<AbstractCompilerError> errors) {
+    private List<GeneratedEndpoint> generateEndpoints(Controller c, ValidationReport.Builder reportBuilder) {
         List<GeneratedEndpoint> generatedTypes = new ArrayList<>();
         for (Endpoint e : c.getEndpoints()) {
             EndpointResolverGenerator generator =
@@ -98,8 +93,8 @@ public class CodeGenerationStep extends CompilerStep {
             try {
                 GeneratedType type = generator.generateCodeFile();
                 generatedTypes.add(new GeneratedEndpoint(e, type));
-            } catch (IOException e1) {
-                errors.add(new CodeGenerationError(e.getMethodElement(), e1.getMessage()));
+            } catch (IOException exception) {
+                reportBuilder.addError(new ValidationError(exception.getMessage(), ErrorCause.CODE_GENERATION_ERROR));
             }
         }
         return generatedTypes;
