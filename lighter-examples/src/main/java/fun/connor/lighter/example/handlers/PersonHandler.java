@@ -41,8 +41,7 @@ public class PersonHandler {
     }
 
     @Get("/say_hello/{firstName}/{lastName}")
-    public Response<Map<String, String>> sayHello
-            (String firstName, String lastName, Request request) {
+    public Response<Map<String, String>> sayHello(String firstName, String lastName, Request request) {
         Name name = new Name(firstName, lastName);
         System.out.println("Saying hello to: " + name);
         Person person = repository.readPerson(name);
