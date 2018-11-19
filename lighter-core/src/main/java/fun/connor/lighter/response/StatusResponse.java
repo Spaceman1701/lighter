@@ -15,22 +15,7 @@ public class StatusResponse<T> implements ResponseDecorator<T, T> {
     }
 
     @Override
-    public Response<T> apply(Response<T> from) {
-        return new Response<T>() {
-            @Override
-            public T getContent() {
-                return from.getContent();
-            }
-
-            @Override
-            public int getStatus() {
-                return status;
-            }
-
-            @Override
-            public Map<String, String> getHeaders() {
-                return from.getHeaders();
-            }
-        };
+    public ResponseState<T> apply(ResponseState<T> from) {
+        return new ResponseState<>(from.getContent(), status, from.getHeaders());
     }
 }

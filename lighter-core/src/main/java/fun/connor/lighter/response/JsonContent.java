@@ -1,5 +1,6 @@
 package fun.connor.lighter.response;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class JsonContent<T> implements ResponseDecorator<Void, T> {
@@ -15,22 +16,9 @@ public class JsonContent<T> implements ResponseDecorator<Void, T> {
     }
 
     @Override
-    public Response<T> apply(Response<Void> from) {
-        return new Response<T>() {
-            @Override
-            public T getContent() {
-                return content;
-            }
-
-            @Override
-            public int getStatus() {
-                return from.getStatus();
-            }
-
-            @Override
-            public Map<String, String> getHeaders() {
-                return from.getHeaders();
-            }
-        };
+    public ResponseState<T> apply(ResponseState<Void> from) {
+        Map<String, String> newHeaders = new HashMap<>(from.getHeaders());
+        newHeaders.put("content-type", "application/json");
+        return new ResponseState<>(content, from.getStatus(), newHeaders);
     }
 }
