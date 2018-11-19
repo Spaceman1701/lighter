@@ -9,18 +9,14 @@ public class Response<T> {
     private int status;
     private Map<String, String> headers;
 
-    private Response(T content, int status, Map<String, String> headers) {
-        this.content = content;
-        this.status = status;
-        this.headers = headers;
-    }
-
     private Response(ResponseState<T> state) {
-        this(state.getContent(), state.getStatus(), state.getHeaders());
+        this.content = state.getContent();
+        this.status = state.getStatus();
+        this.headers = state.getHeaders();
     }
 
     public static Response<Void> create() {
-        return new Response<>(null, 0, new HashMap<>());
+        return new Response<>(new ResponseState<>(null, 200, new HashMap<>()));
     }
 
     public <R> Response<R> with(ResponseDecorator<T, R> transformer) {
