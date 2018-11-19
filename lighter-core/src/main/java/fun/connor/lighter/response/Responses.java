@@ -19,4 +19,10 @@ public final class Responses {
         return Response.create()
                 .with(StatusResponse.from(201));
     }
+
+    public static Response<Void> redirect(int status, String url) {
+        return Response.create()
+                .with(HeaderResponse.from("Location", url))
+                .with(StatusResponse.from(status));
+    }
 }
