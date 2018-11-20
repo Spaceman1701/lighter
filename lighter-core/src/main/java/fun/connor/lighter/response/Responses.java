@@ -1,12 +1,15 @@
 package fun.connor.lighter.response;
 
+import fun.connor.lighter.http.HttpHeaders;
+import fun.connor.lighter.http.StatusCodes;
+
 public final class Responses {
 
     private Responses() {}
 
 
     public static <T> Response<T> json(T content) {
-        return json(content, 200);
+        return json(content, StatusCodes.OK);
     }
 
     public static <T> Response<T> json(T content, int status) {
@@ -17,12 +20,15 @@ public final class Responses {
 
     public static Response<Void> accepted() {
         return Response.create()
-                .with(StatusResponse.from(201));
+                .with(StatusResponse.from(StatusCodes.ACCEPTED));
     }
 
     public static Response<Void> redirect(int status, String url) {
+        if (!StatusCodes.isRedirect(status)) {
+            throw new IllegalArgumentException(status + " is not a valid redirect status code");
+        }
         return Response.create()
-                .with(HeaderResponse.from("Location", url))
+                .with(HeaderResponse.from(HttpHeaders.LOCATION, url))
                 .with(StatusResponse.from(status));
     }
 

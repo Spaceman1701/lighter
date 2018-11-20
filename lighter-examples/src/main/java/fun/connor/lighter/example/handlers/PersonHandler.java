@@ -6,6 +6,7 @@ import fun.connor.lighter.example.domain.Person;
 import fun.connor.lighter.example.domain.Subject;
 import fun.connor.lighter.example.persistance.PersonRepository;
 import fun.connor.lighter.handler.Request;
+import fun.connor.lighter.http.StatusCodes;
 import fun.connor.lighter.response.Response;
 import fun.connor.lighter.response.Responses;
 
@@ -35,7 +36,7 @@ public class PersonHandler {
         System.out.println("created: " + person.getName());
         repository.createPerson(person);
 
-        return Responses.json(person, 201);
+        return Responses.json(person, StatusCodes.CREATED);
     }
 
     @Get("/say_hello/{firstName}/{lastName}")
@@ -54,16 +55,16 @@ public class PersonHandler {
     @Put
     public Response<Person> updatePerson(@Body Person person, Subject subject) {
         if (!subject.isAdmin()) {
-           return Responses.noContent(200);
+           return Responses.noContent(StatusCodes.OK);
         }
 
         repository.updatePerson(person);
-        return Responses.json(person, 200);
+        return Responses.json(person, StatusCodes.OK);
     }
 
     @Get("/all")
     public Response<List<Person>> getAll() {
         List<Person> people = repository.getAllPeople();
-        return Responses.json(people, 200);
+        return Responses.json(people, StatusCodes.OK);
     }
 }
