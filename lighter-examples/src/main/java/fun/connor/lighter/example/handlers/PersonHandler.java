@@ -54,7 +54,7 @@ public class PersonHandler {
     @Put
     public Response<Person> updatePerson(@Body Person person, Subject subject) {
         if (!subject.isAdmin()) {
-           return Responses.json(null, 401);
+           return Responses.noContent(200);
         }
 
         repository.updatePerson(person);

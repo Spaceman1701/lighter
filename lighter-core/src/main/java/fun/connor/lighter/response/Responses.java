@@ -26,8 +26,10 @@ public final class Responses {
                 .with(StatusResponse.from(status));
     }
 
-    public static Response<Void> noContent(int status) {
+    public static <T> Response<T> noContent(int status) {
         return Response.create()
-                .with(StatusResponse.from(status));
+                .with(StatusResponse.from(status))
+                .with((responseState) ->
+                        new ResponseState<T>(null, responseState.getStatus(), responseState.getHeaders()));
     }
 }
