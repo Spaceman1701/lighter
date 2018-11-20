@@ -1,5 +1,7 @@
 package fun.connor.lighter.handler;
 
+import fun.connor.lighter.response.Response;
+
 import java.util.Map;
 
 @FunctionalInterface

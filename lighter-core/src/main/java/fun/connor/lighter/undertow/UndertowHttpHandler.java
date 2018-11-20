@@ -3,7 +3,7 @@ package fun.connor.lighter.undertow;
 import fun.connor.lighter.adapter.TypeAdapter;
 import fun.connor.lighter.adapter.TypeAdapterFactory;
 import fun.connor.lighter.handler.LighterRequestResolver;
-import fun.connor.lighter.handler.Response;
+import fun.connor.lighter.response.Response;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
 import io.undertow.util.Headers;
@@ -44,7 +44,7 @@ public class UndertowHttpHandler implements HttpHandler {
         Response r = resolver.resolve(pathParams, queryParams, request);
 
         exchange.setStatusCode(r.getStatus());
-        Map<String, String> customHeaders = r.getCustomHeaders();
+            Map<String, String> customHeaders = r.getHeaders();
         for (Map.Entry<String, String> header : customHeaders.entrySet()) {
             exchange.getResponseHeaders().put(HttpString.tryFromString(header.getKey()), header.getValue());
         }

@@ -25,4 +25,9 @@ public final class Responses {
                 .with(HeaderResponse.from("Location", url))
                 .with(StatusResponse.from(status));
     }
+
+    public static Response<Void> noContent(int status) {
+        return Response.create()
+                .with(StatusResponse.from(status));
+    }
 }

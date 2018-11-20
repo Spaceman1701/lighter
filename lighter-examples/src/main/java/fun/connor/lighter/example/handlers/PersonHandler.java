@@ -6,7 +6,8 @@ import fun.connor.lighter.example.domain.Person;
 import fun.connor.lighter.example.domain.Subject;
 import fun.connor.lighter.example.persistance.PersonRepository;
 import fun.connor.lighter.handler.Request;
-import fun.connor.lighter.handler.Response;
+import fun.connor.lighter.response.Response;
+import fun.connor.lighter.response.Responses;
 
 import javax.inject.Inject;
 import java.util.HashMap;
@@ -34,10 +35,7 @@ public class PersonHandler {
         System.out.println("created: " + person.getName());
         repository.createPerson(person);
 
-        return Response.<Person>builder()
-                .content(person)
-                .status(201)
-                .build();
+        return Responses.json(person, 201);
     }
 
     @Get("/say_hello/{firstName}/{lastName}")
@@ -49,35 +47,23 @@ public class PersonHandler {
         String result = "Hello, " + person.getPreferredName() + "!";
         Map<String, String> resultMap = new HashMap<>();
         resultMap.put("words", result);
-        return Response.<Map<String, String>>builder()
-                .content(resultMap)
-                .status(200)
-                .build();
+        return Responses.json(resultMap);
 
     }
 
     @Put
     public Response<Person> updatePerson(@Body Person person, Subject subject) {
         if (!subject.isAdmin()) {
-           return Response.<Person>builder()
-                   .content(null)
-                   .status(400)
-                   .build();
+           return Responses.json(null, 401);
         }
 
         repository.updatePerson(person);
-        return Response.<Person>builder()
-                .content(person)
-                .status(200)
-                .build();
+        return Responses.json(person, 200);
     }
 
     @Get("/all")
     public Response<List<Person>> getAll() {
         List<Person> people = repository.getAllPeople();
-        return Response.<List<Person>>builder()
-                .content(people)
-                .status(200)
-                .build();
+        return Responses.json(people, 200);
     }
 }

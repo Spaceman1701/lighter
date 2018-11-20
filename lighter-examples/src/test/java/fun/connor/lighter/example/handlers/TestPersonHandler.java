@@ -4,13 +4,14 @@ import fun.connor.lighter.example.domain.Name;
 import fun.connor.lighter.example.domain.Person;
 import fun.connor.lighter.example.persistance.InMemoryPersonRepo;
 import fun.connor.lighter.handler.Request;
-import fun.connor.lighter.handler.Response;
+import fun.connor.lighter.response.Response;
 import fun.connor.lighter.testutils.TestRequest;
 import org.junit.Test;
 
 import java.util.Map;
 import java.util.Optional;
-import static org.junit.Assert.*;
+
+import static org.junit.Assert.assertEquals;
 
 public class TestPersonHandler {
 
