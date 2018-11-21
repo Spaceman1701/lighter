@@ -4,6 +4,7 @@ import fun.connor.lighter.compiler.model.QueryParams;
 import fun.connor.lighter.compiler.validation.Validatable;
 import fun.connor.lighter.compiler.validation.ValidationError;
 import fun.connor.lighter.compiler.validation.ValidationReport;
+import fun.connor.lighter.compiler.validation.cause.ErrorCause;
 
 import java.util.*;
 
@@ -31,7 +32,7 @@ public class AllParametersUniqueValidator implements Validatable {
 
         for (String s : params) {
             if (!uniqueSet.add(s)) {
-                reportBuilder.addError(new ValidationError(duplicateParamsMessage(s)));
+                reportBuilder.addError(new ValidationError(duplicateParamsMessage(s), ErrorCause.ILLEGAL_ROUTE_SYNTAX));
             }
         }
     }

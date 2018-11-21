@@ -59,7 +59,8 @@ public class DelegatingAdaptorFactory implements FilteringTypeAdaptorFactory {
                 return factory.getAdapter(clazz, contentType);
             }
         }
-        return null; //TODO: error case
+        throw new IllegalArgumentException("unable to find TypeAdaptor for " + clazz.getSimpleName() + " and " +
+                "Content-Type: " + contentType);
     }
 
     public static Builder builder() {

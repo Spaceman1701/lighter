@@ -4,6 +4,7 @@ import fun.connor.lighter.compiler.model.endpoint.MethodParameter;
 import fun.connor.lighter.compiler.validation.Validatable;
 import fun.connor.lighter.compiler.validation.ValidationError;
 import fun.connor.lighter.compiler.validation.ValidationReport;
+import fun.connor.lighter.compiler.validation.cause.ErrorCause;
 
 import java.util.Map;
 
@@ -23,7 +24,7 @@ public class AllParamsExistValidator implements Validatable {
         params.keySet().forEach(p -> {
             String nameOnMethod = params.get(p);
             if (!methodParams.containsKey(nameOnMethod)) {
-                reportBuilder.addError(new ValidationError(missingKeyMessage(p)));
+                reportBuilder.addError(new ValidationError(missingKeyMessage(p), ErrorCause.CANNOT_MAP_PARAMETER));
             }
         });
     }
