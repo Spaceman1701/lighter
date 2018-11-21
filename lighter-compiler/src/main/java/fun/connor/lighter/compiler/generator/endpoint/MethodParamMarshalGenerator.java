@@ -14,18 +14,20 @@ public class MethodParamMarshalGenerator implements Statement {
 
     private LocalVariable destination;
     private Expression source;
+    private Expression contentType;
     private LighterTypes types;
-    private Map<TypeName, TypeAdaptorGenerator> generatorMap;
+    private TypeAdaptorFactoryGenerator typeAdaptorFactory;
 
-    private boolean isOptional;
+    private final boolean isOptional;
 
-    public MethodParamMarshalGenerator
-            (LocalVariable destination, Expression source, Map<TypeName, TypeAdaptorGenerator> generatorMap,
-             LighterTypes types) {
+
+    public MethodParamMarshalGenerator(LocalVariable destination, Expression source, Expression contentType,
+                                       TypeAdaptorFactoryGenerator typeAdaptorFactory, LighterTypes types) {
         this.destination = destination;
         this.source = source;
+        this.contentType = contentType;
+        this.typeAdaptorFactory = typeAdaptorFactory;
         this.types = types;
-        this.generatorMap = generatorMap;
 
         isOptional = MoreTypes.isTypeOptional(destination.getType());
     }
@@ -51,11 +53,6 @@ public class MethodParamMarshalGenerator implements Statement {
         return builder.build();
     }
 
-    private TypeAdaptorGenerator getTypeAdaptor(TypeMirror type) {
-        TypeMirror erasedType = types.erasure(type);
-        return generatorMap.get(TypeName.get(erasedType));
-    }
-
     private CodeBlock buildOptionalBlock(LocalVariable tempStr) {
         //TODO: deal with primitives
         TypeMirror optionType = types.extractOptionalType((DeclaredType) destination.getType());
@@ -73,9 +70,10 @@ public class MethodParamMarshalGenerator implements Statement {
     }
 
     private CodeBlock buildMarshalBlock(Assignable destination, Expression input, boolean throwOnNull) {
+        TypeAdaptorGenerator typeAdaptorGenerator = typeAdaptorFactory.makeGetTypeAdaptor(destination.getType(), contentType);
         return ParameterMarshallerGenerator.builder(destination, types)
                 .shouldThrowOnNull(throwOnNull)
-                .typeAdaptorGenerator(getTypeAdaptor(destination.getType()))
+                .typeAdaptorGenerator(typeAdaptorGenerator)
                 .input(input)
                 .build().make();
     }

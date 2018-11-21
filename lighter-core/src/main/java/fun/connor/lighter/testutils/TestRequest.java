@@ -1,6 +1,7 @@
 package fun.connor.lighter.testutils;
 
 import fun.connor.lighter.handler.Request;
+import fun.connor.lighter.http.HttpHeaders;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -59,6 +60,11 @@ public class TestRequest implements Request {
     @Override
     public List<String> getHeaderValues(String header) {
         return headers.get(header);
+    }
+
+    @Override
+    public String getContentType() {
+        return getHeaderValue(HttpHeaders.CONTENT_TYPE);
     }
 
     @Override

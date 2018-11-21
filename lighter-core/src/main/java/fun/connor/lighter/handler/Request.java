@@ -8,6 +8,8 @@ public interface Request {
 
     List<String> getHeaderValues(String header);
 
+    String getContentType();
+
     String getRequestPath();
 
     String getMethod();

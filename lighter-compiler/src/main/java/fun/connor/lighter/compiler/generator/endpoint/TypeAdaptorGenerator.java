@@ -1,98 +1,32 @@
 package fun.connor.lighter.compiler.generator.endpoint;
 
 import com.squareup.javapoet.CodeBlock;
-import com.squareup.javapoet.FieldSpec;
-import com.squareup.javapoet.ParameterizedTypeName;
-import com.squareup.javapoet.TypeName;
-import fun.connor.lighter.adapter.TypeAdapter;
 import fun.connor.lighter.compiler.LighterTypes;
-import fun.connor.lighter.compiler.generator.codegen.Assignable;
 import fun.connor.lighter.compiler.generator.codegen.Expression;
-import fun.connor.lighter.compiler.generator.codegen.Field;
 
-import javax.lang.model.element.Modifier;
-import javax.lang.model.element.TypeElement;
-import javax.lang.model.type.DeclaredType;
-import javax.lang.model.type.PrimitiveType;
 import javax.lang.model.type.TypeMirror;
 
-public class TypeAdaptorGenerator implements Field {
+public class TypeAdaptorGenerator implements Expression {
 
-    private TypeMirror adaptingType;
-    private DeclaredType fieldType;
-    private FieldSpec field;
-
+    private Expression source;
+    private TypeMirror producedType;
     private LighterTypes types;
 
-    public TypeAdaptorGenerator(TypeMirror adaptingType, LighterTypes types) {
+    TypeAdaptorGenerator(Expression source, TypeMirror producedType, LighterTypes types) {
+        this.source = source;
         this.types = types;
-        this.adaptingType = types.erasure(adaptingType);
-        if (adaptingType.getKind().isPrimitive()) {
-            this.adaptingType = types.boxedClass((PrimitiveType) adaptingType).asType();
-        }
-
-        DeclaredType typeAdaptorMirror = (DeclaredType) types.mirrorOfClass(TypeAdapter.class);
-
-        this.fieldType = types.getDeclaredType((TypeElement)typeAdaptorMirror.asElement(), this.adaptingType);
-
-        TypeName typeName =
-                ParameterizedTypeName.get(fieldType);
-
-        String fieldName = TypeName.get(this.adaptingType).toString().replace('.', '_') + "Adapter";
-
-        field = FieldSpec.builder(typeName, fieldName, Modifier.PRIVATE, Modifier.FINAL).build();
-    }
-
-    @Override
-    public FieldSpec getField() {
-        return field;
+        this.producedType = producedType;
     }
 
     public TypeMirror getAdaptingType() {
-        return adaptingType;
+        return producedType;
     }
 
-    public Assignable makeAssignable() {
-        return new Assignable() {
-            @Override
-            public CodeBlock makeAssignmentStub() {
-                return CodeBlock.of("$N", field);
-            }
-
-            @Override
-            public TypeMirror getType() {
-                return fieldType;
-            }
-        };
-    }
-
-    public Expression makeDeserialize(Expression readFrom) {
-        CodeBlock fromStub = readFrom.makeReadStub();
-
+    public Expression makeSerialize(Expression object) {
         return new Expression() {
             @Override
             public CodeBlock makeReadStub() {
-                return CodeBlock.builder()
-                        .add("this.$N.deserialize($L)", field, fromStub)
-                        .build();
-            }
-
-            @Override
-            public TypeMirror getType() {
-                return adaptingType;
-            }
-        };
-    }
-
-    public Expression makeSerialize(Expression readFrom) {
-        CodeBlock readStub = readFrom.makeReadStub();
-
-        return new Expression() {
-            @Override
-            public CodeBlock makeReadStub() {
-                return CodeBlock.builder()
-                        .add("this.$N.deserialize($L)", field, readStub)
-                        .build();
+                return CodeBlock.of("$L.serialize($L)", source.makeReadStub(), object.makeReadStub());
             }
 
             @Override
@@ -102,5 +36,27 @@ public class TypeAdaptorGenerator implements Field {
         };
     }
 
+    public Expression makeDeserialize(Expression string) {
+        return new Expression() {
+            @Override
+            public CodeBlock makeReadStub() {
+                return CodeBlock.of("$L.deserialize($L)", source.makeReadStub(), string.makeReadStub());
+            }
 
+            @Override
+            public TypeMirror getType() {
+                return producedType;
+            }
+        };
+    }
+
+    @Override
+    public CodeBlock makeReadStub() {
+        return source.makeReadStub();
+    }
+
+    @Override
+    public TypeMirror getType() {
+        return source.getType();
+    }
 }

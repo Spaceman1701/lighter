@@ -32,6 +32,20 @@ public class RequestGenerator implements Expression {
         };
     }
 
+    public Expression makeGetContentType() {
+        return new Expression() {
+            @Override
+            public CodeBlock makeReadStub() {
+                return CodeBlock.of("$L.getContentType()", source.makeReadStub());
+            }
+
+            @Override
+            public TypeMirror getType() {
+                return types.mirrorOfClass(String.class);
+            }
+        };
+    }
+
     @Override
     public CodeBlock makeReadStub() {
         return source.makeReadStub();

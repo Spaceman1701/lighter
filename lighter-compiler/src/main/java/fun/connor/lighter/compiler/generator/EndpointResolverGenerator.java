@@ -47,10 +47,6 @@ public class EndpointResolverGenerator extends AbstractGenerator {
         Map<MethodParameter.Source, List<MethodParameter>> params =
                 endpoint.getParametersBySource();
 
-
-        Map<TypeName, TypeAdaptorGenerator> typeAdaptorGenerators = makeTypeAdaptorsMap(params);
-        attachFields(typeAdaptorGenerators.values());
-
         TypeAdaptorFactoryGenerator typeAdaptorFactoryGenerator
                 = new TypeAdaptorFactoryGenerator("typeAdaptorFactory", types);
         builder.addField(typeAdaptorFactoryGenerator.getField());
@@ -67,9 +63,9 @@ public class EndpointResolverGenerator extends AbstractGenerator {
         builder.addField(controllerGenerator.getField());
 
         builder.addMethod(new ResolverConstructorGenerator(controllerGenerator,
-                typeAdaptorGenerators, typeAdaptorFactoryGenerator, requestGuardFactories, types).make());
+                typeAdaptorFactoryGenerator, requestGuardFactories, types).make());
         builder.addMethod(new ResolveMethodGenerator
-                (typeAdaptorGenerators, types, typeAdaptorFactoryGenerator,
+                (types, typeAdaptorFactoryGenerator,
                        requestGuardFactories ,controllerGenerator, endpoint).make());
 
 
@@ -82,28 +78,12 @@ public class EndpointResolverGenerator extends AbstractGenerator {
                 .forEach(builder::addField);
     }
 
-    private Map<TypeName, TypeAdaptorGenerator> makeTypeAdaptorsMap
-            (Map<MethodParameter.Source, List<MethodParameter>> params) {
-        List<MethodParameter> parametersForAdapting = params.entrySet().stream()
-                .filter(e -> requiresAdaptor(e.getKey()))
-                .map(Map.Entry::getValue)
-                .flatMap(List::stream)
-                .collect(Collectors.toList());
-        return makeObjectFromTypes(parametersForAdapting, (t) -> new TypeAdaptorGenerator(t, types));
-    }
-
     private Map<TypeName, RequestGuardFactoryGenerator> makeRequestGuardFactories
             (Map<MethodParameter.Source, List<MethodParameter>> params) {
         List<MethodParameter> typesForGuards =
                 new ArrayList<>(params.getOrDefault(MethodParameter.Source.GUARD, new ArrayList<>()));
         return makeObjectFromTypes(typesForGuards, (t) ->
                         new RequestGuardFactoryGenerator(requestGuards.getRequestGuard((DeclaredType)t), types));
-    }
-
-    private boolean requiresAdaptor(MethodParameter.Source source) {
-        return source == MethodParameter.Source.BODY
-                || source == MethodParameter.Source.QUERY
-                || source == MethodParameter.Source.PATH;
     }
 
     private <T> Map<TypeName, T> makeObjectFromTypes(List<MethodParameter> forTypes, Function<TypeMirror, T> constructor) {

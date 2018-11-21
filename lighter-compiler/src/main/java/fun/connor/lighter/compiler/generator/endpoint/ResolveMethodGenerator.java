@@ -8,6 +8,7 @@ import fun.connor.lighter.compiler.generator.codegen.*;
 import fun.connor.lighter.compiler.model.Endpoint;
 import fun.connor.lighter.compiler.model.endpoint.MethodParameter;
 import fun.connor.lighter.handler.Request;
+import fun.connor.lighter.http.MediaType;
 
 import javax.lang.model.element.Modifier;
 import javax.lang.model.type.TypeMirror;
@@ -21,7 +22,6 @@ public class ResolveMethodGenerator {
 
     private Map<TypeName, RequestGuardFactoryGenerator> requestGuards;
     private TypeAdaptorFactoryGenerator typeAdaptorFactory;
-    private Map<TypeName, TypeAdaptorGenerator> adaptorGenerators;
     private LighterTypes types;
     private Endpoint endpoint;
     private ControllerGenerator controller;
@@ -35,11 +35,10 @@ public class ResolveMethodGenerator {
     private Map<String, LocalVariable> controllerParamVariables;
 
     public ResolveMethodGenerator
-            (Map<TypeName, TypeAdaptorGenerator> adaptorGenerators, LighterTypes types,
+            (LighterTypes types,
              TypeAdaptorFactoryGenerator typeAdapterFactory,
              Map<TypeName, RequestGuardFactoryGenerator> requestGuards,
              ControllerGenerator controller, Endpoint endpoint) {
-        this.adaptorGenerators = adaptorGenerators;
         this.types = types;
         this.endpoint = endpoint;
         this.controller = controller;
@@ -135,9 +134,25 @@ public class ResolveMethodGenerator {
             case BODY:
                 return requestMaker.makeGetBody();
             case GUARD:
-                throw new IllegalArgumentException("gaurd param doesn't require marhsalling");
+                throw new IllegalArgumentException("guard param doesn't require marhsalling");
             case CONTEXT:
                 throw new IllegalArgumentException("context param doesn't require marshalling");
+        }
+        throw new IllegalArgumentException("unexpected parameter source type");
+    }
+
+    private Expression getMethodParamContentType(MethodParameter param) {
+        switch (param.getSource()) {
+            case QUERY:
+                return Expression.literal(String.class, MediaType.TEXT_PLAIN, types);
+            case PATH:
+                return Expression.literal(String.class, MediaType.TEXT_PLAIN, types);
+            case BODY:
+                return requestMaker.makeGetContentType();
+            case GUARD:
+                throw new IllegalArgumentException("guard param doesn't require a content type");
+            case CONTEXT:
+                throw new IllegalArgumentException("context param doesn't require a content type");
         }
         throw new IllegalArgumentException("unexpected parameter source type");
     }
@@ -148,8 +163,9 @@ public class ResolveMethodGenerator {
 
     private CodeBlock makeVariableMarshaling(MethodParameter param, LocalVariable output) {
         Expression getParam = getMarshallerSource(param);
+        Expression paramContentType = getMethodParamContentType(param);
         MethodParamMarshalGenerator marshalGenerator =
-                new MethodParamMarshalGenerator(output, getParam, adaptorGenerators, types);
+                new MethodParamMarshalGenerator(output, getParam, paramContentType, typeAdaptorFactory, types);
         return marshalGenerator.make();
     }
 

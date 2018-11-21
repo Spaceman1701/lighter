@@ -4,21 +4,21 @@ import java.util.function.Predicate;
 
 public class BasicAdaptorFilter implements FilteringTypeAdaptorFactory {
 
-    private Predicate<Class<?>> predicate;
+    private Predicate<TypeRequirement> predicate;
     private TypeAdapterFactory factory;
 
-    public BasicAdaptorFilter(Predicate<Class<?>> predicate, TypeAdapterFactory factory) {
+    public BasicAdaptorFilter(Predicate<TypeRequirement> predicate, TypeAdapterFactory factory) {
         this.predicate = predicate;
         this.factory = factory;
     }
 
     @Override
-    public Predicate<Class<?>> applies() {
+    public Predicate<TypeRequirement> applies() {
         return predicate;
     }
 
     @Override
-    public <T> TypeAdapter<T> getAdapter(Class<T> clazz) {
-        return factory.getAdapter(clazz);
+    public <T> TypeAdapter<T> getAdapter(Class<T> clazz, String mediaType) {
+        return factory.getAdapter(clazz, mediaType);
     }
 }

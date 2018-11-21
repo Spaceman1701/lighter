@@ -1,9 +1,6 @@
 package fun.connor.lighter.marshal;
 
-import fun.connor.lighter.adapter.BasicAdaptorFilter;
-import fun.connor.lighter.adapter.FilteringTypeAdaptorFactory;
-import fun.connor.lighter.adapter.TypeAdapter;
-import fun.connor.lighter.adapter.TypeAdapterFactory;
+import fun.connor.lighter.adapter.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +14,7 @@ public class DelegatingAdaptorFactory implements FilteringTypeAdaptorFactory {
 
 
     @Override
-    public Predicate<Class<?>> applies() {
+    public Predicate<TypeRequirement> applies() {
         return delegateFactories.stream()
                 .map(FilteringTypeAdaptorFactory::applies)
                 .reduce(Predicate::or)
@@ -32,7 +29,7 @@ public class DelegatingAdaptorFactory implements FilteringTypeAdaptorFactory {
             delegateFactories = new ArrayList<>();
         }
 
-        public Builder addDelegateFactory(Predicate<Class<?>> condition, TypeAdapterFactory factory) {
+        public Builder addDelegateFactory(Predicate<TypeRequirement> condition, TypeAdapterFactory factory) {
             delegateFactories.add(new BasicAdaptorFilter(condition, factory));
             return this;
         }
@@ -55,10 +52,11 @@ public class DelegatingAdaptorFactory implements FilteringTypeAdaptorFactory {
 
 
     @Override
-    public <T> TypeAdapter<T> getAdapter(Class<T> clazz) {
+    public <T> TypeAdapter<T> getAdapter(Class<T> clazz, String contentType) {
+        TypeRequirement requirement = new TypeRequirement(clazz, contentType);
         for (FilteringTypeAdaptorFactory factory : delegateFactories) {
-            if (factory.applies().test(clazz)) {
-                return factory.getAdapter(clazz);
+            if (factory.applies().test(requirement)) {
+                return factory.getAdapter(clazz, contentType);
             }
         }
         return null; //TODO: error case

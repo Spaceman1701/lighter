@@ -18,18 +18,15 @@ import java.util.Map;
 public class ResolverConstructorGenerator {
 
     private ControllerGenerator controllerGenerator;
-    private Map<TypeName, TypeAdaptorGenerator> typeAdaptors;
     private TypeAdaptorFactoryGenerator factoryGenerator;
     private Map<TypeName, RequestGuardFactoryGenerator> requestGuardFactories;
     private LighterTypes types;
 
     public ResolverConstructorGenerator
-            (ControllerGenerator controllerGenerator, Map<TypeName,
-             TypeAdaptorGenerator> typeAdaptors,
+            (ControllerGenerator controllerGenerator,
              TypeAdaptorFactoryGenerator typeAdaptorFactoryGenerator,
              Map<TypeName, RequestGuardFactoryGenerator> requestGuardFactories, LighterTypes types) {
         this.controllerGenerator = controllerGenerator;
-        this.typeAdaptors = typeAdaptors;
         this.factoryGenerator = typeAdaptorFactoryGenerator;
         this.requestGuardFactories = requestGuardFactories;
         this.types = types;
@@ -47,9 +44,6 @@ public class ResolverConstructorGenerator {
 
     private CodeBlock makeCode() {
         CodeBlock.Builder builder = CodeBlock.builder();
-        for (TypeAdaptorGenerator generator : typeAdaptors.values()) {
-            builder.addStatement(makeTypeAdaptorAssignment(generator).make());
-        }
 
         builder.addStatement(makeControllerAssignment().make());
 
@@ -89,21 +83,5 @@ public class ResolverConstructorGenerator {
             }
         };
         return Assignment.of(controllerAssign, controllerExpr);
-    }
-
-    private Statement makeTypeAdaptorAssignment(TypeAdaptorGenerator generator) {
-        Assignable field = generator.makeAssignable();
-        Expression typeAdaptorExpr = new Expression() {
-            @Override
-            public CodeBlock makeReadStub() {
-                return CodeBlock.of("$L.getAdapter($T.class)", "adaptorFactory", generator.getAdaptingType());
-            }
-
-            @Override
-            public TypeMirror getType() {
-                return field.getType();
-            }
-        };
-        return Assignment.of(field, typeAdaptorExpr);
     }
 }

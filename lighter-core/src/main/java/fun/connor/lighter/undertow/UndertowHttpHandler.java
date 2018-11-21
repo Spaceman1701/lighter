@@ -3,6 +3,8 @@ package fun.connor.lighter.undertow;
 import fun.connor.lighter.adapter.TypeAdapter;
 import fun.connor.lighter.adapter.TypeAdapterFactory;
 import fun.connor.lighter.handler.LighterRequestResolver;
+import fun.connor.lighter.http.HttpHeaders;
+import fun.connor.lighter.http.MediaType;
 import fun.connor.lighter.response.Response;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
@@ -48,10 +50,18 @@ public class UndertowHttpHandler implements HttpHandler {
         for (Map.Entry<String, String> header : customHeaders.entrySet()) {
             exchange.getResponseHeaders().put(HttpString.tryFromString(header.getKey()), header.getValue());
         }
-        exchange.getResponseHeaders().put(Headers.CONTENT_TYPE, "application/json");
         if (r.hasContent()) {
-            TypeAdapter typeAdapter = adapterFactory.getAdapter(r.getContent().getClass());
+            String contentType = getContentType(r);
+            TypeAdapter typeAdapter = adapterFactory.getAdapter(r.getContent().getClass(), contentType);
             exchange.getResponseSender().send(typeAdapter.serialize(r.getContent()));
         }
+    }
+
+    private String getContentType(Response<?> response) {
+        String contentType = response.getHeaders().get(HttpHeaders.CONTENT_TYPE);
+        if (contentType == null) {
+            contentType = MediaType.TEXT_PLAIN;
+        }
+        return contentType;
     }
 }

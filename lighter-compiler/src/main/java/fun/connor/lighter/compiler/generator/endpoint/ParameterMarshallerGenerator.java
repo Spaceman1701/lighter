@@ -2,10 +2,7 @@ package fun.connor.lighter.compiler.generator.endpoint;
 
 import com.squareup.javapoet.CodeBlock;
 import fun.connor.lighter.compiler.LighterTypes;
-import fun.connor.lighter.compiler.generator.codegen.Assignable;
-import fun.connor.lighter.compiler.generator.codegen.Assignment;
-import fun.connor.lighter.compiler.generator.codegen.Expression;
-import fun.connor.lighter.compiler.generator.codegen.Statement;
+import fun.connor.lighter.compiler.generator.codegen.*;
 import fun.connor.lighter.handler.TypeMarshalException;
 
 import static java.util.Objects.requireNonNull;
@@ -40,7 +37,6 @@ public class ParameterMarshallerGenerator implements Statement {
 
     @Override
     public CodeBlock make() {
-
         return CodeBlock.builder()
                 .beginControlFlow("if ($L != null)", inputStr.makeReadStub())
                     .addStatement(Assignment.of(output, adaptor.makeDeserialize(inputStr)).make())

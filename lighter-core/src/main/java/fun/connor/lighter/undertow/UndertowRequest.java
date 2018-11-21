@@ -1,6 +1,7 @@
 package fun.connor.lighter.undertow;
 
 import fun.connor.lighter.handler.Request;
+import fun.connor.lighter.http.HttpHeaders;
 import io.undertow.server.HttpServerExchange;
 
 import java.io.BufferedReader;
@@ -17,6 +18,11 @@ public class UndertowRequest implements Request {
 
     public UndertowRequest(final HttpServerExchange exchange) {
         this.exchange = exchange;
+    }
+
+    @Override
+    public String getContentType() {
+        return getHeaderValue(HttpHeaders.CONTENT_TYPE);
     }
 
     @Override
