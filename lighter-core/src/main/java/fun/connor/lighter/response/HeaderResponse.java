@@ -21,6 +21,6 @@ public class HeaderResponse<T> implements ResponseDecorator<T, T> {
     public ResponseState<T> apply(ResponseState<T> from) {
         Map<String, String> newHeaders = new HashMap<>(from.getHeaders());
         newHeaders.put(key, value);
-        return new ResponseState<>(from.getContent(), from.getStatus(), from.getHeaders());
+        return new ResponseState<>(from.getContent(), from.getStatus(), newHeaders);
     }
 }
