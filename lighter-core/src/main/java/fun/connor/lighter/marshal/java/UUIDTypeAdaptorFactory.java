@@ -6,19 +6,20 @@ import fun.connor.lighter.adapter.TypeRequirement;
 import fun.connor.lighter.handler.TypeMarshalException;
 import fun.connor.lighter.http.MediaType;
 
+import java.util.UUID;
 import java.util.function.Predicate;
 
-public class IntegerTypeAdaptor implements FilteringTypeAdaptorFactory {
+public class UUIDTypeAdaptorFactory implements FilteringTypeAdaptorFactory {
 
     @Override
     public Predicate<TypeRequirement> applies() {
-        return req -> req.getClazz().isAssignableFrom(Integer.class)
+        return req -> req.getClazz().isAssignableFrom(UUID.class)
                 && req.getMediaType().equalsIgnoreCase(MediaType.TEXT_PLAIN);
     }
 
     @Override
     public <T> TypeAdapter<T> getAdapter(Class<T> clazz, String contentType) {
-        if (clazz.isAssignableFrom(Integer.class)) {
+        if (clazz.isAssignableFrom(UUID.class)) {
             return new TypeAdapter<T>() {
                 @Override
                 public String serialize(T type) throws TypeMarshalException {
@@ -27,7 +28,7 @@ public class IntegerTypeAdaptor implements FilteringTypeAdaptorFactory {
 
                 @Override @SuppressWarnings("unchecked")
                 public T deserialize(String serializedData) throws TypeMarshalException {
-                    return (T) Integer.valueOf(Integer.parseInt(serializedData));
+                    return (T) UUID.fromString(serializedData);
                 }
             };
         }
