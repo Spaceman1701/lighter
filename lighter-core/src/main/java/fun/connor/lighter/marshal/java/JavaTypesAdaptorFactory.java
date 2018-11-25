@@ -14,6 +14,7 @@ public class JavaTypesAdaptorFactory implements FilteringTypeAdaptorFactory {
     public JavaTypesAdaptorFactory() {
         factory = DelegatingAdaptorFactory.builder()
                 .addDelegateFactory(new BooleanTypeAdapterFactory())
+                .addDelegateFactory(new IntegerTypeAdaptor())
                 .addDelegateFactory(new StringTypeAdapterFactory())
                 .build();
     }
