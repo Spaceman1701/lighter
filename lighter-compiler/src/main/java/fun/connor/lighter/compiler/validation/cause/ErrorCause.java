@@ -1,5 +1,9 @@
 package fun.connor.lighter.compiler.validation.cause;
 
+/**
+ * Enumeration of all high-level causes of compiler errors. These exist to provide
+ * generic context to errors, aid error searchability, and aid testing
+ */
 public enum  ErrorCause {
     UNKNOWN                             (0, "an error occurred"),
     INDISTINGUISHABLE_ROUTES            (1, "there were indistinguishable routes"),
@@ -24,10 +28,16 @@ public enum  ErrorCause {
         this.message = "LC" + idString + ": " + message;
     }
 
+    /**
+     * @return the unique id of this error cause
+     */
     public int getId() {
         return id;
     }
 
+    /**
+     * @return a generic message for this error cause
+     */
     public String getMessage() {
         return message;
     }

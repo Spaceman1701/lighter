@@ -4,6 +4,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Validation reports are used to provide compiler errors to the user. Validation errors represent
+ * incorrect input and <strong>not</strong> logic errors in the Lighter compiler. Validation reports
+ * follow a composite pattern. Every report contains a set of sub-reports and {@link ValidationError}s.
+ * <br>
+ * Reports are constructed using a builder object. The builder maintains a report-level context to aid
+ * in locating user errors. If errors or reports added to the builder do not have their own context information,
+ * they inherit the report context. This way most errors gain some location information regardless of where
+ * they are generated.
+ * <br>
+ * ValidationReport implements the {@link Printable} interface which allows it to format it's data for the
+ * compiler log.
+ */
 public class ValidationReport implements Printable {
 
     private final List<ValidationError> errors;
@@ -22,10 +35,19 @@ public class ValidationReport implements Printable {
                 .reduce(Boolean::logicalOr).orElse(false);
     }
 
+    /**
+     * Create a context free {@link Builder}
+     * @return a new builder
+     */
     public static Builder builder() {
         return new Builder();
     }
 
+    /**
+     * Create a builder with context
+     * @param contextHint location context
+     * @return a new builder
+     */
     public static Builder builder(LocationHint contextHint) {
         return new Builder(contextHint);
     }
@@ -43,6 +65,10 @@ public class ValidationReport implements Printable {
         }
     }
 
+    /**
+     * Handles creation of reports from errors and sub-reports. Maintains
+     * report-level context
+     */
     public static class Builder {
 
         private List<ValidationError> errors;
@@ -68,10 +94,13 @@ public class ValidationReport implements Printable {
             }
         }
 
-        public LocationHint getLocationHint() {
-            return reportLocation;
-        }
-
+        /**
+         * Add an error to this report. If this report has a location hint and
+         * the error does not, the error's location hint will be set to the report
+         * location hint
+         * @param error the error to add
+         * @return self
+         */
         public Builder addError(ValidationError error) {
             if (reportLocation != null && !error.getLocationHint().isPresent()) {
                 error.setLocationHint(reportLocation);
@@ -80,6 +109,13 @@ public class ValidationReport implements Printable {
             return this;
         }
 
+        /**
+         * Add a sub-report to this report. If this report has a location hint and
+         * the child report does not, the child report's location hint will be set
+         * to this report's location hint
+         * @param builder the child report builder
+         * @return self
+         */
         public Builder addChild(ValidationReport.Builder builder) {
             if (builder.reportLocation == null && reportLocation != null) {
                 builder.setLocationHint(reportLocation);
@@ -88,6 +124,10 @@ public class ValidationReport implements Printable {
             return this;
         }
 
+        /**
+         * Constructs a {@link ValidationReport} from this builder's data
+         * @return a new ValidationReport
+         */
         public ValidationReport build() {
             return new ValidationReport(this);
         }
