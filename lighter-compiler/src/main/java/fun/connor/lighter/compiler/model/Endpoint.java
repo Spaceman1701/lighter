@@ -142,6 +142,7 @@ public class Endpoint implements Validatable {
      * <br>
      * 2) Both endpoint's routes capture each other (see {@link Route#captures(Route)}) and
      * they have the same HTTP method
+     * @param other the endpoint to compare
      * @return <code>true</code> iff this endpoint is the same as the other
      */
     public boolean isSameEndpoint(Endpoint other) {

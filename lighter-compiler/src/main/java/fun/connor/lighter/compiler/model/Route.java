@@ -106,6 +106,9 @@ public class Route {
     /**
      * Check if this route covers ALL cases of another
      * route.
+     *
+     * @param other the endpoint to compare
+     * @return true iff these endpoints are semantically indistinguishable
      */
     public boolean captures(Route other) {
         Objects.requireNonNull(other);
