@@ -11,11 +11,19 @@ import java.util.*;
 
 import static fun.connor.lighter.compiler.MoreTypes.isTypeMirrorOfClass;
 
+/**
+ * An implementation of {@link Types} that provides extra utility functions
+ */
 public class LighterTypes implements Types {
 
     private Types baseTypes;
     private Elements elements;
 
+    /**
+     * Construct an instance from an al
+     * @param base
+     * @param elements
+     */
     public LighterTypes(Types base, Elements elements) {
         this.baseTypes = base;
         this.elements = elements;

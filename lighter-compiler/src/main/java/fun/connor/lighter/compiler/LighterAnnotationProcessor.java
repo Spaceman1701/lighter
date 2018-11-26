@@ -14,7 +14,17 @@ import javax.lang.model.SourceVersion;
 import javax.lang.model.element.TypeElement;
 import java.util.*;
 
-
+/**
+ * The Lighter annotation processor. All Lighter annotations are processed
+ * by this processor. Individual operations are delegated to {@link CompilerStep}
+ * objects. Each CompilerStep object is essentially a single-purpose annotation
+ * processor.
+ *
+ * The advantage of this implementation is that new steps can be added without adding
+ * new processors.
+ *
+ * See {@link Processor} and {@link AbstractProcessor}
+ */
 @AutoService(Processor.class)
 public class LighterAnnotationProcessor extends AbstractProcessor {
 
