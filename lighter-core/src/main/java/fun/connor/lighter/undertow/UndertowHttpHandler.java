@@ -2,14 +2,13 @@ package fun.connor.lighter.undertow;
 
 import fun.connor.lighter.adapter.TypeAdapter;
 import fun.connor.lighter.adapter.TypeAdapterFactory;
-import fun.connor.lighter.global.GlobalRequestTransformer;
+import fun.connor.lighter.GlobalRequestTransformer;
 import fun.connor.lighter.handler.LighterRequestResolver;
 import fun.connor.lighter.http.HttpHeaders;
 import fun.connor.lighter.http.MediaType;
 import fun.connor.lighter.response.Response;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.HttpServerExchange;
-import io.undertow.util.Headers;
 import io.undertow.util.HttpString;
 import io.undertow.util.PathTemplateMatch;
 import org.slf4j.Logger;

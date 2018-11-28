@@ -5,7 +5,7 @@ import fun.connor.lighter.adapter.TypeAdapterFactory;
 import fun.connor.lighter.autoconfig.LighterRouter;
 import fun.connor.lighter.autoconfig.RouteConfiguration;
 import fun.connor.lighter.console.LighterStartupPrinter;
-import fun.connor.lighter.global.GlobalRequestTransformer;
+import fun.connor.lighter.GlobalRequestTransformer;
 import fun.connor.lighter.handler.LighterRequestResolver;
 import fun.connor.lighter.http.HttpHeaders;
 import fun.connor.lighter.injection.InjectionObjectFactory;
@@ -13,14 +13,12 @@ import io.undertow.Handlers;
 import io.undertow.Undertow;
 import io.undertow.server.RoutingHandler;
 import io.undertow.server.handlers.BlockingHandler;
-import io.undertow.util.Headers;
 import io.undertow.util.HttpString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class LighterUndertow implements Lighter {
     private static final Logger log = LoggerFactory.getLogger(LighterUndertow.class);
