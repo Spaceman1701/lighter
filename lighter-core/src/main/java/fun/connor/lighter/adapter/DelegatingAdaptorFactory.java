@@ -7,6 +7,12 @@ import java.util.function.Predicate;
 /**
  * Creates adapters based on a delegation chain. Useful when creating
  * a single adaptor factory for multiple content types
+ * <p>
+ *     A delegate factory will be selected if its filtering predicate
+ *     is sufficient for the type adaption requirement. If more than one
+ *     delegate factory can fulfill the requirement, the factory added
+ *     to the builder first is chosen.
+ * </p>
  */
 public class DelegatingAdaptorFactory implements FilteringTypeAdaptorFactory {
 
@@ -20,6 +26,9 @@ public class DelegatingAdaptorFactory implements FilteringTypeAdaptorFactory {
     }
 
 
+    /**
+     * Fluent builder for constructing DelegatingAdaptorFactory instances
+     */
     public static class Builder {
         private List<FilteringTypeAdaptorFactory> delegateFactories;
 
@@ -27,16 +36,40 @@ public class DelegatingAdaptorFactory implements FilteringTypeAdaptorFactory {
             delegateFactories = new ArrayList<>();
         }
 
+        /**
+         * Add a delegate factory with the given condition. The condition replaces any condition
+         * on the {@link TypeAdapterFactory} instance.
+         * <p>
+         *     See {@link DelegatingAdaptorFactory} for details on delegate selection.
+         * </p>
+         * @param condition the condition for delegating to this factory
+         * @param factory the factory to delegate to
+         * @return self
+         */
         public Builder addDelegateFactory(Predicate<TypeRequirement> condition, TypeAdapterFactory factory) {
             delegateFactories.add(new BasicAdaptorFilter(condition, factory));
             return this;
         }
 
+        /**
+         * Add a delegate {@link FilteringTypeAdaptorFactory}. This factory will be delegated to this
+         * factory based on its filtering predicate.
+         * <p>
+         *     See {@link DelegatingAdaptorFactory} for details on delegate selection.
+         * </p>
+         * @param factory the factory
+         * @return self
+         */
         public Builder addDelegateFactory(FilteringTypeAdaptorFactory factory) {
             delegateFactories.add(factory);
             return this;
         }
 
+        /**
+         * Construct a new {@link DelegatingAdaptorFactory} with the configuration
+         * of this builder.
+         * @return the new factory instance
+         */
         public DelegatingAdaptorFactory build() {
             return new DelegatingAdaptorFactory(delegateFactories);
         }
