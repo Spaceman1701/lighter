@@ -1,5 +1,8 @@
 package fun.connor.lighter.http;
 
+/**
+ * Constants and utility methods for common HTTP status codes.
+ */
 public final class StatusCodes {
 
     /*
@@ -83,22 +86,47 @@ public final class StatusCodes {
     public static final int NOT_EXTENDED = 510;
     public static final int NETWORK_AUTHENTICATION_REQUIRED = 511;
 
-    public static boolean isInformal(int statusCode) {
+    /**
+     * Checks if a status code is an informational code.
+     * @param statusCode the status
+     * @return {@code true} iff the status code is informational
+     */
+    public static boolean isInformational(int statusCode) {
         return statusCode >= 100 && statusCode < 200;
     }
 
+    /**
+     * Checks if a status code is a success code.
+     * @param statusCode the status
+     * @return {@code true} iff the status code is success
+     */
     public static boolean isSuccess(int statusCode) {
         return statusCode >= 200 && statusCode < 300;
     }
 
+    /**
+     * Checks if a status code is a redirect code.
+     * @param statusCode the status
+     * @return {@code true} iff the status code is redirect
+     */
     public static boolean isRedirect(int statusCode) {
         return statusCode >= 300 && statusCode < 400;
     }
 
+    /**
+     * Checks if a status code is a client error code.
+     * @param statusCode the status
+     * @return {@code true} iff the status code is a client error
+     */
     public static boolean isClientError(int statusCode) {
         return statusCode >= 400 && statusCode < 500;
     }
 
+    /**
+     * Checks if a status code is a server error code.
+     * @param statusCode the status
+     * @return {@code true} iff the status code is a server error
+     */
     public static boolean isServerError(int statusCode) {
         return statusCode >= 500 & statusCode < 600;
     }

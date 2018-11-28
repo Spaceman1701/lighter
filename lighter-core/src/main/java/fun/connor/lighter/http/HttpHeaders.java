@@ -150,6 +150,12 @@ public final class HttpHeaders {
     public static final String X_FRAME_OPTIONS = "X-Frame-Options";
 
 
+    /**
+     * Check if two Header names are equivalent (following IANA requirements)
+     * @param a the first header
+     * @param b the second header
+     * @return {@code true} iff the two header string represent the same header
+     */
     public static boolean equal(String a, String b) {
         Objects.requireNonNull(a);
         Objects.requireNonNull(b);

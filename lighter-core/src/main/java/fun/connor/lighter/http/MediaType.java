@@ -86,29 +86,55 @@ public final class MediaType implements Serializable {
     private final String subType;
     private final Map<String, String> parameters;
 
+    /**
+     * Construct a Media type with parameters
+     * @param type the type
+     * @param subType the subtype
+     * @param parameters the parameters
+     */
     public MediaType(final String type, final String subType, final Map<String, String> parameters) {
         this.type = type;
         this.subType = subType;
         this.parameters = parameters;
     }
 
+    /**
+     * Construct a media type with no parameters
+     * @param type the type
+     * @param subType the subtype
+     */
     public MediaType(final String type, final String subType) {
         this(type, subType, Collections.emptyMap());
     }
 
 
+    /**
+     * Parse a MediaType from a IANA Media type string
+     * @param str the IANA String
+     * @return the MediaType instance representing the string
+     * @throws IllegalArgumentException if the the parameter is malformed
+     */
     public static MediaType from(final String str) {
         return null;
     }
 
+    /**
+     * @return the IANA type of this Media Type
+     */
     public String getType() {
         return type;
     }
 
+    /**
+     * @return the IANA subtype of this Media type
+     */
     public String getSubType() {
         return subType;
     }
 
+    /**
+     * @return the IANA parameters of this Media type
+     */
     public Map<String, String> getParameters() {
         return new HashMap<>(parameters);
     }
