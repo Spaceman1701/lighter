@@ -6,7 +6,7 @@ import com.squareup.javapoet.TypeName;
 import fun.connor.lighter.compiler.LighterTypes;
 import fun.connor.lighter.compiler.generator.codegen.*;
 import fun.connor.lighter.compiler.model.Endpoint;
-import fun.connor.lighter.compiler.model.endpoint.MethodParameter;
+import fun.connor.lighter.compiler.model.MethodParameter;
 import fun.connor.lighter.handler.Request;
 import fun.connor.lighter.http.MediaType;
 

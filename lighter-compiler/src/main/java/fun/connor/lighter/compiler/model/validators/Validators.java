@@ -3,7 +3,7 @@ package fun.connor.lighter.compiler.model.validators;
 
 import fun.connor.lighter.compiler.model.QueryParams;
 import fun.connor.lighter.compiler.model.Route;
-import fun.connor.lighter.compiler.model.endpoint.MethodParameter;
+import fun.connor.lighter.compiler.model.MethodParameter;
 import fun.connor.lighter.compiler.model.validators.endpoint.AllParametersUniqueValidator;
 import fun.connor.lighter.compiler.model.validators.endpoint.AllParamsExistValidator;
 

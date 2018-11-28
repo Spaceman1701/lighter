@@ -1,4 +1,4 @@
-package fun.connor.lighter.compiler.model.endpoint;
+package fun.connor.lighter.compiler.model;
 
 import fun.connor.lighter.compiler.MoreTypes;
 

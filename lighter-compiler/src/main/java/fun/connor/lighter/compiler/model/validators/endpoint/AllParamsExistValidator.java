@@ -1,6 +1,6 @@
 package fun.connor.lighter.compiler.model.validators.endpoint;
 
-import fun.connor.lighter.compiler.model.endpoint.MethodParameter;
+import fun.connor.lighter.compiler.model.MethodParameter;
 import fun.connor.lighter.compiler.validation.Validatable;
 import fun.connor.lighter.compiler.validation.ValidationError;
 import fun.connor.lighter.compiler.validation.ValidationReport;

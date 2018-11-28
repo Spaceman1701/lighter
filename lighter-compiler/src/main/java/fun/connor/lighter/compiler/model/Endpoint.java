@@ -1,6 +1,5 @@
 package fun.connor.lighter.compiler.model;
 
-import fun.connor.lighter.compiler.model.endpoint.MethodParameter;
 import fun.connor.lighter.compiler.model.validators.Validators;
 import fun.connor.lighter.compiler.validation.LocationHint;
 import fun.connor.lighter.compiler.validation.Validatable;

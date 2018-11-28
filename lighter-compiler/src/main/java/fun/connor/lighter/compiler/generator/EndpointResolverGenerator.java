@@ -8,7 +8,7 @@ import fun.connor.lighter.compiler.generator.endpoint.*;
 import fun.connor.lighter.compiler.model.Controller;
 import fun.connor.lighter.compiler.model.Endpoint;
 import fun.connor.lighter.compiler.model.RequestGuards;
-import fun.connor.lighter.compiler.model.endpoint.MethodParameter;
+import fun.connor.lighter.compiler.model.MethodParameter;
 import fun.connor.lighter.handler.LighterRequestResolver;
 
 import javax.annotation.processing.Filer;
@@ -18,7 +18,6 @@ import javax.lang.model.type.PrimitiveType;
 import javax.lang.model.type.TypeMirror;
 import java.util.*;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 public class EndpointResolverGenerator extends AbstractGenerator {
 
