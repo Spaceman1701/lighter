@@ -6,7 +6,7 @@ import fun.connor.lighter.Lighter;
 import fun.connor.lighter.autoconfig.AutoConfigFactory;
 import fun.connor.lighter.autoconfig.ReverseInjector;
 import fun.connor.lighter.example.modules.ExampleModule;
-import fun.connor.lighter.marshal.DelegatingAdaptorFactory;
+import fun.connor.lighter.adapter.DelegatingAdaptorFactory;
 import fun.connor.lighter.marshal.gson.GsonTypeAdapterFactory;
 import fun.connor.lighter.marshal.java.JavaTypesAdaptorFactory;
 import fun.connor.lighter.undertow.LighterUndertow;

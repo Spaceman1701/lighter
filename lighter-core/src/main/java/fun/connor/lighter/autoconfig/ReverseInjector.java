@@ -14,24 +14,23 @@ import fun.connor.lighter.injection.InjectionObjectFactory;
  *<br><br>
  * 1) {@link fun.connor.lighter.declarative.ResourceController}
  * <br>
- * 2) {@link fun.connor.lighter.processor.model.RequestGuardFactory}
+ * 2) {@link fun.connor.lighter.handler.RequestGuardFactory}
  * <br><br>
  *
- * While it is possible to write this class by hand, Lighter will generate
+ * While it is possible to write implementations of this interface by hand, Lighter will generate
  * one for you. This will be accessible through the {@code AutoConfigFactory}
  * link other generated classes.
  *
  * Example:
- * <pre>
- *     {@code
+ * <pre> {@code
  *     public class ExampleLighterReverseInjector implements ReverseInjector {
  *
- *         @Override
+ *         {@literal @}Override
  *         public InjectionObjectFactory getInjector() {
  *             ...
  *         }
  *
- *         @Inject
+ *         {@literal @}Inject
  *         public ExampleController setExampleController(ExampleController ex) {
  *             ...
  *         }

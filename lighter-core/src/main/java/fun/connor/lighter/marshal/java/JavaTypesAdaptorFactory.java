@@ -3,7 +3,7 @@ package fun.connor.lighter.marshal.java;
 import fun.connor.lighter.adapter.FilteringTypeAdaptorFactory;
 import fun.connor.lighter.adapter.TypeAdapter;
 import fun.connor.lighter.adapter.TypeRequirement;
-import fun.connor.lighter.marshal.DelegatingAdaptorFactory;
+import fun.connor.lighter.adapter.DelegatingAdaptorFactory;
 
 import java.util.function.Predicate;
 

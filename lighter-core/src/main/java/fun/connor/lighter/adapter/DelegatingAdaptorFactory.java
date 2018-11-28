@@ -1,6 +1,4 @@
-package fun.connor.lighter.marshal;
-
-import fun.connor.lighter.adapter.*;
+package fun.connor.lighter.adapter;
 
 import java.util.ArrayList;
 import java.util.List;

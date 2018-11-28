@@ -21,8 +21,8 @@ public class LighterTypes implements Types {
 
     /**
      * Construct an instance from an al
-     * @param base
-     * @param elements
+     * @param base the Types instance to act as a facade for
+     * @param elements the elements instance to use for element utilities
      */
     public LighterTypes(Types base, Elements elements) {
         this.baseTypes = base;
