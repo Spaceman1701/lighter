@@ -8,6 +8,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Implementation of request using in-memory data structures in its
+ * implementation. This is useful for creating requests for testing (which
+ * is sometimes required for methods which are either directly or indirectly dependent on
+ * the raw request).
+ * <p>
+ *     The methods on this class do what they appear to. See {@link Request} for details.
+ * </p>
+ */
 public class TestRequest implements Request {
 
     private Map<String, List<String>> headers;

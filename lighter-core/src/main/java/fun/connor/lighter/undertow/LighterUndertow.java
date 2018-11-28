@@ -20,6 +20,11 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Top-level implementation of {@link Lighter} for the Undertow backend. Use the
+ * {@link Builder} to construct instances of this class with proper configuration.
+ * This implementation does not offer any extra configuration over the generic options.
+ */
 public class LighterUndertow implements Lighter {
     private static final Logger log = LoggerFactory.getLogger(LighterUndertow.class);
 

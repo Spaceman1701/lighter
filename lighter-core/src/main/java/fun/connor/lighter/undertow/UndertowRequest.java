@@ -10,6 +10,10 @@ import java.io.InputStreamReader;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Implementation of {@link Request} backed by an Undertow {@link HttpServerExchange}. This
+ * implementation defers loading the request body until it is required.
+ */
 public class UndertowRequest implements Request {
 
     private HttpServerExchange exchange;

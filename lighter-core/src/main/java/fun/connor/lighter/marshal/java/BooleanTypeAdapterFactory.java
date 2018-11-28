@@ -8,6 +8,10 @@ import fun.connor.lighter.http.MediaType;
 
 import java.util.function.Predicate;
 
+/**
+ * {@link fun.connor.lighter.adapter.TypeAdapterFactory} and {@link TypeAdapter} for the
+ * {@link java.lang.Boolean}
+ */
 public class BooleanTypeAdapterFactory implements FilteringTypeAdaptorFactory {
 
     public Predicate<TypeRequirement> applies() {

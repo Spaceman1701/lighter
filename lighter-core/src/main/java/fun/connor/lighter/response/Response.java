@@ -10,14 +10,10 @@ import java.util.Map;
  */
 public class Response<T> {
 
-    private final T content;
-    private final int status;
-    private final Map<String, String> headers;
+    private final ResponseState<T> state;
 
-    private Response(ResponseState<T> state) {
-        this.content = state.getContent();
-        this.status = state.getStatus();
-        this.headers = state.getHeaders();
+    private Response(final ResponseState<T> state) {
+        this.state = state;
     }
 
     /**
@@ -41,34 +37,34 @@ public class Response<T> {
      * @return a response with the applied transformation
      */
     public <R> Response<R> with(ResponseDecorator<T, R> transformer) {
-        return new Response<>(transformer.apply(new ResponseState<>(content, status, headers)));
+        return new Response<>(transformer.apply(state));
     }
 
     /**
      * @return [@code true} iff the response has a body
      */
     public boolean hasContent() {
-        return content != null;
+        return state.getContent() != null;
     }
 
     /**
      * @return the response body or {@code null} if it does not have one
      */
     public T getContent() {
-        return content;
+        return state.getContent();
     }
 
     /**
      * @return the HTTP status code of this response.
      */
     public int getStatus() {
-        return status;
+        return state.getStatus();
     }
 
     /**
      * @return this response's HTTP headers.
      */
     public Map<String, String> getHeaders() {
-        return headers;
+        return state.getHeaders();
     }
 }

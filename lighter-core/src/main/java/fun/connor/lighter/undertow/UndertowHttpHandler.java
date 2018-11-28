@@ -19,6 +19,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Implementation of {@link HttpHandler} that delegates responsibility to a {@link LighterRequestResolver}.
+ * This handler assumes that it is already placed on a worker thread and will usually attempt to perform
+ * blocking IO.
+ */
 public class UndertowHttpHandler implements HttpHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(UndertowHttpHandler.class);
@@ -27,7 +32,14 @@ public class UndertowHttpHandler implements HttpHandler {
     private TypeAdapterFactory adapterFactory;
     private List<GlobalRequestTransformer> requestTransformers;
 
-    public UndertowHttpHandler
+    /**
+     * Construct an HTTP handler that delgeates to the provider {@link LighterRequestResolver}.
+     * @param resolver the resolver to delegate to
+     * @param typeAdapterFactory the application top level {@link TypeAdapterFactory}.
+     * @param requestTransformers the chain of {@link GlobalRequestTransformer} to apply to every
+     *                            response.
+     */
+    UndertowHttpHandler
             (LighterRequestResolver resolver, TypeAdapterFactory typeAdapterFactory,
              List<GlobalRequestTransformer> requestTransformers) {
         this.resolver = resolver;
@@ -35,6 +47,14 @@ public class UndertowHttpHandler implements HttpHandler {
         this.requestTransformers = requestTransformers;
     }
 
+    /**
+     * Parses the path and query parameters and generates a {@link Response} from the
+     * {@link LighterRequestResolver}. Then all {@link GlobalRequestTransformer}s are applied
+     * to the response and the response is written back to the exchange.
+     * @param exchange The exchange to resolve.
+     * @throws Exception in the case of an unrecoverable error. This checked exception ensures
+     * that no handling error will crash the server.
+     */
     @Override @SuppressWarnings("unchecked")
     public void handleRequest(HttpServerExchange exchange) throws Exception {
         Map<String, String> pathParams = new HashMap<>();

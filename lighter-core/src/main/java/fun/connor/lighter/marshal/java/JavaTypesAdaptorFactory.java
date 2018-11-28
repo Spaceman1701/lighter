@@ -7,6 +7,10 @@ import fun.connor.lighter.adapter.DelegatingAdaptorFactory;
 
 import java.util.function.Predicate;
 
+/**
+ * {@link fun.connor.lighter.adapter.TypeAdapterFactory} and {@link TypeAdapter} for the
+ * all supported Java standard library types.
+ */
 public class JavaTypesAdaptorFactory implements FilteringTypeAdaptorFactory {
 
     private DelegatingAdaptorFactory factory;

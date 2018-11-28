@@ -8,6 +8,10 @@ import fun.connor.lighter.http.MediaType;
 
 import java.util.function.Predicate;
 
+/**
+ * {@link fun.connor.lighter.adapter.TypeAdapterFactory} and {@link TypeAdapter} for the
+ * {@link java.lang.Integer}
+ */
 public class IntegerTypeAdaptorFactory implements FilteringTypeAdaptorFactory {
 
     @Override

@@ -5,6 +5,11 @@ import fun.connor.lighter.handler.TypeMarshalException;
 
 import java.io.IOException;
 
+/**
+ * {@link TypeAdapter} implementation for any Java object and Media Type application/json. Implemented
+ * using GSON. This will be moved to its own package soon.
+ * @param <T> The type this adapter applies to.
+ */
 public class GsonTypeAdapter<T> implements TypeAdapter<T> {
 
     private com.google.gson.TypeAdapter<T> adapter;
