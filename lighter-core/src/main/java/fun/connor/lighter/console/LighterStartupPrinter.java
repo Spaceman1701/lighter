@@ -2,6 +2,9 @@ package fun.connor.lighter.console;
 
 import java.io.PrintStream;
 
+/**
+ * Prints the Lighter startup banner to the terminal
+ */
 public class LighterStartupPrinter {
 
     private static final String BANNER =
@@ -18,10 +21,18 @@ public class LighterStartupPrinter {
 
     private PrintStream outStream;
 
+    /**
+     * Constructs a printer for the given PrintStream. Normally, this
+     * is {@link System#out}
+     * @param outStream the stream to print to
+     */
     public LighterStartupPrinter(PrintStream outStream) {
         this.outStream = outStream;
     }
 
+    /**
+     * Prints the banner.
+     */
     public void printBanner() {
         outStream.println(BANNER);
     }
