@@ -22,4 +22,5 @@ allprojects {
             options.compilerArgs << "-Xlint:unchecked"
         }
     }
+
 }
