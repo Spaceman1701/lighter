@@ -6,6 +6,10 @@ import dagger.Provides;
 import fun.connor.lighter.example.persistance.InMemoryPersonRepo;
 import fun.connor.lighter.example.persistance.PersonRepository;
 
+/**
+ * An example Dagger {@link Module} which defines a provider for
+ * {@link PersonRepository}
+ */
 @Module
 public class ExampleDaggerModule {
 

@@ -9,6 +9,19 @@ import fun.connor.lighter.handler.RequestGuardFactory;
 import javax.inject.Inject;
 import java.util.Map;
 
+/**
+ * {@link ProducesRequestGuard} factory for {@link Subject} objects. This class demonstrates
+ * using the Request guard for authentication. While the implementation here is very simple,
+ * it shows the general design of Request Guard based implementations. This class reads the
+ * Authorization header from the raw request, parses the username and password strings, and checks
+ * that they match the super-secure passphrase for the server. Finally, it constructs a {@link Subject}
+ * implementation that reflects the results of this processing.
+ * <p>
+ *     This allows implementations to require user authentication without coupling them with authentication
+ *     logic. In fact, consumers of the {@link Subject} object don't even have to know that the this
+ *     factory exists! Authentication is complete decoupled from the business logic.
+ * </p>
+ */
 @ProducesRequestGuard(Subject.class)
 public class SubjectFactory implements RequestGuardFactory<Subject> {
 

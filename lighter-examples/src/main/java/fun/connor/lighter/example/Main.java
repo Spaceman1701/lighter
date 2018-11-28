@@ -14,6 +14,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
+/**
+ * Example main application class. This example uses google Guice for dependency injection.
+ * Commented code contains example use for Dagger.
+ */
 public class Main {
 
     private static final Logger logger = LoggerFactory.getLogger(Main.class);

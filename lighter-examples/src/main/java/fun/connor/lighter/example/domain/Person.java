@@ -1,5 +1,8 @@
 package fun.connor.lighter.example.domain;
 
+/**
+ * Represents a person in the application domain. This class is a simple POJO.
+ */
 public class Person {
     private Name name;
 

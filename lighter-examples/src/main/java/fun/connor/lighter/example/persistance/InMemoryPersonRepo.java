@@ -8,10 +8,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * HashMap based implementation of {@link PersonRepository}.
+ */
 public class InMemoryPersonRepo implements PersonRepository {
 
     private Map<Name, Person> people;
 
+    /**
+     * Create a empty person repo
+     */
     public InMemoryPersonRepo() {
         people = new HashMap<>();
     }
