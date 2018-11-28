@@ -5,6 +5,11 @@ import fun.connor.lighter.compiler.LighterTypes;
 
 import javax.lang.model.type.TypeMirror;
 
+/**
+ * Code generator for {@link java.util.Map} objects. This object mirrors the interface
+ * of Map but instead provides methods for generating usages of Map's interface. This allows
+ * changes in Map's interface to be encapsulated.
+ */
 public class MapGenerator {
 
     private TypeMirror keyType;
@@ -24,6 +29,11 @@ public class MapGenerator {
         this(types.mirrorOfClass(keyType), types.mirrorOfClass(valueType), source, types);
     }
 
+    /**
+     * Generator method for {@link java.util.Map#get(Object)}
+     * @param keyExpr expression that produces the map key
+     * @return an expression that represents the method call.
+     */
     public Expression makeGet(Expression keyExpr) {
         return new Expression() {
             @Override
@@ -38,6 +48,12 @@ public class MapGenerator {
         };
     }
 
+    /**
+     * Generator method for {@link java.util.Map#put(Object, Object)}
+     * @param keyExpr expression that produces the map key
+     * @param valueExpr expression that produces the map value
+     * @return expression that represents the method call
+     */
     public Expression makePut(Expression keyExpr, Expression valueExpr) {
         return new Expression() {
             @Override
