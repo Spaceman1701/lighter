@@ -45,7 +45,7 @@ public class Response<T> {
     }
 
     /**
-     * @return @[code true} iff the response has a body
+     * @return [@code true} iff the response has a body
      */
     public boolean hasContent() {
         return content != null;
