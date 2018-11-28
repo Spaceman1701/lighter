@@ -105,6 +105,9 @@ public class LighterUndertow implements Lighter {
         return new Builder();
     }
 
+    /**
+     * {@link Lighter.Builder} implementation for the Undertow backend.
+     */
     public static class Builder implements Lighter.Builder {
 
         private Undertow.Builder undertowBuilder;
