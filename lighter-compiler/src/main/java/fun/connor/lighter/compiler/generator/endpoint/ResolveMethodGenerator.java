@@ -18,6 +18,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * Java source code generator for the
+ * {@link fun.connor.lighter.handler.LighterRequestResolver#resolve(Map, Map, Request)} method in LighterRequestResolver
+ * implementations. This class is quite complex as the resolve method is responsible for marshalling the raw request
+ * into the Java type dependencies of the endpoint method it delegates to. This includes data from the path parameters,
+ * query parameters, request body, and RequestGuardFactories.
+ * <p>
+ *     This complexity is not exposed by the interface, however. The behavior of the request method is fixed for
+ *     every resolver, so there is no need to expose complex configuration of behavior.
+ * </p>
+ */
 public class ResolveMethodGenerator {
 
     private Map<TypeName, RequestGuardFactoryGenerator> requestGuards;
@@ -34,6 +45,15 @@ public class ResolveMethodGenerator {
     private Map<String, MethodParameter> controllerParams;
     private Map<String, LocalVariable> controllerParamVariables;
 
+    /**
+     * Construct a new resolve method generator for a specific implementation
+     * @param types type utilities
+     * @param typeAdapterFactory generator for the top-level {@link fun.connor.lighter.adapter.TypeAdapterFactory}.
+     * @param requestGuards Map of request guard factory code generators keyed by the name of the RequestGuard type
+     *                      they produce
+     * @param controller generator for the controller that contains the method this resolver will delegate to
+     * @param endpoint the endpoint which represents this request resolver.
+     */
     public ResolveMethodGenerator
             (LighterTypes types,
              TypeAdaptorFactoryGenerator typeAdapterFactory,
@@ -59,6 +79,10 @@ public class ResolveMethodGenerator {
         controllerParamVariables = makeControllerParamVariables(controllerParams);
     }
 
+    /**
+     * Create the JavaPoet {@link MethodSpec} for the resolve method.
+     * @return the MethodSpec
+     */
     public MethodSpec make() {
         MethodSpec.Builder builder = MethodSpec.methodBuilder("resolve")
                 .addModifiers(Modifier.PUBLIC, Modifier.FINAL)

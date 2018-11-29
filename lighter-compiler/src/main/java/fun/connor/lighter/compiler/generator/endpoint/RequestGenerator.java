@@ -7,16 +7,28 @@ import fun.connor.lighter.handler.Request;
 
 import javax.lang.model.type.TypeMirror;
 
+/**
+ * Java source code generator for generating usages of {@link Request}.
+ */
 public class RequestGenerator implements Expression {
 
     private Expression source;
     private LighterTypes types;
 
+    /**
+     * Create a RequestGenerator from a source
+     * @param source expression which produces a {@link Request} at runtime
+     * @param types type utilities
+     */
     public RequestGenerator(Expression source, LighterTypes types) {
         this.source = source;
         this.types = types;
     }
 
+    /**
+     * Generate an expression representing a call to {@link Request#getBody()}
+     * @return the expression
+     */
     public Expression makeGetBody() {
         return new Expression() {
 
@@ -32,6 +44,10 @@ public class RequestGenerator implements Expression {
         };
     }
 
+    /**
+     * Generate an expression representing a call to {@link Request#getContentType()}
+     * @return the expression
+     */
     public Expression makeGetContentType() {
         return new Expression() {
             @Override

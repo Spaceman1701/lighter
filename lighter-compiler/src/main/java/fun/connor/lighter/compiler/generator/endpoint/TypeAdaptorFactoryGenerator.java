@@ -14,6 +14,10 @@ import javax.lang.model.element.Modifier;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
 
+/**
+ * Java source code generator for using {@link TypeAdapterFactory}. This generator represents TypeAdapterFactories
+ * that are stored in class fields.
+ */
 public class TypeAdaptorFactoryGenerator implements Field {
 
     private FieldSpec field;
@@ -21,6 +25,11 @@ public class TypeAdaptorFactoryGenerator implements Field {
     private LighterTypes types;
 
 
+    /**
+     * Construct a new TypeAdapterFactoryGenerator
+     * @param name the name of the field
+     * @param types type utilities
+     */
     public TypeAdaptorFactoryGenerator(String name, LighterTypes types) {
         this.types = types;
 
@@ -30,15 +39,30 @@ public class TypeAdaptorFactoryGenerator implements Field {
                 .build();
     }
 
+    /**
+     * Get the field specification for that this generator controls
+     * @return the JavaPoet {@link FieldSpec}.
+     */
     @Override
     public FieldSpec getField() {
         return field;
     }
 
+    /**
+     * Get the type of the field that this generator controls
+     * @return the type as {@link TypeMirror}
+     */
     public TypeMirror getType() {
         return type;
     }
 
+    /**
+     * Generates a {@link TypeAdaptorGenerator} which represents a {@link TypeAdapter} that can serialize and
+     * deserialize the provided type and IANA media type
+     * @param clazz type which TypeAdapter should provide
+     * @param mediaType IANA media type TypeAdapter should provide
+     * @return A java source code generator that can generate code that uses {@link TypeAdapter}.
+     */
     public TypeAdaptorGenerator makeGetTypeAdaptor(TypeMirror clazz, Expression mediaType) {
         CodeBlock access = makeExpression().makeReadStub();
         Expression adaptorSource = new Expression() {
@@ -56,7 +80,10 @@ public class TypeAdaptorFactoryGenerator implements Field {
     }
 
 
-
+    /**
+     * Create an expression that produces the value of the field
+     * @return the field as an {@link Expression}
+     */
     public Expression makeExpression() {
         return new Expression() {
             @Override
@@ -71,6 +98,10 @@ public class TypeAdaptorFactoryGenerator implements Field {
         };
     }
 
+    /**
+     * Create an assignable for the field
+     * @return the field as an {@link Assignable}
+     */
     public Assignable makeAssignable() {
         return new Assignable() {
             @Override
