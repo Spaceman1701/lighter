@@ -18,12 +18,33 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Java source code generator for {@link ReverseInjector} implementations. This generator dynamically creates the
+ * implementation based on the actual dependencies of the application as determined at compile time. It generates source
+ * code with {@link javax.inject} and Java Beans compatible setters. This allows the generated reverse injector object
+ * to act as a configuration bean for the actual application implementation. For more details, see
+ * {@link ReverseInjector}.
+ * <p>
+ *     Currently, this object generates implementations which use a {@link HashMap} to map between {@link Class} objects
+ *     and instances of the classes.
+ * </p>
+ * <p>
+ * Future versions of this class may change the implementation to use {@link javax.inject.Provider} methods
+ * to mock the behavior that directly passing the injector object to Lighter would create.
+ * </p>
+ */
 public class ReverseInjectorGenerator extends AbstractGenerator {
 
     private Set<DeclaredType> dependencies;
 
     private LighterTypes types;
 
+    /**
+     * Create a reverse injector
+     * @param dependencies the application dependencies
+     * @param types type utils
+     * @param filer filer for writing Java source files
+     */
     public ReverseInjectorGenerator(Set<DeclaredType> dependencies, LighterTypes types, Filer filer) {
         super(filer);
         this.dependencies = dependencies;

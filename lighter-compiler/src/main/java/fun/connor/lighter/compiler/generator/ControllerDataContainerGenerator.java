@@ -7,6 +7,10 @@ import fun.connor.lighter.handler.ResourceControllerMetaData;
 import javax.annotation.processing.Filer;
 import javax.lang.model.element.Modifier;
 
+/**
+ * {@link AbstractGenerator} implementation which generates {@link ResourceControllerMetaData} implementations. Currently
+ * these implementations do nothing.
+ */
 public class ControllerDataContainerGenerator extends AbstractGenerator {
 
 

@@ -60,7 +60,7 @@ public class TypeAdaptorGenerator implements Expression {
     /**
      * Generate an expression which represents a method call to
      * {@link fun.connor.lighter.adapter.TypeAdapter#deserialize(String)}.
-     * @param object an expression which produces the runtime argument for the method
+     * @param string an expression which produces the runtime argument for the method
      * @return an expression representing the method call with the given argument
      */
     public Expression makeDeserialize(Expression string) {
