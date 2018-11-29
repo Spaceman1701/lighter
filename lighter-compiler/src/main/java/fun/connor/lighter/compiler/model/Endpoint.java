@@ -13,9 +13,10 @@ import javax.lang.model.type.TypeMirror;
 import java.util.*;
 
 /**
- * Application endpoint. This object represents an HTTP endpoint in the application. HTTP endpoints are defined
- * by a specific HTTP method and a path template. HTTP endpoints also have query parameters and a method to execute
- * to handle requests to the endpoint. Endpoints are usually created from user defined endpoint methods.
+ * HTTP endpoint that in the application. This object represents an HTTP endpoint in the application.
+ * HTTP endpoints are defined by a specific HTTP method and a path template. HTTP endpoints also have
+ * query parameters and a method to execute to handle requests to the endpoint. Endpoints are usually created
+ * from user defined endpoint methods.
  */
 public class Endpoint implements Validatable {
 
