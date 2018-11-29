@@ -10,6 +10,9 @@ import fun.connor.lighter.compiler.model.validators.endpoint.AllParamsExistValid
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Static factory for creating external validator instances.
+ */
 public final class Validators {
     private Validators() {};
 

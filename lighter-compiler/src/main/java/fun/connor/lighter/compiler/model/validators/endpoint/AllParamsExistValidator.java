@@ -8,6 +8,10 @@ import fun.connor.lighter.compiler.validation.cause.ErrorCause;
 
 import java.util.Map;
 
+/**
+ * External validator for {@link fun.connor.lighter.compiler.model.Endpoint} that validates that all
+ * query and path parameters exist on the endpoint method.
+ */
 public class AllParamsExistValidator implements Validatable {
 
     private Map<String, String> params;

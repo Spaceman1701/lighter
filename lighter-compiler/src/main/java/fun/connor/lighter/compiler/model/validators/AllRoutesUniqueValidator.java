@@ -8,6 +8,9 @@ import fun.connor.lighter.compiler.validation.ValidationReport;
 
 import java.util.List;
 
+/**
+ * External validator that validates that all routes in a given list are differentiable.
+ */
 public class AllRoutesUniqueValidator implements Validatable {
 
     private List<Route> routes;

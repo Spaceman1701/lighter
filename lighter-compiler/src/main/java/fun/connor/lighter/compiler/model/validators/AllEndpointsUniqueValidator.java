@@ -10,6 +10,9 @@ import fun.connor.lighter.compiler.validation.cause.ErrorCause;
 
 import java.util.List;
 
+/**
+ * External validator which validates that all endpoints have differentiable path templates.
+ */
 public class AllEndpointsUniqueValidator implements Validatable {
 
     private List<Endpoint> endpoints;

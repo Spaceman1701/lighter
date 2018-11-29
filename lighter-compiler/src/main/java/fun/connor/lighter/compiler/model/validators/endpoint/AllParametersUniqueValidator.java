@@ -8,6 +8,10 @@ import fun.connor.lighter.compiler.validation.cause.ErrorCause;
 
 import java.util.*;
 
+/**
+ * External validator for {@link fun.connor.lighter.compiler.model.Endpoint} which validates that there
+ * are no collisions between query and path parameters.
+ */
 public class AllParametersUniqueValidator implements Validatable {
 
 
