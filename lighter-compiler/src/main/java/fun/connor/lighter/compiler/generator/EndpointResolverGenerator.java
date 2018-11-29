@@ -19,6 +19,13 @@ import javax.lang.model.type.TypeMirror;
 import java.util.*;
 import java.util.function.Function;
 
+/**
+ * {@link AbstractGenerator} implementation for generating {@link LighterRequestResolver} implementations. This
+ * generator does the bulk of the code generation work in lighter-compiler. Because of this, internally it uses
+ * the components from {@link fun.connor.lighter.compiler.generator.endpoint} to separate code generation
+ * responsibilities. In order to understand how this class works, it is important to understand how all those classes
+ * work. This class also makes use of the {@link fun.connor.lighter.compiler.generator.codegen} tools extensively.
+ */
 public class EndpointResolverGenerator extends AbstractGenerator {
 
     private Endpoint endpoint;
@@ -28,6 +35,14 @@ public class EndpointResolverGenerator extends AbstractGenerator {
 
     private TypeSpec.Builder builder;
 
+    /**
+     * Construct a new EndpointResolverGenerator.
+     * @param controller the controller which contains the endpoint method
+     * @param endpoint the endpoint that will be used to generate the source code
+     * @param requestGuards the application RequestGuards
+     * @param types type utilities
+     * @param filer filter for writing files to the disk
+     */
     public EndpointResolverGenerator(Controller controller, Endpoint endpoint,
                                      RequestGuards requestGuards, LighterTypes types, Filer filer) {
         super(filer);

@@ -1,5 +1,8 @@
 package fun.connor.lighter.compiler.model;
 
+/**
+ * Parser for path and query parameters.
+ */
 class ParameterParser {
 
     private final String exposedName;

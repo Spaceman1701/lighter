@@ -2,6 +2,10 @@ package fun.connor.lighter.compiler.generator;
 
 import java.util.Objects;
 
+/**
+ * String utils code Java source code generation. Useful when attempting to enforce
+ * idiomatic naming conventions.
+ */
 public final class Utils {
 
     private Utils() {}

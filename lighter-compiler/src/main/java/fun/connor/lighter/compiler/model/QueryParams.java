@@ -3,6 +3,10 @@ package fun.connor.lighter.compiler.model;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Endpoint HTTP query parameters. This class represents the mappings between raw query parameters
+ * and their Java method parameters on the {@link Endpoint}.
+ */
 public class QueryParams {
 
     private Map<String, String> nameMappings;

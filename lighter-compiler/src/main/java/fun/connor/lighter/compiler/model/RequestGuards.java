@@ -4,6 +4,10 @@ import javax.lang.model.type.DeclaredType;
 import java.util.Collection;
 import java.util.Map;
 
+/**
+ * Top level Request Guard model class which represents the mapping between
+ * {@link fun.connor.lighter.handler.RequestGuard}s and {@link fun.connor.lighter.handler.RequestGuardFactory}s.
+ */
 public class RequestGuards {
     private Map<DeclaredType, RequestGuardFactory> requestGuards;
 

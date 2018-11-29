@@ -4,7 +4,16 @@ import fun.connor.lighter.compiler.MoreTypes;
 
 import javax.lang.model.type.TypeMirror;
 
+/**
+ * A single parameter on an {@link Endpoint} handler method. Every parameter has a source where the
+ * parameters runtime data is generated. Parameters are typed, have a name, and have a specific order
+ * on the method they belong to.
+ */
 public class MethodParameter {
+    /**
+     * The kind of source that should provide the data that is bound to a
+     * method parameter at runtime
+     */
     public enum Source {
         PATH, QUERY, BODY, CONTEXT, GUARD
     }

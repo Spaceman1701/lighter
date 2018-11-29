@@ -2,6 +2,9 @@ package fun.connor.lighter.compiler.model;
 
 import javax.lang.model.type.DeclaredType;
 
+/**
+ * Represents a {@link RequestGuardFactory} implementation in the application.
+ */
 public class RequestGuardFactory {
 
     private final DeclaredType producedType;

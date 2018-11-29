@@ -9,6 +9,10 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * The top level class which represents the application. This class has a list of all {@link Controller}s
+ * in the application. Instances of this class represent the entire implicate structure of a Lighter application.
+ */
 public class Model implements Validatable {
     private List<Controller> controllers;
 

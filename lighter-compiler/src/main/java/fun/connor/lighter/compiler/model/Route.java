@@ -5,6 +5,9 @@ import javafx.util.Pair;
 
 import java.util.*;
 
+/**
+ * Represents a route constructed from a template String. Endpoints and Controllers both have Routes.
+ */
 public class Route {
 
     private Map<String, String> params;

@@ -7,6 +7,11 @@ import fun.connor.lighter.compiler.validation.ValidationReport;
 import javax.lang.model.element.TypeElement;
 import java.util.List;
 
+/**
+ * Represents a {@link fun.connor.lighter.declarative.ResourceController} annotated class. Controllers own
+ * {@link Endpoint}s. Every controller has a route fragment that it controls and that each endpoint it owns
+ * has. Controllers are {@link Validatable}.
+ */
 public class Controller implements Validatable {
 
     private TypeElement element;
