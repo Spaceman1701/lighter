@@ -13,6 +13,9 @@ import java.util.Optional;
 import static fun.connor.lighter.compiler.validators.LocationValidator.Predicates.requireConcreteClass;
 import static fun.connor.lighter.compiler.validators.LocationValidator.Predicates.requireModifier;
 
+/**
+ * {@link AnnotationValidator} implementation which validates {@link ResourceController} annotations.
+ */
 public class ResourceControllerValidator extends AnnotationValidator<ResourceController> {
 
 

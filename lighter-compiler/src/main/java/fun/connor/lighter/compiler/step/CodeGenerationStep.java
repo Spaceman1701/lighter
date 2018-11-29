@@ -17,6 +17,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Generates the Java source code from the application model. This step must run
+ * after the {@link ValidateModelStep} as it assumes the invariants check by it are
+ * always held. This step is has side effects as it creates new source files.
+ */
 public class CodeGenerationStep extends CompilerStep {
 
     private Model model;

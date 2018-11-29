@@ -16,6 +16,13 @@ import java.util.Optional;
 import static fun.connor.lighter.compiler.validators.LocationValidator.Predicates.enclosingHasAnnotation;
 import static fun.connor.lighter.compiler.validators.LocationValidator.Predicates.requireModifier;
 
+/**
+ * {@link AnnotationValidator} implementation for Lighter Endpoint Annotations. Currently
+ * {@link fun.connor.lighter.declarative.Get}, {@link fun.connor.lighter.declarative.Post},
+ * {@link fun.connor.lighter.declarative.Delete}, {@link fun.connor.lighter.declarative.Put}. These annotation
+ * types can be validated as a single validator since they all act as an identifier for the same thing.
+ * @param <T> the specific annotation type this validator validates
+ */
 public class EndpointAnnotationValidator<T extends Annotation> extends AnnotationValidator<T> {
 
     public EndpointAnnotationValidator(Element annotatedElement, T annotation) {

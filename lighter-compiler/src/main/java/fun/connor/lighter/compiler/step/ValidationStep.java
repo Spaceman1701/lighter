@@ -19,6 +19,9 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Validates that annotations are placed correctly and have legal argument values.
+ */
 public class ValidationStep extends CompilerStep {
 
 

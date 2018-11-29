@@ -15,6 +15,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
 
+/**
+ * External validator for annotations that ensures they are placed in a legal location. Uses a
+ * set of location predicates to validate the location of the annotated element.
+ */
 public class LocationValidator implements Validatable {
 
     private final List<Predicate<Element>> conditions;

@@ -9,6 +9,10 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Generates the Java source code for the {@link fun.connor.lighter.autoconfig.ReverseInjector}
+ * for the application
+ */
 public class ReverseInjectorCodeGenerationStep extends CompilerStep {
 
     private Set<DeclaredType> dependencies;

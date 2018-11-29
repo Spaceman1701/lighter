@@ -8,6 +8,9 @@ import javax.annotation.processing.RoundEnvironment;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Validates that the application model represents an application that will work at runtime.
+ */
 public class ValidateModelStep extends CompilerStep {
 
     private Model model;

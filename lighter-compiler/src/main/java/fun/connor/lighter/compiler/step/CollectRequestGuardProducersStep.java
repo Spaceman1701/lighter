@@ -12,6 +12,10 @@ import javax.lang.model.element.Element;
 import javax.lang.model.type.DeclaredType;
 import java.util.*;
 
+/**
+ * Finds all the {@link fun.connor.lighter.handler.RequestGuardFactory}s which are annotated to be used
+ * by the application.
+ */
 public class CollectRequestGuardProducersStep extends CompilerStep {
 
     public CollectRequestGuardProducersStep(ProcessingEnvironment env) {

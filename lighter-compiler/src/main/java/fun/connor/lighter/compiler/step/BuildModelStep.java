@@ -14,6 +14,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Constructs the application model from annotated classes. This step must run after
+ * the {@link ValidationStep} as it assumes that all invariants validated by that step
+ * are held.
+ */
 public class BuildModelStep extends CompilerStep {
 
     public BuildModelStep(ProcessingEnvironment env) {

@@ -4,6 +4,10 @@ import fun.connor.lighter.compiler.validation.ValidationReport;
 
 import java.util.Optional;
 
+/**
+ * Result from running a compiler step. Results include a {@link ValidationReport} for any errors that ought
+ * to be reported from the step and a named result.
+ */
 public class StepResult {
     private final ValidationReport validationReport;
     private final String resultName;

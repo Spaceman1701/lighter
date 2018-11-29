@@ -11,6 +11,9 @@ import javax.lang.model.type.DeclaredType;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Collects all the dependencies of application classes that will have to be constructed by Lighter.
+ */
 public class CollectDependenciesStep extends CompilerStep {
 
     private Model model;
