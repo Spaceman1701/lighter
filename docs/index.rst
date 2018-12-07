@@ -32,12 +32,3 @@ Lighter Web Framework Documentation
     concepts/injection.rst
     concepts/lighter.rst
     concepts/autoconfig.rst
-
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
