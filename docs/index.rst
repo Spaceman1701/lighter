@@ -19,6 +19,12 @@ Lighter achieves this by working at *compile-time instead of run-time*. Lighter 
 reflection. Instead, it depends on annotation processors to provide high level constructs. This
 allows Lighter's abstractions to have close to zero cost.
 
+For complete API documentation, check out the javadocs (link TBD).
+
+**TESE DOCS ARE STILL A WORK IN PROGRESS.**
+Almost every page still has a lot of work that needs to be done. Many pages have not been
+started. 
+
 .. toctree::
    :maxdepth: 2
    :caption: Overview
