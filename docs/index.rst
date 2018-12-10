@@ -19,6 +19,11 @@ Lighter achieves this by working at *compile-time instead of run-time*. Lighter 
 reflection. Instead, it depends on annotation processors to provide high level constructs. This
 allows Lighter's abstractions to have close to zero cost.
 
+Lighter aims to be the anti-framework framework. Whenever possible, it achieves abstraction without
+magic. When it does use magic, Lighter focuses on making it inutitive and easy to follow. Lighter avoids
+pulling in dependencies it doesn't have to and lets the developer structure their application. Lighter provides
+abstraction without incuring performance penalties or clarity costs.
+
 For complete API documentation, check out the javadocs (link TBD).
 
 **TESE DOCS ARE STILL A WORK IN PROGRESS.**
