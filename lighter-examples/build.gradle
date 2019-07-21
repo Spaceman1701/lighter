@@ -1,13 +1,16 @@
+plugins {
+    id 'java'
+    id 'application'
+    id 'maven-publish'
+}
+
 group 'fun.connor'
 version '0.1-SNAPSHOT'
-
-apply plugin: 'java'
-apply plugin: 'application'
-apply plugin: 'maven'
 
 mainClassName = 'fun.connor.lighter.example.Main'
 
 sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
 repositories {
     mavenCentral()

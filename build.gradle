@@ -3,15 +3,22 @@ version '0.1-SNAPSHOT'
 
 apply plugin: 'java'
 apply plugin: 'maven-publish'
-apply plugin: 'maven'
 
 sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
 subprojects {
     version = '1.0'
 }
 
 allprojects {
+
+    publishing {
+        repositories {
+            mavenLocal()
+        }
+    }
+
     repositories {
         mavenCentral()
         mavenLocal()

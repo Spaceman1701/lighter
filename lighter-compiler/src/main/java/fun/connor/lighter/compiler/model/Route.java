@@ -1,7 +1,7 @@
 package fun.connor.lighter.compiler.model;
 
 import com.google.common.collect.Streams;
-import javafx.util.Pair;
+import fun.connor.lighter.compiler.utils.Pair;
 
 import java.util.*;
 
@@ -121,8 +121,8 @@ public class Route {
 
         boolean routesEqual = Streams.zip(parts.stream(), other.parts.stream(), Pair::new)
                 .map((p) -> {
-                    RoutePart a = p.getKey();
-                    RoutePart b = p.getValue();
+                    RoutePart a = p.getFirst();
+                    RoutePart b = p.getSecond();
                     if (a.getKind() == b.getKind()) {
                         if (a.getKind() != RoutePart.Kind.PARAMETER) {
                             return a.getString().equals(b.getString());
